@@ -26,20 +26,45 @@ export default function Login() {
 
   return (
     <div className="auth-container">
+      {/* Animated Background Shapes */}
+      <div className="auth-shape shape-1"></div>
+      <div className="auth-shape shape-2"></div>
+      <div className="auth-shape shape-3"></div>
+
       <div className="auth-card">
-        <h2>Log In</h2>
-        {error && <div className="auth-error">{error}</div>}
+        <h2>Welcome Back</h2>
+        <p className="auth-subtitle">Log in to manage your expenses</p>
+        
+        {error && (
+          <div className="auth-error">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            {error}
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit}>
           <div className="auth-group">
             <label>Email</label>
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input 
+              type="email" 
+              required 
+              placeholder="Enter your email"
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+            />
           </div>
           <div className="auth-group">
             <label>Password</label>
-            <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input 
+              type="password" 
+              required 
+              placeholder="Enter your password"
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+            />
           </div>
           <button disabled={loading} className="auth-button" type="submit">
-            Log In
+            {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
         <div className="auth-link">

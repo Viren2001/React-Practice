@@ -13,8 +13,7 @@ function ExpenseForm({ addExpense }) {
             return alert("Please fill all required fields (name, amount, category)");
         }
 
-        // If user didn't select a date, use today's date
-        const expenseDate = date || new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+        const expenseDate = date || new Date().toISOString().slice(0, 10);
 
         addExpense({
             id: Date.now(),
@@ -24,7 +23,6 @@ function ExpenseForm({ addExpense }) {
             date: expenseDate,
         });
 
-        // Clear form after adding
         setName("");
         setAmount("");
         setCategory("Food");
@@ -32,14 +30,14 @@ function ExpenseForm({ addExpense }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
+        <form onSubmit={handleSubmit} className="expense-form">
             <input
                 type="text"
                 placeholder="Expense Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                style={{ marginRight: "10px" }}
+                className="form-input"
             />
             <input
                 type="number"
@@ -47,12 +45,12 @@ function ExpenseForm({ addExpense }) {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 required
-                style={{ marginRight: "10px" }}
+                className="form-input"
             />
             <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                style={{ marginRight: "10px" }}
+                className="form-select"
             >
                 <option value="Food">Food</option>
                 <option value="Transport">Transport</option>
@@ -63,9 +61,9 @@ function ExpenseForm({ addExpense }) {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                style={{ marginRight: "10px" }}
+                className="form-input"
             />
-            <button type="submit">Add Expense</button>
+            <button type="submit" className="form-submit-btn">Add Expense</button>
         </form>
     );
 }
