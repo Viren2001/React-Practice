@@ -1,10 +1,9 @@
 function PageHeader({ title, subtitle }) {
     return (
-        <div className="page-header">
-            <h1>{title}</h1>
-            <p>{subtitle}</p>
+        <div style={{ marginBottom: "32px" }}>
+            <h1 style={{ fontSize: "32px", color: "var(--text-main)", marginBottom: "4px" }}>{title}</h1>
+            <p style={{ fontSize: "15px", color: "var(--text-muted)", fontWeight: "500" }}>{subtitle}</p>
         </div>
-        
     );
 }
 

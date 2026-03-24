@@ -11,106 +11,181 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
+  ResponsiveContainer,
+  AreaChart,
+  Area
 } from "recharts";
 
-const COLORS = ["#2563eb", "#16a34a", "#7c3aed", "#ca8a04", "#f97316", "#14b8a6"];
-const cardStyle = {
-  padding: "20px",
-  marginBottom: "20px",
-  backgroundColor: "#fff",
-  borderRadius: "8px",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-};
+const COLORS = ["#2563eb", "#10b981", "#7c3aed", "#f59e0b", "#ef4444", "#14b8a6"];
 
-function Reports({ expenses = [] }) {
-  // Local state for month selector
-  const [month, setMonth] = useState(new Date().toISOString().slice(0, 7)); // default to current month
+function Reports({ expenses = [], month: propMonth, currency = "$" }) {
+  const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
 
   // Filter expenses for selected month
   const monthlyExpenses = expenses.filter((exp) => exp.date?.slice(0, 7) === month);
-
-  // Monthly total
   const monthTotal = monthlyExpenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
-
-  // All-time total
   const total = expenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
 
-  // Pie chart data by category
+  // Pie chart data (Category Breakdown)
   const categoryTotals = monthlyExpenses.reduce((acc, e) => {
-    const cat = e.category || "Uncategorized";
+    const cat = e.category || "Other";
     acc[cat] = (acc[cat] || 0) + Number(e.amount);
     return acc;
   }, {});
   const pieData = Object.entries(categoryTotals).map(([name, value]) => ({ name, value }));
 
-  // Bar chart data (daily totals)
+  // Trend & Bar data (Daily Totals)
   const dailyTotals = {};
+  // Initialize with all days of the month to show a smooth trend
+  const year = parseInt(month.split('-')[0]);
+  const m = parseInt(month.split('-')[1]);
+  const daysInMonth = new Date(year, m, 0).getDate();
+  
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${month}-${d.toString().padStart(2, '0')}`;
+    dailyTotals[dateStr] = 0;
+  }
+
   monthlyExpenses.forEach((exp) => {
-    if (exp.date) dailyTotals[exp.date] = (dailyTotals[exp.date] || 0) + Number(exp.amount);
+    if (exp.date && dailyTotals[exp.date] !== undefined) {
+      dailyTotals[exp.date] += Number(exp.amount);
+    }
   });
-  const barData = Object.entries(dailyTotals)
+
+  const timeData = Object.entries(dailyTotals)
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([date, total]) => ({ date, total }));
+    .map(([date, total]) => ({ 
+      date: date.split('-')[2], // Just the day number
+      fullDate: date,
+      total 
+    }));
 
   return (
-    <div style={{ padding: "20px", maxWidth: "1000px", margin: "0 auto" }}>
-      <PageHeader title="Reports" subtitle="Analyze your spending patterns" />
+    <div className="page-container">
+      <PageHeader title="Reports" subtitle="Visual insights into your spending habits" />
 
-      {/* Month Selector */}
-      <div style={cardStyle}>
-        <label>
-          Select Month:{" "}
+      {/* Summary Cards Row */}
+      <div className="stats-grid">
+        <div className="card">
+          <h3 className="card-label">Analysis Month</h3>
           <input
             type="month"
             value={month}
             onChange={(e) => setMonth(e.target.value)}
+            style={{ width: "100%" }}
           />
-        </label>
-        <div style={{ marginTop: "10px" }}>
-          <div style={{ fontWeight: "bold", fontSize: "18px", color: "#2563eb" }}>
-            Total Expenses (All-Time): ${total.toFixed(2)}
-          </div>
-          <div style={{ fontWeight: "bold", fontSize: "18px", color: "#16a34a" }}>
-            Total Expenses (Month: {month}): ${monthTotal.toFixed(2)}
-          </div>
+        </div>
+        <div className="card">
+          <h3 className="card-label">Monthly Volume</h3>
+          <p className="stats-value success">{currency}{monthTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+          <p className="card-subtext">Across {monthlyExpenses.length} transactions</p>
+        </div>
+        <div className="card">
+          <h3 className="card-label">Lifetime Total</h3>
+          <p className="stats-value primary">{currency}{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+          <p className="card-subtext">Total spending logged</p>
         </div>
       </div>
 
-      {/* Pie Chart */}
-      <div style={cardStyle}>
-        <h3>Expenses by Category (Month: {month})</h3>
-        {monthlyExpenses.length === 0 ? (
-          <p style={{ textAlign: "center" }}>No expenses for this month.</p>
-        ) : (
-          <div style={{ display: "flex", justifyContent: "center", height: "55vh" }}>
-            <PieChart width={400} height={400}>
-              <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={120} label>
-                {pieData.map((entry, index) => (
-                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend verticalAlign="bottom" height={36} />
-            </PieChart>
-          </div>
-        )}
+      {/* Main Trends Chart */}
+      <div className="card chart-main-card">
+        <h3 className="card-title">Spending Trend</h3>
+        <div className="chart-container">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={timeData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+              <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12}} />
+              <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12}} />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: 'var(--bg-card)', 
+                  border: '1px solid var(--border)', 
+                  borderRadius: '10px',
+                  boxShadow: 'var(--shadow-md)',
+                  color: 'var(--text-main)'
+                }} 
+              />
+              <Area type="monotone" dataKey="total" stroke="#2563eb" strokeWidth={3} fillOpacity={1} fill="url(#colorTotal)" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
-      {/* Bar Chart */}
-      <div style={cardStyle}>
-        <h3>Daily Expenses (Month: {month})</h3>
-        {barData.length === 0 ? (
-          <p style={{ textAlign: "center" }}>No expenses for this month.</p>
-        ) : (
-          <BarChart width={800} height={300} data={barData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="total" fill="#2563eb" />
-          </BarChart>
-        )}
+      <div className="charts-grid">
+        {/* Category Breakdown */}
+        <div className="card">
+          <h3 className="card-title">Category Breakdown</h3>
+          {pieData.length === 0 ? (
+            <div className="empty-chart">
+              <p>No data available</p>
+            </div>
+          ) : (
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} cornerRadius={4} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                     contentStyle={{ 
+                        backgroundColor: 'var(--bg-card)', 
+                        border: '1px solid var(--border)', 
+                        borderRadius: '10px',
+                        color: 'var(--text-main)'
+                      }} 
+                  />
+                  <Legend verticalAlign="bottom" height={36}/>
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
+
+        {/* Daily Comparison Bar Chart */}
+        <div className="card">
+          <h3 className="card-title">Daily Distribution</h3>
+          {timeData.filter(d => d.total > 0).length === 0 ? (
+            <div className="empty-chart">
+              <p>No daily spending recorded</p>
+            </div>
+          ) : (
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={timeData.filter(d => d.total > 0)}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 11}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 11}} />
+                  <Tooltip 
+                    cursor={{fill: 'rgba(37, 99, 235, 0.05)'}}
+                    contentStyle={{ 
+                      backgroundColor: 'var(--bg-card)', 
+                      border: '1px solid var(--border)', 
+                      borderRadius: '10px',
+                      color: 'var(--text-main)'
+                    }} 
+                  />
+                  <Bar dataKey="total" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
