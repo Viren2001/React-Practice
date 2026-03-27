@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { getCategoryIcon } from "../utils/categoryIcons";
+import { Check, X, Plus } from "lucide-react";
 
-function ExpenseForm({ addExpense }) {
+function ExpenseForm({ addExpense, categories = [], addCategory }) {
     const [name, setName] = useState("");
     const [amount, setAmount] = useState("");
-    const [category, setCategory] = useState("Food");
+    const [category, setCategory] = useState(categories[0] || "Food");
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+    const [isAddingCategory, setIsAddingCategory] = useState(false);
+    const [newCategoryName, setNewCategoryName] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -24,8 +27,35 @@ function ExpenseForm({ addExpense }) {
 
         setName("");
         setAmount("");
-        setCategory("Food");
+        setCategory(categories[0] || "Food");
         setDate(new Date().toISOString().slice(0, 10));
+    };
+
+    const handleCategoryChange = (val) => {
+        if (val === "ADD_NEW") {
+            setIsAddingCategory(true);
+        } else {
+            setCategory(val);
+        }
+    };
+
+    const handleSaveNewCategory = (e) => {
+        if (e) e.stopPropagation();
+        if (newCategoryName.trim()) {
+            addCategory(newCategoryName.trim());
+            setCategory(newCategoryName.trim());
+            setNewCategoryName("");
+            setIsAddingCategory(false);
+        } else {
+            handleCancelNewCategory();
+        }
+    };
+
+    const handleCancelNewCategory = (e) => {
+        if (e) e.stopPropagation();
+        setIsAddingCategory(false);
+        setNewCategoryName("");
+        setCategory(categories[0] || "Food");
     };
 
     return (
@@ -59,26 +89,84 @@ function ExpenseForm({ addExpense }) {
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-muted)", textTransform: "uppercase" }}>Category</label>
                 <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
-                    <div style={{ 
-                        position: "absolute", 
-                        left: "14px", 
-                        color: "var(--text-muted)",
-                        display: "flex",
-                        alignItems: "center"
-                    }}>
-                        {getCategoryIcon(category)}
-                    </div>
-                    <select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        style={{ paddingLeft: "42px", appearance: "none" }}
-                    >
-                        <option value="Food">Food</option>
-                        <option value="Transport">Transport</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Bills">Bills</option>
-                        <option value="Other">Other</option>
-                    </select>
+                    {!isAddingCategory ? (
+                        <div style={{ flex: 1, position: "relative", display: "flex", alignItems: "center" }}>
+                            <div style={{ 
+                                position: "absolute", 
+                                left: "14px", 
+                                color: "var(--text-muted)",
+                                display: "flex",
+                                alignItems: "center"
+                            }}>
+                                {getCategoryIcon(category)}
+                            </div>
+                            <select
+                                value={category}
+                                onChange={(e) => handleCategoryChange(e.target.value)}
+                                style={{ paddingLeft: "42px", appearance: "none" }}
+                            >
+                                {categories.map(cat => (
+                                    <option key={cat} value={cat}>{cat}</option>
+                                ))}
+                                <option value="ADD_NEW">+ Add New Category</option>
+                            </select>
+                        </div>
+                    ) : (
+                        <div style={{ flex: 1, display: "flex", alignItems: "center", gap: "6px", position: "relative" }}>
+                            <input 
+                                autoFocus
+                                type="text" 
+                                placeholder="Category name..."
+                                value={newCategoryName}
+                                onChange={(e) => setNewCategoryName(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') handleSaveNewCategory(e);
+                                    if (e.key === 'Escape') handleCancelNewCategory(e);
+                                }}
+                                style={{ paddingRight: "70px" }}
+                            />
+                            <div style={{ 
+                                position: "absolute", 
+                                right: "6px", 
+                                top: "50%", 
+                                transform: "translateY(-50%)",
+                                display: "flex",
+                                gap: "4px"
+                            }}>
+                                <button 
+                                    type="button"
+                                    onClick={handleSaveNewCategory}
+                                    title="Save Category"
+                                    style={{ 
+                                        width: "28px", 
+                                        height: "28px", 
+                                        padding: 0, 
+                                        background: "var(--success)",
+                                        color: "white",
+                                        borderRadius: "6px"
+                                    }}
+                                >
+                                    <Check size={14} />
+                                </button>
+                                <button 
+                                    type="button"
+                                    onClick={handleCancelNewCategory}
+                                    title="Cancel"
+                                    style={{ 
+                                        width: "28px", 
+                                        height: "28px", 
+                                        padding: 0, 
+                                        background: "var(--bg-app)",
+                                        border: "1px solid var(--border)",
+                                        color: "var(--text-muted)",
+                                        borderRadius: "6px"
+                                    }}
+                                >
+                                    <X size={14} />
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>

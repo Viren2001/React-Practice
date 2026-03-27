@@ -7,6 +7,7 @@
   --bg-app: #f8fafc;
   --bg-sidebar: #0f172a;
   --bg-card: #ffffff;
+  --bg-card-rgb: 255, 255, 255;
   --bg-input: #ffffff;
   
   --text-main: #0f172a;
@@ -14,6 +15,7 @@
   --text-on-dark: #f8fafc;
   
   --primary: #2563eb;
+  --primary-rgb: 37, 99, 235;
   --primary-hover: #1d4ed8;
   --primary-glow: rgba(37, 99, 235, 0.15);
   
@@ -45,7 +47,9 @@
   --text-muted: #94a3b8;
   
   --primary: #3b82f6;
+  --primary-rgb: 59, 130, 246;
   --primary-hover: #60a5fa;
+  --bg-card-rgb: 30, 41, 59;
   --primary-glow: rgba(59, 130, 246, 0.2);
   
   --border: #334155;

@@ -8,7 +8,8 @@ import {
     Settings,
     LogOut,
     Sun,
-    Moon
+    Moon,
+    PlusCircle
 } from "lucide-react";
 
 function Sidebar() {
@@ -29,19 +30,22 @@ function Sidebar() {
         <aside className="sidebar">
             <div className="sidebar-brand">
                 <div className="logo">
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <div style={{
-                            width: "32px",
-                            height: "32px",
-                            backgroundColor: "#2563eb",
-                            borderRadius: "8px",
+                            width: "36px",
+                            height: "36px",
+                            background: "linear-gradient(135deg, var(--primary) 0%, #1e40af 100%)",
+                            borderRadius: "10px",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: "18px",
+                            fontSize: "20px",
+                            boxShadow: "0 4px 12px rgba(37, 99, 235, 0.3)",
                             flexShrink: 0
-                        }}>💰</div>
-                        <span className="logo-text">Tracker</span>
+                        }}>
+                             <PlusCircle size={20} color="white" />
+                        </div>
+                        <span className="logo-text">Tracker<span style={{ color: "var(--primary)" }}>.</span></span>
                     </div>
                 </div>
             </div>
@@ -49,24 +53,25 @@ function Sidebar() {
             <nav className="nav">
                 <NavLink to="/" end className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <LayoutDashboard size={20} />
-                    <span className="nav-label">Dashboard</span>
+                    <span className="nav-label">Overview</span>
                 </NavLink>
                 <NavLink to="/expenses" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <ReceiptIndianRupee size={20} />
-                    <span className="nav-label">Expenses</span>
+                    <span className="nav-label">Transactions</span>
                 </NavLink>
                 <NavLink to="/reports" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <BarChart3 size={20} />
-                    <span className="nav-label">Reports</span>
+                    <span className="nav-label">Analytics</span>
                 </NavLink>
                 <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <Settings size={20} />
-                    <span className="nav-label">Settings</span>
+                    <span className="nav-label">Preferences</span>
                 </NavLink>
             </nav>
 
             <div className="sidebar-footer">
                 <div className="theme-toggle-container">
+                    <div style={{ fontSize: "11px", fontWeight: "800", color: "#64748b", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "1px" }}>Appearance</div>
                     <button
                         onClick={toggleTheme}
                         className="theme-btn"
@@ -78,7 +83,23 @@ function Sidebar() {
 
                 {currentUser && (
                     <div className="user-info">
-                        <div className="user-email">{currentUser.email}</div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <div style={{ 
+                                width: "32px", 
+                                height: "32px", 
+                                borderRadius: "8px", 
+                                background: "rgba(255,255,255,0.1)", 
+                                display: "flex", 
+                                alignItems: "center", 
+                                justifyContent: "center",
+                                fontWeight: "800",
+                                fontSize: "14px",
+                                color: "white"
+                            }}>
+                                {currentUser.email?.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="user-email" style={{ flex: 1 }}>{currentUser.email}</div>
+                        </div>
                     </div>
                 )}
 
@@ -88,7 +109,7 @@ function Sidebar() {
                     title="Log Out"
                 >
                     <LogOut size={18} />
-                    <span className="logout-label">Log Out</span>
+                    <span className="logout-label">Sign Out</span>
                 </button>
             </div>
         </aside>
