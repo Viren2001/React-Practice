@@ -9,9 +9,7 @@ import { Sun, Moon, Download, Save, User, Palette, Bell, DollarSign } from "luci
 import { getCategoryIcon } from "../utils/categoryIcons";
 import { exportToCSV } from "../utils/exportCSV";
 
-const categories = ["Food", "Transport", "Shopping", "Bills", "Other"];
-
-function Settings({ expenses = [], month }) {
+function Settings({ expenses = [], month, categories = [], addCategory }) {
   const { currentUser } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const toast = useToast();
@@ -21,6 +19,7 @@ function Settings({ expenses = [], month }) {
   const [alertThreshold, setAlertThreshold] = useState(80);
   const [currency, setCurrency] = useState("$");
   const [settingsDocId, setSettingsDocId] = useState(null);
+  const [newCatName, setNewCatName] = useState("");
 
   // Load settings from Firestore
   useEffect(() => {
@@ -54,6 +53,7 @@ function Settings({ expenses = [], month }) {
         categoryBudgets,
         alertThreshold: Number(alertThreshold),
         currency,
+        categories, // Include the current categories list
         updatedAt: Date.now(),
       };
 
@@ -66,6 +66,14 @@ function Settings({ expenses = [], month }) {
       toast.success("Settings saved successfully!");
     } catch (err) {
       toast.error("Failed to save settings");
+    }
+  };
+
+  const handleAddCat = () => {
+    if (newCatName.trim()) {
+      addCategory(newCatName.trim());
+      setNewCatName("");
+      toast.success(`Category "${newCatName}" added!`);
     }
   };
 
@@ -148,7 +156,7 @@ function Settings({ expenses = [], month }) {
         <div className="card settings-card">
           <div className="settings-card-header">
             <DollarSign size={20} />
-            <h3>Budget</h3>
+            <h3>Budget & Categories</h3>
           </div>
           <div className="settings-card-body">
             <div className="settings-row">
@@ -169,13 +177,30 @@ function Settings({ expenses = [], month }) {
 
             <div className="settings-divider" />
 
+            <div className="settings-row" style={{ marginBottom: "16px" }}>
+              <div>
+                <div className="settings-item-label">Add Category</div>
+                <div className="settings-item-desc">Create a new custom category</div>
+              </div>
+              <div style={{ display: "flex", gap: "8px" }}>
+                <input
+                  type="text"
+                  placeholder="name..."
+                  value={newCatName}
+                  onChange={(e) => setNewCatName(e.target.value)}
+                  style={{ width: "120px" }}
+                />
+                <button onClick={handleAddCat} className="btn-save-settings" style={{ minWidth: "auto", padding: "8px 12px" }}>Add</button>
+              </div>
+            </div>
+
             <div className="settings-item-label" style={{ marginBottom: "12px" }}>Category Budgets</div>
-            <div className="category-budgets-grid">
+            <div className="category-budgets-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
               {categories.map((cat) => (
                 <div key={cat} className="category-budget-item">
                   <div className="category-budget-label">
                     {getCategoryIcon(cat)}
-                    <span>{cat}</span>
+                    <span style={{ fontSize: "13px" }}>{cat}</span>
                   </div>
                   <div className="settings-input-group">
                     <span className="settings-input-prefix">{currency}</span>

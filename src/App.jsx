@@ -12,7 +12,7 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { ToastProvider, useToast } from "./contexts/ToastContext";
 import { db } from "./firebase";
-import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, updateDoc, getDocs } from "firebase/firestore";
+import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, updateDoc, getDocs, writeBatch } from "firebase/firestore";
 import "./App.css";
 import "./styles/Auth.css";
 
@@ -24,14 +24,16 @@ function AppLayout() {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   });
+  const [categories, setCategories] = useState(["Food", "Transport", "Shopping", "Bills", "Other"]);
   const [budget, setBudget] = useState(0);
   const [categoryBudgets, setCategoryBudgets] = useState({});
   const [currency, setCurrency] = useState("$");
 
-  // Sync budget from settings
+  // Sync budget and categories from settings
   useEffect(() => {
     if (!currentUser) {
       setBudget(0);
+      setCategories(["Food", "Transport", "Shopping", "Bills", "Other"]);
       setCategoryBudgets({});
       return;
     }
@@ -47,6 +49,9 @@ function AppLayout() {
         setBudget(data.monthlyBudget || 0);
         setCategoryBudgets(data.categoryBudgets || {});
         setCurrency(data.currency || "$");
+        if (data.categories) {
+          setCategories(data.categories);
+        }
       }
     });
 
@@ -77,6 +82,36 @@ function AppLayout() {
       }
     } catch (error) {
       console.error("Error updating budget: ", error);
+    }
+  };
+
+  const addCategory = async (newCategory) => {
+    if (!currentUser || !newCategory) return;
+    if (categories.includes(newCategory)) return;
+
+    try {
+      const q = query(
+        collection(db, "settings"),
+        where("userId", "==", currentUser.uid)
+      );
+      const querySnapshot = await getDocs(q);
+      const updatedCategories = [...categories, newCategory];
+
+      if (querySnapshot.empty) {
+        await addDoc(collection(db, "settings"), {
+          userId: currentUser.uid,
+          categories: updatedCategories,
+          createdAt: Date.now()
+        });
+      } else {
+        const docRef = doc(db, "settings", querySnapshot.docs[0].id);
+        await updateDoc(docRef, {
+          categories: updatedCategories,
+          updatedAt: Date.now()
+        });
+      }
+    } catch (error) {
+      console.error("Error adding category: ", error);
     }
   };
 
@@ -136,6 +171,37 @@ function AppLayout() {
     }
   };
 
+  const deleteMultipleExpenses = async (ids) => {
+    if (!ids || ids.length === 0) return;
+    try {
+      const batch = writeBatch(db);
+      ids.forEach(id => {
+        batch.delete(doc(db, "expenses", id));
+      });
+      await batch.commit();
+    } catch (error) {
+      console.error("Error deleting multiple expenses: ", error);
+    }
+  };
+
+  const deleteAllExpenses = async () => {
+    if (!currentUser) return;
+    try {
+      const q = query(
+        collection(db, "expenses"),
+        where("userId", "==", currentUser.uid)
+      );
+      const querySnapshot = await getDocs(q);
+      const batch = writeBatch(db);
+      querySnapshot.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+    } catch (error) {
+      console.error("Error deleting all expenses: ", error);
+    }
+  };
+
   return (
     <div className={currentUser ? "app-container" : ""}>
       {currentUser && <Sidebar />}
@@ -170,6 +236,10 @@ function AppLayout() {
                   addExpense={addExpense}
                   editExpense={editExpense}
                   deleteExpense={deleteExpense}
+                  deleteMultipleExpenses={deleteMultipleExpenses}
+                  deleteAllExpenses={deleteAllExpenses}
+                  categories={categories}
+                  addCategory={addCategory}
                   category={category}
                   setCategory={setCategory}
                   month={month}
@@ -191,7 +261,12 @@ function AppLayout() {
             path="/settings"
             element={
               <ProtectedRoute>
-                <Settings expenses={expenses} month={month} />
+                <Settings 
+                  expenses={expenses} 
+                  month={month} 
+                  categories={categories} 
+                  addCategory={addCategory} 
+                />
               </ProtectedRoute>
             }
           />
