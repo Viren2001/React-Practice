@@ -7,6 +7,7 @@ import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Landing from "./pages/Landing";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
@@ -214,17 +215,21 @@ function AppLayout() {
           <Route
             path="/"
             element={
-              <ProtectedRoute>
-                <Dashboard
-                  expenses={expenses}
-                  month={month}
-                  setMonth={setMonth}
-                  budget={budget}
-                  updateBudget={updateBudget}
-                  categoryBudgets={categoryBudgets}
-                  currency={currency}
-                />
-              </ProtectedRoute>
+              currentUser ? (
+                <ProtectedRoute>
+                  <Dashboard
+                    expenses={expenses}
+                    month={month}
+                    setMonth={setMonth}
+                    budget={budget}
+                    updateBudget={updateBudget}
+                    categoryBudgets={categoryBudgets}
+                    currency={currency}
+                  />
+                </ProtectedRoute>
+              ) : (
+                <Landing />
+              )
             }
           />
           <Route

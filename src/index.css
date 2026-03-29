@@ -149,3 +149,42 @@ input::placeholder {
 .card:hover {
   box-shadow: var(--shadow-lg);
 }
+
+/* Global Animations */
+.fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-1 {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.stagger-2 {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.stagger-3 {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.5s;
+  opacity: 0;
+  transform: translateY(30px);
+}
