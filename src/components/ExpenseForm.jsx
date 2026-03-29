@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import { Check, X, Plus } from "lucide-react";
+import CustomDropdown from "./CustomDropdown";
 
 function ExpenseForm({ addExpense, categories = [], addCategory }) {
     const [name, setName] = useState("");
@@ -88,28 +89,19 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-muted)", textTransform: "uppercase" }}>Category</label>
-                <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                <div style={{ position: "relative", display: "flex", alignItems: "center", overflow: "visible" }}>
                     {!isAddingCategory ? (
-                        <div style={{ flex: 1, position: "relative", display: "flex", alignItems: "center" }}>
-                            <div style={{ 
-                                position: "absolute", 
-                                left: "14px", 
-                                color: "var(--text-muted)",
-                                display: "flex",
-                                alignItems: "center"
-                            }}>
-                                {getCategoryIcon(category)}
-                            </div>
-                            <select
+                        <div style={{ flex: 1, overflow: "visible" }}>
+                            <CustomDropdown
+                                options={[...categories, "+ Add New"]}
                                 value={category}
-                                onChange={(e) => handleCategoryChange(e.target.value)}
-                                style={{ paddingLeft: "42px", appearance: "none" }}
-                            >
-                                {categories.map(cat => (
-                                    <option key={cat} value={cat}>{cat}</option>
-                                ))}
-                                <option value="ADD_NEW">+ Add New Category</option>
-                            </select>
+                                onChange={(val) => {
+                                    if (val === "+ Add New") setIsAddingCategory(true);
+                                    else handleCategoryChange(val);
+                                }}
+                                icon={getCategoryIcon(category)}
+                                searchable={true}
+                            />
                         </div>
                     ) : (
                         <div style={{ flex: 1, display: "flex", alignItems: "center", gap: "6px", position: "relative" }}>

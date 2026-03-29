@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import MonthSelector from "../components/MonthSelector";
 import PageHeader from "../components/PageHeader";
 import {
   PieChart,
@@ -66,13 +67,11 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
 
       {/* Summary Cards Row */}
       <div className="stats-grid">
-        <div className="card">
-          <h3 className="card-label">Analysis Month</h3>
-          <input
-            type="month"
+        <div className="card" style={{ overflow: "visible", position: "relative", zIndex: 10 }}>
+          <MonthSelector
+            label="Analysis Month"
             value={month}
-            onChange={(e) => setMonth(e.target.value)}
-            style={{ width: "100%" }}
+            onChange={(val) => setMonth(val)}
           />
         </div>
         <div className="card">

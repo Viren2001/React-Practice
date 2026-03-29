@@ -5,6 +5,8 @@ import EditExpenseModal from "../components/EditExpenseModal";
 import EmptyState from "../components/EmptyState";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import { useToast } from "../contexts/ToastContext";
+import MonthSelector from "../components/MonthSelector";
+import CustomDropdown from "../components/CustomDropdown";
 import { 
     Search, 
     Pencil, 
@@ -192,7 +194,8 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
             )}
 
             {/* Controls Section */}
-            <div className="card glass" style={{ marginBottom: "32px", padding: "32px" }}>
+            {/* Controls Section */}
+            <div className="card glass" style={{ marginBottom: "32px", padding: "32px", overflow: "visible", position: "relative", zIndex: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
                     <Filter size={18} color="var(--primary)" />
                     <h3 className="card-label" style={{ margin: 0 }}>Filter & Sort</h3>
@@ -200,36 +203,40 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                 
                 <div className="expense-controls-grid" style={{ gap: "24px" }}>
                     {/* Month Picker */}
-                    <div>
-                        <label className="card-label" style={{ marginBottom: "8px", display: "block" }}>Period</label>
-                        <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} style={{ background: "rgba(0,0,0,0.02)" }} />
-                    </div>
+                    <MonthSelector
+                        label="Period"
+                        value={month}
+                        onChange={(val) => setMonth(val)}
+                    />
 
                     {/* Category Filter */}
-                    <div>
-                        <label className="card-label" style={{ marginBottom: "8px", display: "block" }}>Category</label>
-                        <div style={{ position: "relative" }}>
-                            <div style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)", zIndex: 1, display: "flex" }}>{getCategoryIcon(category)}</div>
-                            <select value={category} onChange={(e) => setCategory(e.target.value)} style={{ paddingLeft: "42px", appearance: "none", background: "rgba(0,0,0,0.02)" }}>
-                                <option value="All">All Transactions</option>
-                                {categories.map(cat => (
-                                    <option key={cat} value={cat}>{cat}</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
+                    <CustomDropdown
+                        label="Category"
+                        options={["All", ...categories]}
+                        value={category}
+                        onChange={(val) => setCategory(val)}
+                        icon={getCategoryIcon(category)}
+                        searchable={true}
+                    />
 
                     {/* Sorting */}
-                    <div>
-                        <label className="card-label" style={{ marginBottom: "8px", display: "block" }}>Order</label>
-                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={{ background: "rgba(0,0,0,0.02)" }}>
-                            <option value="date-desc">Newest First</option>
-                            <option value="date-asc">Oldest First</option>
-                            <option value="amount-desc">High to Low</option>
-                            <option value="amount-asc">Low to High</option>
-                        </select>
-                    </div>
+                    <CustomDropdown
+                        label="Order"
+                        options={["Newest First", "Oldest First", "High to Low", "Low to High"]}
+                        value={
+                             sortBy === "date-desc" ? "Newest First" :
+                             sortBy === "date-asc" ? "Oldest First" :
+                             sortBy === "amount-desc" ? "High to Low" : "Low to High"
+                        }
+                        onChange={(val) => {
+                            if (val === "Newest First") setSortBy("date-desc");
+                            else if (val === "Oldest First") setSortBy("date-asc");
+                            else if (val === "High to Low") setSortBy("amount-desc");
+                            else if (val === "Low to High") setSortBy("amount-asc");
+                        }}
+                    />
                 </div>
+
 
                 <div style={{ marginTop: "32px", position: "relative" }}>
                     <Search size={18} style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)", pointerEvents: "none" }} />
