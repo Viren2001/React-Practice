@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import CustomDropdown from "../components/CustomDropdown";
 import PageHeader from "../components/PageHeader";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
@@ -120,7 +121,7 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
         </div>
 
         {/* Appearance Card */}
-        <div className="card settings-card">
+        <div className="card settings-card" style={{ overflow: "visible", position: "relative", zIndex: 10 }}>
           <div className="settings-card-header">
             <Palette size={20} />
             <h3>Appearance</h3>
@@ -141,13 +142,18 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
                 <div className="settings-item-label">Currency</div>
                 <div className="settings-item-desc">Display currency symbol</div>
               </div>
-              <select value={currency} onChange={(e) => setCurrency(e.target.value)} style={{ width: "80px" }}>
-                <option value="$">$ USD</option>
-                <option value="€">€ EUR</option>
-                <option value="£">£ GBP</option>
-                <option value="₹">₹ INR</option>
-                <option value="¥">¥ JPY</option>
-              </select>
+              <div style={{ width: "140px" }}>
+                <CustomDropdown
+                  options={["$ USD", "€ EUR", "£ GBP", "₹ INR", "¥ JPY"]}
+                  value={
+                    currency === "$" ? "$ USD" :
+                    currency === "€" ? "€ EUR" :
+                    currency === "£" ? "£ GBP" :
+                    currency === "₹" ? "₹ INR" : "¥ JPY"
+                  }
+                  onChange={(val) => setCurrency(val.split(' ')[0])}
+                />
+              </div>
             </div>
           </div>
         </div>

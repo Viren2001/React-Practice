@@ -6,6 +6,7 @@ import BudgetAlert from "../components/BudgetAlert";
 import EmptyState from "../components/EmptyState";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import MonthSelector from "../components/MonthSelector";
 import { 
     Wallet, 
     TrendingDown, 
@@ -78,18 +79,16 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
 
             <div className="dashboard-grid">
                 {/* Period Selector Card */}
-                <div className="card glass" style={{ borderLeft: "4px solid var(--primary)" }}>
+                <div className="card glass" style={{ borderLeft: "4px solid var(--primary)", overflow: "visible", position: "relative", zIndex: 10 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
                         <div style={{ background: "rgba(var(--primary-rgb), 0.1)", color: "var(--primary)", padding: "10px", borderRadius: "12px" }}>
                             <Calendar size={20} />
                         </div>
                         <h3 className="card-label" style={{ margin: 0 }}>Current Period</h3>
                     </div>
-                    <input
-                        type="month"
+                    <MonthSelector
                         value={month}
-                        onChange={(e) => setMonth(e.target.value)}
-                        style={{ background: "rgba(0,0,0,0.02)", border: "1px solid var(--border)" }}
+                        onChange={(val) => setMonth(val)}
                     />
                 </div>
 

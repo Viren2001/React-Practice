@@ -1328,3 +1328,321 @@
         flex-direction: column;
     }
 }
+
+/* =====================================
+   CUSTOM DROPDOWN COMPONENTS
+   ===================================== */
+.custom-dropdown-container {
+    position: relative;
+    width: 100%;
+    z-index: 100 !important;
+}
+
+.custom-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(var(--bg-card-rgb), 0.5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    user-select: none;
+    min-height: 48px;
+    width: 100%; /* Ensure it fills container */
+}
+
+.custom-dropdown-trigger:hover {
+    border-color: var(--primary);
+    background: rgba(var(--primary-rgb), 0.05);
+}
+
+.custom-dropdown-trigger.active {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.trigger-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.trigger-icon {
+    display: flex;
+    align-items: center;
+    color: var(--primary);
+}
+
+.trigger-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.trigger-text.placeholder {
+    color: var(--text-muted);
+}
+
+.chevron {
+    color: var(--text-muted);
+    transition: transform 0.3s;
+}
+
+.chevron.rotated {
+    transform: rotate(180deg);
+}
+
+.custom-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0; /* Align to both ends */
+    width: auto; /* Let right:0 control width */
+    z-index: 99999 !important;
+    padding: 8px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--primary);
+    max-height: 280px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+    background: var(--bg-card) !important;
+    backdrop-filter: blur(20px) saturate(200%);
+    padding: 8px;
+    padding-right: 4px; /* Tighter for thin scrollbar */
+}
+
+.custom-dropdown-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-dropdown-menu::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+.custom-dropdown-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dropdown-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+.dropdown-search input {
+    border: none !important;
+    background: transparent !important;
+    padding: 4px 0 !important;
+    font-size: 14px !important;
+    box-shadow: none !important;
+    width: 100%;
+    color: var(--text-main);
+}
+
+.dropdown-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Ensure width is contained */
+}
+
+.dropdown-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 2px;
+}
+
+.dropdown-option:hover {
+    background: rgba(var(--primary-rgb), 0.15);
+    color: var(--primary);
+    transform: translateX(4px);
+}
+
+.dropdown-option.selected {
+    background: var(--primary);
+    color: white;
+}
+
+.option-text {
+    font-size: 14px;
+    font-weight: 600;
+    overflow: hidden; /* Prevent text overflow */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.check-icon {
+    flex-shrink: 0;
+}
+
+.dropdown-no-results {
+    padding: 16px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.animate-slide-down {
+    animation: slideDown 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =====================================
+   MONTH SELECTOR COMPONENT
+   ===================================== */
+.month-selector-container {
+    position: relative;
+    width: 100%;
+    z-index: 100 !important;
+}
+
+.month-selector-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(var(--bg-card-rgb), 0.5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    user-select: none;
+    min-height: 54px;
+    width: 100%; /* Ensure it fills container */
+}
+
+.month-selector-trigger:hover {
+    border-color: var(--primary);
+    background: rgba(var(--primary-rgb), 0.05);
+}
+
+.month-selector-trigger.active {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.month-icon-box {
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.current-month-text {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.view-year-text {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--text-main);
+}
+
+.month-selector-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0; /* Match parent width perfectly */
+    width: auto;
+    min-width: max-content; /* Ensure grid fits */
+    z-index: 99999 !important;
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--primary); /* Thicker border */
+    box-shadow: 0 40px 70px rgba(0, 0, 0, 0.7);
+    background: var(--bg-card) !important;
+    backdrop-filter: blur(20px) saturate(200%);
+}
+
+.month-selector-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.year-nav-btn {
+    padding: 6px;
+    border-radius: 8px;
+    background: rgba(var(--bg-card-rgb), 0.5);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    min-width: unset;
+}
+
+.year-nav-btn:hover {
+    color: var(--primary);
+    background: rgba(var(--primary-rgb), 0.1);
+}
+
+.months-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.month-btn {
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    border-radius: 10px;
+    position: relative;
+    width: 100%;
+}
+
+.month-btn:hover {
+    background: rgba(var(--bg-card-rgb), 0.8);
+    color: var(--text-main);
+}
+
+.month-btn.selected {
+    background: var(--primary);
+    color: white;
+}
+
+.selected-dot {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+}
