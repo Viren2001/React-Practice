@@ -153,6 +153,7 @@ function AppLayout() {
   };
 
   const editExpense = async (id, updatedData) => {
+    if (!currentUser) return;
     try {
       const docRef = doc(db, "expenses", id);
       await updateDoc(docRef, {
@@ -165,6 +166,7 @@ function AppLayout() {
   };
 
   const deleteExpense = async (id) => {
+    if (!currentUser) return;
     try {
       await deleteDoc(doc(db, "expenses", id));
     } catch (error) {
@@ -173,7 +175,7 @@ function AppLayout() {
   };
 
   const deleteMultipleExpenses = async (ids) => {
-    if (!ids || ids.length === 0) return;
+    if (!currentUser || !ids || ids.length === 0) return;
     try {
       const batch = writeBatch(db);
       ids.forEach(id => {

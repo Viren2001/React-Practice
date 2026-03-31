@@ -19,7 +19,11 @@ export default function Login() {
       await login(email, password);
       navigate("/");
     } catch (err) {
-      setError("Failed to log in: " + err.message);
+      if (err.code === "auth/invalid-credential" || err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
+        setError("Invalid email or password. Please try again.");
+      } else {
+        setError("An error occurred during log in. Please try again later.");
+      }
     }
     setLoading(false);
   }
@@ -29,44 +33,44 @@ export default function Login() {
       <div className="auth-left stagger-1">
         <Link to="/" className="auth-nav">
           <div className="logo-icon-wrapper">
-             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: "rotate(-45deg)" }}><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: "rotate(-45deg)" }}><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </div>
           Tracker<span>.</span>
         </Link>
-        
+
         <div className="auth-shape shape-1"></div>
         <div className="auth-shape shape-2"></div>
 
         <div className="auth-card">
           <h2>Welcome Back</h2>
           <p className="auth-subtitle">Log in to manage your expenses</p>
-          
+
           {error && (
             <div className="auth-error">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
               {error}
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit}>
             <div className="auth-group">
               <label>Email</label>
-              <input 
-                type="email" 
-                required 
+              <input
+                type="email"
+                required
                 placeholder="Enter your email"
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="auth-group">
               <label>Password</label>
-              <input 
-                type="password" 
-                required 
+              <input
+                type="password"
+                required
                 placeholder="Enter your password"
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             <button disabled={loading} className="auth-button" type="submit">
@@ -82,11 +86,11 @@ export default function Login() {
       <div className="auth-right stagger-2">
         <div className="auth-right-shape ar-shape-1"></div>
         <div className="auth-right-shape ar-shape-2"></div>
-        
+
         <div className="auth-right-content">
           <h1 className="auth-right-title">Start Your Journey</h1>
           <p className="auth-right-subtitle">Take control of your finances. Join thousands tracking their expenses smart and easy.</p>
-          
+
           <div className="auth-mockup">
             <div className="auth-mockup-header">
               <div className="auth-mockup-avatar"></div>
