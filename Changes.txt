@@ -1,0 +1,12 @@
+🔴 BEFORE (The Problems)
+API Key Exposure: Your sensitive project credentials (API Keys) were hardcoded in firebase.js, risking theft if you pushed code to GitHub.
+Data Leakage Risk: No server-side security rules were set. Any clever user could edit or delete anyone's data by modifying requests in their browser.
+Account Discovery: Anyone could check if an email was already registered because the app would tell them "email already exists."
+Unprotected Actions: Functions for deleting or editing data (editExpense, deleteExpense) did not check for a logged-in user on the frontend level.
+Missing Git Security: Your .gitignore file didn't hide secret files, making it easy to accidentally leak passwords and keys.
+🟢 NOW (The Fixes)
+Secret Credentials: All Firebase keys are hidden in a .env file that stays local on your machine.
+Server-Side Lock: The new firestore.rules force the Firebase server to block anyone trying to access data that doesn't belong to them.
+Sanitized Errors: Login and Signup now show generic, secure messages like "Invalid email or password," keeping your user list private.
+Double-Validation: All database actions now verify the user's identity on both the frontend (your code) and the backend (Firebase).
+Git Hardening: Your .gitignore is correctly configured to keep sensitive files out of your Git history while keeping deployment files tracked.

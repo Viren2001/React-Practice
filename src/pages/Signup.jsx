@@ -24,7 +24,13 @@ export default function Signup() {
       await signup(email, password);
       navigate("/");
     } catch (err) {
-      setError("Failed to create an account: " + err.message);
+      if (err.code === "auth/email-already-in-use") {
+        setError("This email address is already registered.");
+      } else if (err.code === "auth/weak-password") {
+        setError("Password should be at least 6 characters.");
+      } else {
+        setError("Failed to create an account. Please try again.");
+      }
     }
     setLoading(false);
   }
