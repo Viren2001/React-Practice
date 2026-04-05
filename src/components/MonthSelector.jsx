@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Calendar, Check } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Check, Globe } from "lucide-react";
 
-const MonthSelector = ({ value, onChange, label }) => {
+const MonthSelector = ({ value, onChange, label, options = [] }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   // Parse current value (YYYY-MM)
-  const [year, month] = value.split("-").map(Number);
+  const isAll = value === "All";
+  const [year, month] = !isAll ? value.split("-").map(Number) : [new Date().getFullYear(), new Date().getMonth() + 1];
   const [viewYear, setViewYear] = useState(year);
 
   const months = [
@@ -31,7 +32,12 @@ const MonthSelector = ({ value, onChange, label }) => {
     setIsOpen(false);
   };
 
-  const currentMonthName = months[month - 1];
+  const handleAllClick = () => {
+    onChange("All");
+    setIsOpen(false);
+  };
+
+  const currentMonthName = isAll ? "Full History" : months[month - 1];
 
   return (
     <div className="month-selector-container" ref={dropdownRef}>
@@ -42,10 +48,10 @@ const MonthSelector = ({ value, onChange, label }) => {
       >
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div className="month-icon-box">
-            <Calendar size={16} />
+            {isAll ? <Globe size={16} /> : <Calendar size={16} />}
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <span className="current-month-text">{currentMonthName} {year}</span>
+            <span className="current-month-text">{currentMonthName} {!isAll && year}</span>
             <span style={{ fontSize: "11px", color: "var(--text-muted)", fontWeight: "700" }}>Selected Period</span>
           </div>
         </div>
@@ -56,6 +62,16 @@ const MonthSelector = ({ value, onChange, label }) => {
 
       {isOpen && (
         <div className="month-selector-menu animate-slide-down">
+          {options.some(opt => opt.value === "All") && (
+            <button 
+              onClick={handleAllClick}
+              className={`month-btn ${isAll ? 'selected' : ''}`}
+              style={{ width: "100%", marginBottom: "12px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}
+            >
+              <Globe size={14} /> Full History
+            </button>
+          )}
+          
           <div className="month-selector-header">
             <button onClick={() => setViewYear(viewYear - 1)} className="year-nav-btn">
               <ChevronLeft size={16} />
@@ -67,7 +83,7 @@ const MonthSelector = ({ value, onChange, label }) => {
           </div>
           <div className="months-grid">
             {months.map((m, index) => {
-              const isSelected = year === viewYear && month === index + 1;
+              const isSelected = !isAll && year === viewYear && month === index + 1;
               return (
                 <button
                   key={m}

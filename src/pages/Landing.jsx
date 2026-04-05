@@ -169,10 +169,10 @@ export default function Landing() {
               transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="hero-visual-wrapper image-mode"
             >
-              <img 
-                src={dashboardPreview} 
-                alt="Product Dashboard Preview" 
-                className="dashboard-image-preview" 
+              <img
+                src={dashboardPreview}
+                alt="Product Dashboard Preview"
+                className="dashboard-image-preview"
               />
             </motion.div>
           </div>
@@ -182,72 +182,72 @@ export default function Landing() {
         <StackSection>
           <div className="s-ledger-preview">
             <div className="ledger-grid">
-               <div className="ledger-info">
-                  <span className="detail-tag">Interface</span>
-                  <h2>Advanced <br/><span className="font-serif">Transaction Ledger.</span></h2>
-                  <p className="hero-p" style={{textAlign: 'left', margin: '2rem 0'}}>
-                    Manage your history with clinical precision. Our industry-grade ledger provides the power of a spreadsheet with the speed of a native app.
-                  </p>
-                  
-                  <div className="ledger-features">
-                     <div className="l-feat">
-                        <div className="l-feat-icon"><Search size={20} /></div>
-                        <div>
-                           <h4>Instant Search</h4>
-                           <p>Find any transaction by vendor or category in milliseconds.</p>
-                        </div>
-                     </div>
-                     <div className="l-feat">
-                        <div className="l-feat-icon"><Download size={20} /></div>
-                        <div>
-                           <h4>CSV Export</h4>
-                           <p>Take your data anywhere. One-click export for professional tax reporting.</p>
-                        </div>
-                     </div>
-                     <div className="l-feat">
-                        <div className="l-feat-icon"><Settings size={20} /></div>
-                        <div>
-                           <h4>Batch Control</h4>
-                           <p>Select multiple entries to bulk delete or categorize instantly.</p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
+              <div className="ledger-info">
+                <span className="detail-tag">Interface</span>
+                <h2>Advanced <br /><span className="font-serif">Transaction Ledger.</span></h2>
+                <p className="hero-p" style={{ textAlign: 'left', margin: '2rem 0' }}>
+                  Manage your history with clinical precision. Our industry-grade ledger provides the power of a spreadsheet with the speed of a native app.
+                </p>
 
-               <div className="ledger-visual">
-                  <motion.div 
-                    initial={{ x: 50, opacity: 0 }}
-                    whileInView={{ x: 0, opacity: 1 }}
-                    viewport={{ once: true }}
-                    className="ledger-card-mockup"
-                  >
-                     <div className="mock-row header">
-                        <span>Vendor</span>
-                        <span>Category</span>
-                        <span>Amount</span>
-                     </div>
-                     <div className="mock-row">
-                        <div className="mock-vendor"><div className="v-dot" style={{background: '#7c3aed'}}></div> Apple Store</div>
-                        <span className="mock-cat">Software</span>
-                        <span className="mock-amt">-$149.00</span>
-                     </div>
-                     <div className="mock-row active">
-                        <div className="mock-vendor"><div className="v-dot" style={{background: '#10b981'}}></div> Whole Foods</div>
-                        <span className="mock-cat">Groceries</span>
-                        <span className="mock-amt">-$64.20</span>
-                     </div>
-                     <div className="mock-row">
-                        <div className="mock-vendor"><div className="v-dot" style={{background: '#2563eb'}}></div> Shell Gas</div>
-                        <span className="mock-cat">Transport</span>
-                        <span className="mock-amt">-$55.00</span>
-                     </div>
-                     <div className="mock-row active">
-                        <div className="mock-vendor"><div className="v-dot" style={{background: '#f59e0b'}}></div> Starbucks</div>
-                        <span className="mock-cat">Food</span>
-                        <span className="mock-amt">-$5.50</span>
-                     </div>
-                  </motion.div>
-               </div>
+                <div className="ledger-features">
+                  <div className="l-feat">
+                    <div className="l-feat-icon"><Search size={20} /></div>
+                    <div>
+                      <h4>Instant Search</h4>
+                      <p>Find any transaction by vendor or category in milliseconds.</p>
+                    </div>
+                  </div>
+                  <div className="l-feat">
+                    <div className="l-feat-icon"><Download size={20} /></div>
+                    <div>
+                      <h4>CSV Export</h4>
+                      <p>Take your data anywhere. One-click export for professional tax reporting.</p>
+                    </div>
+                  </div>
+                  <div className="l-feat">
+                    <div className="l-feat-icon"><Settings size={20} /></div>
+                    <div>
+                      <h4>Batch Control</h4>
+                      <p>Select multiple entries to bulk delete or categorize instantly.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="ledger-visual">
+                <motion.div
+                  initial={{ x: 50, opacity: 0 }}
+                  whileInView={{ x: 0, opacity: 1 }}
+                  viewport={{ once: true }}
+                  className="ledger-card-mockup"
+                >
+                  <div className="mock-row header">
+                    <span>Vendor</span>
+                    <span>Category</span>
+                    <span>Amount</span>
+                  </div>
+                  <div className="mock-row">
+                    <div className="mock-vendor"><div className="v-dot" style={{ background: '#7c3aed' }}></div> Apple Store</div>
+                    <span className="mock-cat">Software</span>
+                    <span className="mock-amt">-$149.00</span>
+                  </div>
+                  <div className="mock-row active">
+                    <div className="mock-vendor"><div className="v-dot" style={{ background: '#10b981' }}></div> Whole Foods</div>
+                    <span className="mock-cat">Groceries</span>
+                    <span className="mock-amt">-$64.20</span>
+                  </div>
+                  <div className="mock-row">
+                    <div className="mock-vendor"><div className="v-dot" style={{ background: '#2563eb' }}></div> Shell Gas</div>
+                    <span className="mock-cat">Transport</span>
+                    <span className="mock-amt">-$55.00</span>
+                  </div>
+                  <div className="mock-row active">
+                    <div className="mock-vendor"><div className="v-dot" style={{ background: '#f59e0b' }}></div> Starbucks</div>
+                    <span className="mock-cat">Food</span>
+                    <span className="mock-amt">-$5.50</span>
+                  </div>
+                </motion.div>
+              </div>
             </div>
           </div>
         </StackSection>
@@ -255,26 +255,26 @@ export default function Landing() {
         {/* SECTION 3: FEATURES GRID */}
         <StackSection>
           <div className="s-features" id="features">
-            <h2 className="f-title">Designed for <br/><span className="font-serif text-accent">Personal Clarity.</span></h2>
-            
+            <h2 className="f-title">Designed for <br /><span className="font-serif text-accent">Personal Clarity.</span></h2>
+
             <div className="f-grid">
               <div className="f-card">
-                 <span className="detail-tag">UX Design</span>
-                 <div className="f-icon-container"><Zap size={32} /></div>
-                 <h3>Lightning Entry</h3>
-                 <p>Log a transaction perfectly in under 3 seconds. Press <kbd className="mock-kbd">N</kbd> to quick-add from anywhere.</p>
+                <span className="detail-tag">UX Design</span>
+                <div className="f-icon-container"><Zap size={32} /></div>
+                <h3>Lightning Entry</h3>
+                <p>Log a transaction perfectly in under 3 seconds. Press <kbd className="mock-kbd">N</kbd> to quick-add from anywhere.</p>
               </div>
               <div className="f-card">
-                 <span className="detail-tag">Data Visual</span>
-                 <div className="f-icon-container"><PieChart size={32} /></div>
-                 <h3>Deep Analytics</h3>
-                 <p>Your data transforms into gorgeous, interactive charts instantly. Discover exactly where your wealth is leaking.</p>
+                <span className="detail-tag">Data Visual</span>
+                <div className="f-icon-container"><PieChart size={32} /></div>
+                <h3>Deep Analytics</h3>
+                <p>Your data transforms into gorgeous, interactive charts instantly. Discover exactly where your wealth is leaking.</p>
               </div>
               <div className="f-card">
-                 <span className="detail-tag">Encryption</span>
-                 <div className="f-icon-container"><ShieldCheck size={32} /></div>
-                 <h3>Bank-Level Security</h3>
-                 <p>Powered by Google Firebase. Modern infrastructure ensuring your financial footprint stays locked securely.</p>
+                <span className="detail-tag">Encryption</span>
+                <div className="f-icon-container"><ShieldCheck size={32} /></div>
+                <h3>Bank-Level Security</h3>
+                <p>Powered by Google Firebase. Modern infrastructure ensuring your financial footprint stays locked securely.</p>
               </div>
             </div>
           </div>
@@ -283,35 +283,35 @@ export default function Landing() {
         {/* SECTION 4: SMART INSIGHTS PREVIEW */}
         <StackSection>
           <div className="s-insights">
-             <div className="insights-container">
-                <div className="insights-visual">
-                   <div className="chart-mockup">
-                      <div className="chart-header">
-                         <BarChart size={20} color="var(--accent)" />
-                         <span>Monthly Spending Trend</span>
-                      </div>
-                      <div className="chart-bars">
-                         <motion.div initial={{ height: 0 }} whileInView={{ height: '40%' }} viewport={{ once: true }} className="c-bar"></motion.div>
-                         <motion.div initial={{ height: 0 }} whileInView={{ height: '70%' }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="c-bar"></motion.div>
-                         <motion.div initial={{ height: 0 }} whileInView={{ height: '55%' }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="c-bar highlight"></motion.div>
-                         <motion.div initial={{ height: 0 }} whileInView={{ height: '90%' }} viewport={{ once: true }} transition={{ delay: 0.3 }} className="c-bar"></motion.div>
-                         <motion.div initial={{ height: 0 }} whileInView={{ height: '30%' }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="c-bar"></motion.div>
-                      </div>
-                   </div>
+            <div className="insights-container">
+              <div className="insights-visual">
+                <div className="chart-mockup">
+                  <div className="chart-header">
+                    <BarChart size={20} color="var(--accent)" />
+                    <span>Monthly Spending Trend</span>
+                  </div>
+                  <div className="chart-bars">
+                    <motion.div initial={{ height: 0 }} whileInView={{ height: '40%' }} viewport={{ once: true }} className="c-bar"></motion.div>
+                    <motion.div initial={{ height: 0 }} whileInView={{ height: '70%' }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="c-bar"></motion.div>
+                    <motion.div initial={{ height: 0 }} whileInView={{ height: '55%' }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="c-bar highlight"></motion.div>
+                    <motion.div initial={{ height: 0 }} whileInView={{ height: '90%' }} viewport={{ once: true }} transition={{ delay: 0.3 }} className="c-bar"></motion.div>
+                    <motion.div initial={{ height: 0 }} whileInView={{ height: '30%' }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="c-bar"></motion.div>
+                  </div>
                 </div>
-                <div className="insights-info">
-                   <span className="detail-tag">Intelligence</span>
-                   <h2>Visualizing <br/><span className="font-serif">the invisible.</span></h2>
-                   <p className="hero-p" style={{textAlign: 'left'}}>
-                     Beautifully rendered charts that go beyond just numbers. Understand your spending patterns over time and across categories with zero effort.
-                   </p>
-                   <ul className="insights-list">
-                      <li><CheckCircle2 size={18} color="var(--accent)" /> Interactive Category Breakdown</li>
-                      <li><CheckCircle2 size={18} color="var(--accent)" /> Daily Spending Distribution</li>
-                      <li><CheckCircle2 size={18} color="var(--accent)" /> Lifetime Spending Stats</li>
-                   </ul>
-                </div>
-             </div>
+              </div>
+              <div className="insights-info">
+                <span className="detail-tag">Intelligence</span>
+                <h2>Visualizing <br /><span className="font-serif">the invisible.</span></h2>
+                <p className="hero-p" style={{ textAlign: 'left' }}>
+                  Beautifully rendered charts that go beyond just numbers. Understand your spending patterns over time and across categories with zero effort.
+                </p>
+                <ul className="insights-list">
+                  <li><CheckCircle2 size={18} color="var(--accent)" /> Interactive Category Breakdown</li>
+                  <li><CheckCircle2 size={18} color="var(--accent)" /> Daily Spending Distribution</li>
+                  <li><CheckCircle2 size={18} color="var(--accent)" /> Lifetime Spending Stats</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </StackSection>
 
@@ -320,47 +320,47 @@ export default function Landing() {
           <div className="s-process" id="process">
             <div className="p-container">
               <div className="p-left">
-                 <div>
-                    <span className="detail-tag">Workflow</span>
-                    <h2>The friction <br/><span className="font-serif">is gone.</span></h2>
-                    <p style={{fontSize: '1.2rem', color: 'var(--text-muted)'}}>Experience seamless financial control in three steps. Hover to explore.</p>
-                 </div>
+                <div>
+                  <span className="detail-tag">Workflow</span>
+                  <h2>The friction <br /><span className="font-serif">is gone.</span></h2>
+                  <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>Experience seamless financial control in three steps. Hover to explore.</p>
+                </div>
               </div>
               <div className="p-right">
                 <div className="p-steps">
                   <div className="p-line"></div>
-                  
+
                   {/* Step 1 */}
                   <div className="p-step">
-                     <div className="p-num">1</div>
-                     <div className="p-content">
-                       <h3>Create Securely</h3>
-                       <div className="p-step-body">
-                          <p>Sign up securely with just your email. No long forms, no credit card checks. Only instant access to the platform.</p>
-                       </div>
-                     </div>
+                    <div className="p-num">1</div>
+                    <div className="p-content">
+                      <h3>Create Securely</h3>
+                      <div className="p-step-body">
+                        <p>Sign up securely with just your email. No long forms, no credit card checks. Only instant access to the platform.</p>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Step 2 */}
                   <div className="p-step">
-                     <div className="p-num">2</div>
-                     <div className="p-content">
-                       <h3>Log Visually</h3>
-                       <div className="p-step-body">
-                          <p>Type the amount, select the category, and hit enter. Our aesthetic UI does the heavy formatting for you instantly.</p>
-                       </div>
-                     </div>
+                    <div className="p-num">2</div>
+                    <div className="p-content">
+                      <h3>Log Visually</h3>
+                      <div className="p-step-body">
+                        <p>Type the amount, select the category, and hit enter. Our aesthetic UI does the heavy formatting for you instantly.</p>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Step 3 */}
                   <div className="p-step">
-                     <div className="p-num">3</div>
-                     <div className="p-content">
-                       <h3>Adapt & Grow</h3>
-                       <div className="p-step-body">
-                          <p>Watch your spending habits form beautiful charts. Correct your behaviors and scale your budget smartly every single month.</p>
-                       </div>
-                     </div>
+                    <div className="p-num">3</div>
+                    <div className="p-content">
+                      <h3>Adapt & Grow</h3>
+                      <div className="p-step-body">
+                        <p>Watch your spending habits form beautiful charts. Correct your behaviors and scale your budget smartly every single month.</p>
+                      </div>
+                    </div>
                   </div>
 
                 </div>
@@ -371,25 +371,25 @@ export default function Landing() {
 
         {/* SECTION 6: SCALABLE INFRASTRUCTURE */}
         <StackSection>
-           <div className="s-infrastructure">
-              <div className="infra-grid">
-                 <div className="infra-card">
-                    <Cloud size={48} className="infra-icon" />
-                    <h3>Cloud Sync</h3>
-                    <p>Real-time data synchronization across all your devices via Firebase.</p>
-                 </div>
-                 <div className="infra-card">
-                    <Database size={48} className="infra-icon" />
-                    <h3>Stable Core</h3>
-                    <p>Highly scalable architecture built to handle years of financial history.</p>
-                 </div>
-                 <div className="infra-card">
-                    <Activity size={48} className="infra-icon" />
-                    <h3>Live Status</h3>
-                    <p>99.9% uptime with constant infrastructure monitoring and heatchecks.</p>
-                 </div>
+          <div className="s-infrastructure">
+            <div className="infra-grid">
+              <div className="infra-card">
+                <Cloud size={48} className="infra-icon" />
+                <h3>Cloud Sync</h3>
+                <p>Real-time data synchronization across all your devices via Firebase.</p>
               </div>
-           </div>
+              <div className="infra-card">
+                <Database size={48} className="infra-icon" />
+                <h3>Stable Core</h3>
+                <p>Highly scalable architecture built to handle years of financial history.</p>
+              </div>
+              <div className="infra-card">
+                <Activity size={48} className="infra-icon" />
+                <h3>Live Status</h3>
+                <p>99.9% uptime with constant infrastructure monitoring and heatchecks.</p>
+              </div>
+            </div>
+          </div>
         </StackSection>
       </div>
 
@@ -466,7 +466,9 @@ export default function Landing() {
               <p className="footer-v2-desc" style={{ fontSize: '0.9rem' }}>Join 5,000+ others receiving weekly financial clarity tips.</p>
               <div className="newsletter-form">
                 <input type="email" placeholder="Your email..." className="newsletter-input" />
-                <button className="newsletter-btn"><ChevronRight size={20} /></button>
+                <button className="newsletter-btn">
+                  Subscribe <ChevronRight size={16} style={{ marginLeft: '4px' }} />
+                </button>
               </div>
             </motion.div>
           </div>

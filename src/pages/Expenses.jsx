@@ -7,13 +7,13 @@ import { getCategoryIcon } from "../utils/categoryIcons";
 import { useToast } from "../contexts/ToastContext";
 import MonthSelector from "../components/MonthSelector";
 import CustomDropdown from "../components/CustomDropdown";
-import { 
-    Search, 
-    Pencil, 
-    Trash2, 
-    RefreshCw, 
-    Download, 
-    Layers, 
+import {
+    Search,
+    Pencil,
+    Trash2,
+    RefreshCw,
+    Download,
+    Layers,
     Plus,
     X,
     Filter,
@@ -28,6 +28,14 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
     const [selectedIds, setSelectedIds] = useState([]);
     const [editingExpense, setEditingExpense] = useState(null);
     const [showForm, setShowForm] = useState(false);
+    const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+    
+    // Advanced Filters State
+    const [minAmount, setMinAmount] = useState("");
+    const [maxAmount, setMaxAmount] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    
     const toast = useToast();
 
     // Keyboard shortcut: N to open form
@@ -55,11 +63,36 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
 
     // Filtering logic
     const filteredExpenses = expenses.filter((exp) => {
-        const matchesMonth = exp.date?.slice(0, 7) === month;
+        const amt = Number(exp.amount);
+        const expDate = exp.date;
+
+        // Basic Filters
+        const matchesMonth = month === "All" || (expDate && expDate.slice(0, 7) === month);
         const matchesCategory = category === "All" || exp.category === category;
         const matchesSearch = exp.name?.toLowerCase().includes(search.toLowerCase());
-        return matchesMonth && matchesCategory && matchesSearch;
+
+        // Advanced Filters
+        const matchesMinAmount = minAmount === "" || amt >= Number(minAmount);
+        const matchesMaxAmount = maxAmount === "" || amt <= Number(maxAmount);
+        const matchesStartDate = startDate === "" || (expDate && expDate >= startDate);
+        const matchesEndDate = endDate === "" || (expDate && expDate <= endDate);
+
+        return matchesMonth && matchesCategory && matchesSearch && 
+               matchesMinAmount && matchesMaxAmount && matchesStartDate && matchesEndDate;
     });
+
+    const resetFilters = () => {
+        setSearch("");
+        setCategory("All");
+        setMonth(`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}`);
+        setMinAmount("");
+        setMaxAmount("");
+        setStartDate("");
+        setEndDate("");
+        toast.info("Filters cleared");
+    };
+
+    const isFilterActive = search || category !== "All" || minAmount || maxAmount || startDate || endDate;
 
     // Sorting logic
     const sortedExpenses = [...filteredExpenses].sort((a, b) => {
@@ -73,7 +106,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
     const monthlyTotalForFiltered = filteredExpenses.reduce((total, exp) => total + Number(exp.amount), 0);
 
     const handleToggleSelection = (id) => {
-        setSelectedIds(prev => 
+        setSelectedIds(prev =>
             prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
         );
     };
@@ -151,8 +184,8 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                     >
                         <Trash2 size={18} />
                     </button>
-                    <button 
-                        onClick={handleExport} 
+                    <button
+                        onClick={handleExport}
                         style={{ background: "rgba(var(--bg-card-rgb), 0.5)", border: "1px solid var(--border)", color: "var(--text-main)", padding: "10px", borderRadius: "12px" }}
                         title="Export CSV"
                     >
@@ -161,8 +194,8 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                     <button
                         onClick={() => setShowForm(!showForm)}
                         className="btn-primary"
-                        style={{ 
-                            padding: "10px 20px", 
+                        style={{
+                            padding: "10px 20px",
                             background: showForm ? "var(--danger)" : "var(--primary)",
                             boxShadow: !showForm ? "0 10px 20px var(--primary-glow)" : "none",
                             borderRadius: "14px",
@@ -194,24 +227,64 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
             )}
 
             {/* Controls Section */}
-            {/* Controls Section */}
-            <div className="card glass" style={{ marginBottom: "32px", padding: "32px", overflow: "visible", position: "relative", zIndex: 10 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-                    <Filter size={18} color="var(--primary)" />
-                    <h3 className="card-label" style={{ margin: 0 }}>Filter & Sort</h3>
+            <div className="card glass" style={{ marginBottom: "32px", padding: "32px", overflow: "hidden", position: "relative", zIndex: 10 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <Filter size={18} color="var(--primary)" />
+                        <h3 className="card-label" style={{ margin: 0 }}>Advanced Filter Studio</h3>
+                    </div>
+                    <div style={{ display: "flex", gap: "10px" }}>
+                        <button
+                            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                            style={{
+                                background: showAdvancedFilters ? "rgba(var(--primary-rgb), 0.1)" : "transparent",
+                                border: "1px solid var(--border)",
+                                color: showAdvancedFilters ? "var(--primary)" : "var(--text-muted)",
+                                padding: "8px 16px",
+                                borderRadius: "10px",
+                                fontSize: "12px",
+                                fontWeight: "800",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "6px"
+                            }}
+                        >
+                            <Layers size={14} /> {showAdvancedFilters ? "BASIC FILTERS" : "ADVANCED"}
+                        </button>
+                        {isFilterActive && (
+                            <button
+                                onClick={resetFilters}
+                                style={{
+                                    background: "rgba(239, 68, 68, 0.05)",
+                                    border: "1px solid rgba(239, 68, 68, 0.1)",
+                                    color: "#ef4444",
+                                    padding: "8px 16px",
+                                    borderRadius: "10px",
+                                    fontSize: "12px",
+                                    fontWeight: "800",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "6px"
+                                }}
+                            >
+                                <RefreshCw size={14} /> RESET ALL
+                            </button>
+                        )}
+                    </div>
                 </div>
-                
-                <div className="expense-controls-grid" style={{ gap: "24px" }}>
+
+                <div className="expense-controls-grid" style={{ gap: "24px", transition: "all 0.3s ease" }}>
                     {/* Month Picker */}
                     <MonthSelector
-                        label="Period"
+                        label="Analysis Month"
                         value={month}
                         onChange={(val) => setMonth(val)}
+                        options={[{label: "Full History", value: "All"}]}
                     />
 
                     {/* Category Filter */}
                     <CustomDropdown
-                        label="Category"
+                        label="Spending Category"
                         options={["All", ...categories]}
                         value={category}
                         onChange={(val) => setCategory(val)}
@@ -221,49 +294,93 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
 
                     {/* Sorting */}
                     <CustomDropdown
-                        label="Order"
-                        options={["Newest First", "Oldest First", "High to Low", "Low to High"]}
+                        label="Sort Priority"
+                        options={["Newest First", "Oldest First", "Highest Price", "Lowest Price"]}
                         value={
-                             sortBy === "date-desc" ? "Newest First" :
-                             sortBy === "date-asc" ? "Oldest First" :
-                             sortBy === "amount-desc" ? "High to Low" : "Low to High"
+                            sortBy === "date-desc" ? "Newest First" :
+                                sortBy === "date-asc" ? "Oldest First" :
+                                    sortBy === "amount-desc" ? "Highest Price" : "Lowest Price"
                         }
                         onChange={(val) => {
                             if (val === "Newest First") setSortBy("date-desc");
                             else if (val === "Oldest First") setSortBy("date-asc");
-                            else if (val === "High to Low") setSortBy("amount-desc");
-                            else if (val === "Low to High") setSortBy("amount-asc");
+                            else if (val === "Highest Price") setSortBy("amount-desc");
+                            else if (val === "Lowest Price") setSortBy("amount-asc");
                         }}
                     />
                 </div>
 
+                {showAdvancedFilters && (
+                    <div style={{ marginTop: "32px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "24px", paddingTop: "32px", borderTop: "1px solid var(--border)", animation: "fadeInDown 0.3s ease-out" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                            <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-muted)", textTransform: "uppercase" }}>Price Range ({currency})</label>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                <input
+                                    type="number"
+                                    placeholder="Min"
+                                    value={minAmount}
+                                    onChange={(e) => setMinAmount(e.target.value)}
+                                    style={{ padding: "10px", borderRadius: "10px", background: "rgba(var(--bg-card-rgb), 0.3)", fontSize: "14px" }}
+                                />
+                                <span style={{ color: "var(--text-muted)" }}>to</span>
+                                <input
+                                    type="number"
+                                    placeholder="Max"
+                                    value={maxAmount}
+                                    onChange={(e) => setMaxAmount(e.target.value)}
+                                    style={{ padding: "10px", borderRadius: "10px", background: "rgba(var(--bg-card-rgb), 0.3)", fontSize: "14px" }}
+                                />
+                            </div>
+                        </div>
+
+                        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                            <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-muted)", textTransform: "uppercase" }}>Specific Timeframe</label>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                <input
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    style={{ padding: "10px", borderRadius: "10px", background: "rgba(var(--bg-card-rgb), 0.3)", fontSize: "13px" }}
+                                />
+                                <span style={{ color: "var(--text-muted)" }}>to</span>
+                                <input
+                                    type="date"
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    style={{ padding: "10px", borderRadius: "10px", background: "rgba(var(--bg-card-rgb), 0.3)", fontSize: "13px" }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <div style={{ marginTop: "32px", position: "relative" }}>
                     <Search size={18} style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)", pointerEvents: "none" }} />
                     <input
                         type="text"
-                        placeholder="Search by vendor or item name..."
+                        placeholder="Search for a specific purchase, vendor or note..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        style={{ 
-                            paddingLeft: "48px", 
-                            background: "rgba(var(--bg-card-rgb), 0.3)", 
+                        style={{
+                            paddingLeft: "48px",
+                            background: "rgba(var(--bg-card-rgb), 0.3)",
                             borderRadius: "14px",
                             height: "52px",
                             fontSize: "15px",
-                            fontWeight: "600"
+                            fontWeight: "600",
+                            border: search ? "2px solid var(--primary)" : "2px solid transparent"
                         }}
                     />
                 </div>
             </div>
 
             {/* Summary Highlights */}
-            <div className="glass" style={{ 
-                marginBottom: "32px", 
-                padding: "20px 28px", 
-                borderRadius: "20px", 
-                display: "flex", 
-                justifyContent: "space-between", 
+            <div className="glass" style={{
+                marginBottom: "32px",
+                padding: "20px 28px",
+                borderRadius: "20px",
+                display: "flex",
+                justifyContent: "space-between",
                 alignItems: "center",
                 border: "1px solid var(--border)",
                 background: "linear-gradient(90deg, rgba(var(--primary-rgb), 0.05) 0%, transparent 100%)"
@@ -287,7 +404,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                         <h3 className="card-label" style={{ margin: 0 }}>Transaction Ledger</h3>
                     </div>
                     {sortedExpenses.length > 0 && (
-                        <button 
+                        <button
                             onClick={handleSelectAll}
                             style={{ background: "none", border: "none", color: "var(--primary)", fontSize: "12px", fontWeight: "800", cursor: "pointer", padding: "4px 8px" }}
                         >
@@ -309,10 +426,10 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                             {sortedExpenses.map((exp) => (
                                 <li key={exp.id} className={`expense-item ${selectedIds.includes(exp.id) ? 'selected' : ''}`} style={{ background: "rgba(var(--bg-card-rgb), 0.5)", border: "1px solid var(--border)", position: "relative" }}>
                                     <div className="expense-item-left">
-                                        <div 
+                                        <div
                                             onClick={() => handleToggleSelection(exp.id)}
-                                            style={{ 
-                                                cursor: "pointer", 
+                                            style={{
+                                                cursor: "pointer",
                                                 marginRight: "16px",
                                                 padding: "4px",
                                                 borderRadius: "6px",
@@ -368,9 +485,9 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
 
                         {/* Multi-select bottom bar */}
                         {selectedIds.length > 0 && (
-                            <div style={{ 
-                                position: "sticky", 
-                                bottom: "24px", 
+                            <div style={{
+                                position: "sticky",
+                                bottom: "24px",
                                 left: "24px",
                                 right: "24px",
                                 background: "var(--bg-sidebar)",
@@ -388,13 +505,13 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                                     {selectedIds.length} items selected
                                 </div>
                                 <div style={{ display: "flex", gap: "12px" }}>
-                                    <button 
+                                    <button
                                         onClick={() => setSelectedIds([])}
                                         style={{ background: "transparent", color: "white", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 18px", borderRadius: "12px", cursor: "pointer", fontWeight: "800" }}
                                     >
                                         Cancel
                                     </button>
-                                    <button 
+                                    <button
                                         onClick={handleDeleteSelected}
                                         style={{ background: "#ef4444", color: "white", border: "none", padding: "10px 18px", borderRadius: "12px", cursor: "pointer", fontWeight: "800", display: "flex", alignItems: "center", gap: "8px" }}
                                     >

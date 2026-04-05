@@ -7,12 +7,12 @@ import EmptyState from "../components/EmptyState";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import MonthSelector from "../components/MonthSelector";
-import { 
-    Wallet, 
-    TrendingDown, 
-    Calendar, 
-    Plus, 
-    ArrowRight, 
+import {
+    Wallet,
+    TrendingDown,
+    Calendar,
+    Plus,
+    ArrowRight,
     Activity,
     Target
 } from "lucide-react";
@@ -117,15 +117,15 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
                             </div>
                             <h3 className="card-label" style={{ margin: 0 }}>Monthly Budget</h3>
                         </div>
-                        <button 
+                        <button
                             onClick={() => isEditingBudget ? handleSaveBudget() : setIsEditingBudget(true)}
-                            style={{ 
-                                background: "rgba(var(--primary-rgb), 0.1)", 
-                                border: "none", 
-                                color: "var(--primary)", 
+                            style={{
+                                background: "rgba(var(--primary-rgb), 0.1)",
+                                border: "none",
+                                color: "var(--primary)",
                                 padding: "6px 12px",
-                                cursor: "pointer", 
-                                fontSize: "11px", 
+                                cursor: "pointer",
+                                fontSize: "11px",
                                 fontWeight: "800",
                                 borderRadius: "8px",
                                 transition: "all 0.2s"
@@ -143,10 +143,10 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
                                 value={tempBudget}
                                 onChange={(e) => setTempBudget(e.target.value)}
                                 autoFocus
-                                style={{ 
-                                    padding: "10px", 
-                                    borderRadius: "10px", 
-                                    border: "2px solid var(--primary)", 
+                                style={{
+                                    padding: "10px",
+                                    borderRadius: "10px",
+                                    border: "2px solid var(--primary)",
                                     width: "100%",
                                     fontSize: "18px",
                                     fontWeight: "800",
@@ -169,7 +169,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
                     </p>
                     <div style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: "600" }}>Expected spend per day</div>
                 </div>
-                
+
                 <div className="card glass insight-card">
                     <h3 className="card-label">Top Category</h3>
                     {topCategory ? (
@@ -191,9 +191,9 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
 
                 <div className="card glass insight-card">
                     <h3 className="card-label">Remaining</h3>
-                    <p style={{ 
-                        fontSize: "24px", 
-                        fontWeight: "900", 
+                    <p style={{
+                        fontSize: "24px",
+                        fontWeight: "900",
                         color: budget > 0 && monthTotal > budget ? "var(--danger)" : "var(--primary)"
                     }}>
                         {budget > 0 ? `${currency}${(budget - monthTotal).toFixed(2)}` : "Not set"}
@@ -211,15 +211,15 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
                         <TrendingDown size={22} color="var(--primary)" />
                         <h3 style={{ margin: 0, fontSize: "20px", fontWeight: "900", letterSpacing: "-0.03em" }}>Recent Activity</h3>
                     </div>
-                    <button 
-                        onClick={() => navigate('/expenses')} 
-                        style={{ 
-                            backgroundColor: "rgba(var(--primary-rgb), 0.05)", 
-                            color: "var(--primary)", 
-                            padding: "8px 16px", 
-                            fontSize: "13px", 
+                    <button
+                        onClick={() => navigate('/expenses')}
+                        style={{
+                            backgroundColor: "rgba(var(--primary-rgb), 0.05)",
+                            color: "var(--primary)",
+                            padding: "8px 16px",
+                            fontSize: "13px",
                             fontWeight: "800",
-                            border: "none", 
+                            border: "none",
                             cursor: "pointer",
                             borderRadius: "10px",
                             display: "flex",
@@ -230,7 +230,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
                         See Reports <ArrowRight size={14} />
                     </button>
                 </div>
-                
+
                 {monthlyExpenses.length === 0 ? (
                     <EmptyState
                         type="dashboard"
