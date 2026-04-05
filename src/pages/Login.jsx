@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { Activity, Zap, Target } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -88,25 +89,57 @@ export default function Login() {
         <div className="auth-right-shape ar-shape-2"></div>
 
         <div className="auth-right-content">
-          <h1 className="auth-right-title">Start Your Journey</h1>
-          <p className="auth-right-subtitle">Take control of your finances. Join thousands tracking their expenses smart and easy.</p>
+          <h1 className="auth-right-title">Pick Up Where You Left Off</h1>
+          <p className="auth-right-subtitle">Dive back into your financial insights and continue your journey to true financial freedom.</p>
 
-          <div className="auth-mockup">
-            <div className="auth-mockup-header">
-              <div className="auth-mockup-avatar"></div>
-              <div style={{ flex: 1 }}>
-                <div className="auth-mockup-line line-1"></div>
-                <div className="auth-mockup-line line-2"></div>
-              </div>
+          <div className="auth-features-mockup fade-in-up" style={{ animationDelay: '0.3s' }}>
+            <div className="auth-css-graphic">
+               <div className="graphic-header">
+                 <div className="g-dot" style={{background: '#ef4444'}}></div>
+                 <div className="g-dot" style={{background: '#f59e0b'}}></div>
+                 <div className="g-dot" style={{background: '#10b981'}}></div>
+               </div>
+               <div className="graphic-body">
+                  <div className="g-bar-group">
+                     <div className="g-bar" style={{ height: '40%' }}></div>
+                     <div className="g-bar" style={{ height: '70%' }}></div>
+                     <div className="g-bar highlight" style={{ height: '100%' }}></div>
+                     <div className="g-bar" style={{ height: '60%' }}></div>
+                  </div>
+                  <div className="g-stats">
+                     <div className="g-stat-box">
+                        <span className="g-lbl">Total Balance</span>
+                        <span className="g-val">$12,450.00</span>
+                     </div>
+                     <div className="g-stat-box outline">
+                        <span className="g-lbl">Monthly Spend</span>
+                        <span className="g-val">$3,120.50</span>
+                     </div>
+                  </div>
+               </div>
             </div>
-            <div className="auth-mockup-stats">
-              <div className="am-stat">
-                <div className="am-stat-val">$2,500</div>
-                <div className="am-stat-label">Budget</div>
+
+            <div className="auth-feature-list">
+              <div className="auth-feat">
+                <div className="feat-icon"><Activity size={20} /></div>
+                <div>
+                   <h4>Deep Insights</h4>
+                   <p>Review your monthly spending</p>
+                </div>
               </div>
-              <div className="am-stat">
-                <div className="am-stat-val">$1,120</div>
-                <div className="am-stat-label">Expenses</div>
+              <div className="auth-feat">
+                <div className="feat-icon"><Zap size={20} /></div>
+                <div>
+                   <h4>Quick Logging</h4>
+                   <p>Add expenses in seconds</p>
+                </div>
+              </div>
+              <div className="auth-feat">
+                <div className="feat-icon"><Target size={20} /></div>
+                <div>
+                   <h4>Budget Goals</h4>
+                   <p>Always stay on track</p>
+                </div>
               </div>
             </div>
           </div>

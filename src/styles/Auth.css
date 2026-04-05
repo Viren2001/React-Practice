@@ -211,9 +211,14 @@
   margin-bottom: 40px;
 }
 
-/* Reused glass mockup from landing */
-.auth-mockup {
-  width: 100%;
+/* Custom CSS Graphic and Features Layout */
+.auth-features-mockup {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.auth-css-graphic {
   background: rgba(30, 41, 59, 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -221,64 +226,138 @@
   border-radius: 20px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   padding: 24px;
-  text-align: left;
   transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
   transition: var(--transition);
 }
 
-.auth-mockup:hover {
+.auth-css-graphic:hover {
   transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-5px);
 }
 
-.auth-mockup-header {
+.graphic-header {
   display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
-.auth-mockup-avatar {
-  width: 40px;
-  height: 40px;
-  background: var(--primary);
-  border-radius: 12px;
-  margin-right: 16px;
+.g-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
 }
 
-.auth-mockup-line {
-  height: 8px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.line-1 { width: 40%; margin-bottom: 8px; }
-.line-2 { width: 25%; background: rgba(255, 255, 255, 0.1); }
-
-.auth-mockup-stats {
+.graphic-body {
   display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 24px;
+  align-items: flex-end;
 }
 
-.am-stat {
+.g-bar-group {
   flex: 1;
-  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: 120px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.g-bar {
+  flex: 1;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px 6px 0 0;
+  transition: height 0.5s ease-out;
+}
+
+.g-bar.highlight {
+  background: var(--primary);
+  box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.g-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.g-stat-box {
+  background: rgba(255,255,255,0.05);
   border-radius: 12px;
   padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
 }
 
-.am-stat-val {
-  font-size: 20px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 4px;
+.g-stat-box.outline {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
-.am-stat-label {
+.g-lbl {
   font-size: 11px;
   color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.g-val {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+}
+
+.auth-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.auth-feat {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255,255,255,0.03);
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.3s;
+}
+
+.auth-feat:hover {
+  background: rgba(255,255,255,0.08);
+  transform: translateX(5px);
+  border-color: rgba(255,255,255,0.2);
+}
+
+.feat-icon {
+  color: var(--primary);
+  background: rgba(var(--primary-rgb), 0.2);
+  padding: 10px;
+  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px var(--primary-glow);
+  flex-shrink: 0;
+}
+
+.auth-feat h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: white;
+}
+
+.auth-feat p {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0;
 }
 
 /* Background animated shapes for auth right side */

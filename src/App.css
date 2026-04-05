@@ -163,18 +163,16 @@
     max-width: 1100px;
     margin: 0 auto;
     width: 100%;
-    animation: fadeIn 0.5s ease-out;
+    animation: fadeIn 0.4s ease-out;
+    will-change: opacity;
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
     }
-
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
@@ -183,6 +181,7 @@
     backdrop-filter: blur(12px) saturate(180%);
     -webkit-backdrop-filter: blur(12px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: visible !important;
 }
 
 /* Grids */
@@ -201,6 +200,35 @@
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
+/* Utility Enhancements */
+.gradient-text {
+    background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 900;
+}
+
+.glass-card {
+    background: rgba(var(--bg-card-rgb), 0.4);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: var(--shadow-md);
+    overflow: visible !important;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Card Elements */
 .card {
     background-color: var(--bg-card);
@@ -208,15 +236,16 @@
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     padding: 28px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--transition);
     backdrop-filter: blur(8px);
+    overflow: visible !important;
 }
 
 .card:hover {
     box-shadow: var(--shadow-lg);
-    transform: translateY(-4px);
     border-color: var(--primary-glow);
 }
+
 
 .card-label {
     font-size: 11px;
@@ -300,7 +329,7 @@
         align-items: center;
         justify-content: space-between;
         background-color: var(--bg-sidebar);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        box-shadow: none !important;
     }
 
     .sidebar-brand {
@@ -1350,7 +1379,8 @@
     transition: var(--transition);
     user-select: none;
     min-height: 48px;
-    width: 100%; /* Ensure it fills container */
+    width: 100%;
+    /* Ensure it fills container */
 }
 
 .custom-dropdown-trigger:hover {
@@ -1398,8 +1428,10 @@
     position: absolute;
     top: calc(100% + 4px);
     left: 0;
-    right: 0; /* Align to both ends */
-    width: auto; /* Let right:0 control width */
+    right: 0;
+    /* Align to both ends */
+    width: auto;
+    /* Let right:0 control width */
     z-index: 99999 !important;
     padding: 8px;
     border-radius: var(--radius-lg);
@@ -1413,7 +1445,8 @@
     background: var(--bg-card) !important;
     backdrop-filter: blur(20px) saturate(200%);
     padding: 8px;
-    padding-right: 4px; /* Tighter for thin scrollbar */
+    padding-right: 4px;
+    /* Tighter for thin scrollbar */
 }
 
 .custom-dropdown-menu::-webkit-scrollbar {
@@ -1453,7 +1486,8 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    width: 100%; /* Ensure width is contained */
+    width: 100%;
+    /* Ensure width is contained */
 }
 
 .dropdown-option {
@@ -1481,7 +1515,8 @@
 .option-text {
     font-size: 14px;
     font-weight: 600;
-    overflow: hidden; /* Prevent text overflow */
+    overflow: hidden;
+    /* Prevent text overflow */
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -1507,6 +1542,7 @@
         opacity: 0;
         transform: translateY(-8px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1534,7 +1570,8 @@
     transition: var(--transition);
     user-select: none;
     min-height: 54px;
-    width: 100%; /* Ensure it fills container */
+    width: 100%;
+    /* Ensure it fills container */
 }
 
 .month-selector-trigger:hover {
@@ -1575,13 +1612,16 @@
     position: absolute;
     top: calc(100% + 4px);
     left: 0;
-    right: 0; /* Match parent width perfectly */
+    right: 0;
+    /* Match parent width perfectly */
     width: auto;
-    min-width: max-content; /* Ensure grid fits */
+    min-width: max-content;
+    /* Ensure grid fits */
     z-index: 99999 !important;
     padding: 20px;
     border-radius: var(--radius-lg);
-    border: 2px solid var(--primary); /* Thicker border */
+    border: 2px solid var(--primary);
+    /* Thicker border */
     box-shadow: 0 40px 70px rgba(0, 0, 0, 0.7);
     background: var(--bg-card) !important;
     backdrop-filter: blur(20px) saturate(200%);
