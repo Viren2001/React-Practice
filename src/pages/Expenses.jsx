@@ -105,6 +105,9 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
 
     const monthlyTotalForFiltered = filteredExpenses.reduce((total, exp) => total + Number(exp.amount), 0);
 
+    // Get only categories that have at least one expense
+    const usedCategories = Array.from(new Set(expenses.map(exp => exp.category))).filter(Boolean);
+
     const handleToggleSelection = (id) => {
         setSelectedIds(prev =>
             prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
@@ -171,11 +174,11 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
 
     return (
         <div className="page-container">
-            <div className="page-header-row" style={{ alignItems: "center", marginBottom: "32px" }}>
-                <div style={{ flex: 1 }}>
+            <div className="page-header-row" style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "32px", flexWrap: "wrap" }}>
+                <div style={{ flex: 1, minWidth: "200px" }}>
                     <PageHeader title="Transactions" subtitle="Detailed breakdown of your spending habits." />
                 </div>
-                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                <div className="page-actions" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
                     <button
                         onClick={handleDeleteAll}
                         style={{ background: "rgba(239, 68, 68, 0.1)", color: "#ef4444", padding: "10px", borderRadius: "12px", border: "1px solid rgba(239, 68, 68, 0.1)" }}
@@ -215,23 +218,32 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
 
             {/* Add Expense Form - Collapsible */}
             {showForm && (
-                <div className="card glass expense-form-card" style={{ marginBottom: "32px", border: "1px solid var(--primary-glow)", background: "rgba(var(--primary-rgb), 0.02)" }}>
+                <div className="card glass-effect expense-form-card" style={{ 
+                    marginBottom: "32px", 
+                    border: "1.5px solid var(--primary-glow)", 
+                    background: "rgba(var(--primary-rgb), 0.05)", 
+                    position: "relative", 
+                    zIndex: 50,
+                    boxShadow: "0 30px 60px -20px var(--primary-glow)"
+                }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
-                        <div style={{ background: "var(--primary)", color: "white", padding: "6px", borderRadius: "8px" }}>
-                            <Plus size={16} />
+                        <div style={{ background: "var(--primary)", color: "white", padding: "8px", borderRadius: "10px", boxShadow: "0 5px 15px var(--primary-glow)" }}>
+                            <Plus size={18} />
                         </div>
-                        <h3 className="card-label" style={{ margin: 0, fontSize: "14px", letterSpacing: "1px" }}>Transaction Builder</h3>
+                        <h3 className="card-label" style={{ margin: 0, fontSize: "14px", letterSpacing: "1.5px", color: "var(--primary)" }}>TRANSACTION BUILDER</h3>
                     </div>
                     <ExpenseForm addExpense={handleAdd} categories={categories} addCategory={addCategory} />
                 </div>
             )}
 
             {/* Controls Section */}
-            <div className="card glass" style={{ marginBottom: "32px", padding: "32px", overflow: "hidden", position: "relative", zIndex: 10 }}>
+            <div className="card glass-effect" style={{ marginBottom: "32px", padding: "32px", position: "relative", zIndex: 40, border: "1.5px solid var(--border)" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <Filter size={18} color="var(--primary)" />
-                        <h3 className="card-label" style={{ margin: 0 }}>Advanced Filter Studio</h3>
+                        <div style={{ background: "rgba(var(--primary-rgb), 0.1)", padding: "10px", borderRadius: "12px" }}>
+                            <Filter size={20} color="var(--primary)" />
+                        </div>
+                        <h3 className="card-label" style={{ margin: 0, fontSize: "14px", letterSpacing: "1px" }}>FILTER STUDIO</h3>
                     </div>
                     <div style={{ display: "flex", gap: "10px" }}>
                         <button
@@ -285,7 +297,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                     {/* Category Filter */}
                     <CustomDropdown
                         label="Spending Category"
-                        options={["All", ...categories]}
+                        options={["All", ...usedCategories]}
                         value={category}
                         onChange={(val) => setCategory(val)}
                         icon={getCategoryIcon(category)}
@@ -375,24 +387,26 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
             </div>
 
             {/* Summary Highlights */}
-            <div className="glass" style={{
+            <div className="glass-effect" style={{
                 marginBottom: "32px",
-                padding: "20px 28px",
-                borderRadius: "20px",
+                padding: "24px 32px",
+                borderRadius: "24px",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                border: "1px solid var(--border)",
-                background: "linear-gradient(90deg, rgba(var(--primary-rgb), 0.05) 0%, transparent 100%)"
+                border: "2px solid var(--border)",
+                background: "linear-gradient(135deg, rgba(var(--primary-rgb), 0.08) 0%, rgba(var(--primary-rgb), 0.02) 100%)",
+                boxShadow: "0 10px 30px -10px rgba(0,0,0,0.05)"
             }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <Layers size={18} color="var(--primary)" />
-                    <span style={{ fontSize: "14px", fontWeight: "800", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "1px" }}>
-                        Results: <span style={{ color: "var(--text-main)" }}>{sortedExpenses.length}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                    <Layers size={22} color="var(--primary)" />
+                    <span style={{ fontSize: "12px", fontWeight: "900", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "1.5px" }}>
+                        LEDGER ENTRIES: <span style={{ color: "var(--text-main)", background: "rgba(var(--primary-rgb), 0.1)", padding: "4px 10px", borderRadius: "8px", marginLeft: "4px" }}>{sortedExpenses.length}</span>
                     </span>
                 </div>
-                <div style={{ fontSize: "22px", fontWeight: "900", color: "var(--primary)", letterSpacing: "-0.04em" }}>
-                    Total: {currency}{monthlyTotalForFiltered.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                <div style={{ fontSize: "28px", fontWeight: "900", color: "var(--primary)", letterSpacing: "-0.04em", display: "flex", alignItems: "center", gap: "8px" }}>
+                    <span style={{ fontSize: "16px", color: "var(--text-muted)", fontWeight: "700" }}>TOTAL</span>
+                    {currency}{monthlyTotalForFiltered.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </div>
             </div>
 

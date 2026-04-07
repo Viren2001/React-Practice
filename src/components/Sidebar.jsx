@@ -31,19 +31,18 @@ function Sidebar() {
             <div className="sidebar-brand">
                 <div className="logo">
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                        <div style={{
-                            width: "36px",
-                            height: "36px",
+                        <div className="logo-icon" style={{
+                            width: "32px",
+                            height: "32px",
                             background: "linear-gradient(135deg, var(--primary) 0%, #1e40af 100%)",
                             borderRadius: "10px",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: "20px",
-                            boxShadow: "0 4px 12px rgba(37, 99, 235, 0.3)",
+                            boxShadow: "0 4px 12px var(--primary-glow)",
                             flexShrink: 0
                         }}>
-                             <PlusCircle size={20} color="white" />
+                             <PlusCircle size={18} color="white" />
                         </div>
                         <span className="logo-text">Tracker<span style={{ color: "var(--primary)" }}>.</span></span>
                     </div>
@@ -71,7 +70,7 @@ function Sidebar() {
 
             <div className="sidebar-footer">
                 <div className="theme-toggle-container">
-                    <div style={{ fontSize: "11px", fontWeight: "800", color: "#64748b", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "1px" }}>Appearance</div>
+                    <div className="sidebar-footer-label" style={{ fontSize: "11px", fontWeight: "800", color: "#64748b", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "1px" }}>Appearance</div>
                     <button
                         onClick={toggleTheme}
                         className="theme-btn"

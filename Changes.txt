@@ -10,3 +10,11 @@ Server-Side Lock: The new firestore.rules force the Firebase server to block any
 Sanitized Errors: Login and Signup now show generic, secure messages like "Invalid email or password," keeping your user list private.
 Double-Validation: All database actions now verify the user's identity on both the frontend (your code) and the backend (Firebase).
 Git Hardening: Your .gitignore is correctly configured to keep sensitive files out of your Git history while keeping deployment files tracked.
+
+-- adding autocategorization in expense form
+-- adding new chart to report card
+-- fixing drop down menus
+-- adding recurring expense feature
+-- adding more categories
+-- adding more keywords for autocategorization
+-- export csv date issue solve 

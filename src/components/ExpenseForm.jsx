@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getCategoryIcon } from "../utils/categoryIcons";
-import { Check, X, Plus } from "lucide-react";
+import { Check, X, Sparkles } from "lucide-react";
 import CustomDropdown from "./CustomDropdown";
+import { autoCategorize } from "../utils/autoCategorize";
 
 function ExpenseForm({ addExpense, categories = [], addCategory }) {
     const [name, setName] = useState("");
@@ -10,6 +11,9 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
     const [isAddingCategory, setIsAddingCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState("");
+    const [hasManuallyChangedCategory, setHasManuallyChangedCategory] = useState(false);
+    const [isAutoSuggesting, setIsAutoSuggesting] = useState(false);
+    const [isRecurring, setIsRecurring] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -24,12 +28,31 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
             amount: parseFloat(amount),
             category,
             date: date || new Date().toISOString().slice(0, 10),
+            isRecurring,
         });
 
         setName("");
         setAmount("");
         setCategory(categories[0] || "Food");
         setDate(new Date().toISOString().slice(0, 10));
+        setHasManuallyChangedCategory(false);
+        setIsAutoSuggesting(false);
+        setIsRecurring(false);
+    };
+
+    const handleNameChange = (e) => {
+        const newName = e.target.value;
+        setName(newName);
+
+        if (!hasManuallyChangedCategory) {
+            const suggestedCategory = autoCategorize(newName);
+            if (suggestedCategory && categories.includes(suggestedCategory)) {
+                setCategory(suggestedCategory);
+                setIsAutoSuggesting(true);
+            } else {
+                setIsAutoSuggesting(false);
+            }
+        }
     };
 
     const handleCategoryChange = (val) => {
@@ -37,6 +60,8 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
             setIsAddingCategory(true);
         } else {
             setCategory(val);
+            setHasManuallyChangedCategory(true);
+            setIsAutoSuggesting(false);
         }
     };
 
@@ -72,7 +97,7 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
                     type="text"
                     placeholder="e.g. Starbucks Coffee"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={handleNameChange}
                     required
                 />
             </div>
@@ -88,7 +113,25 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
                 />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-muted)", textTransform: "uppercase" }}>Category</label>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-muted)", textTransform: "uppercase" }}>Category</label>
+                    {isAutoSuggesting && (
+                        <span style={{ 
+                            fontSize: "10px", 
+                            color: "var(--primary)", 
+                            display: "flex", 
+                            alignItems: "center", 
+                            gap: "4px",
+                            fontWeight: "600",
+                            background: "var(--primary-light)",
+                            padding: "2px 6px",
+                            borderRadius: "10px",
+                            border: "1px solid var(--primary-glow)"
+                        }}>
+                            <Sparkles size={10} /> Auto-suggested
+                        </span>
+                    )}
+                </div>
                 <div style={{ position: "relative", display: "flex", alignItems: "center", overflow: "visible" }}>
                     {!isAddingCategory ? (
                         <div style={{ flex: 1, overflow: "visible" }}>
@@ -168,6 +211,22 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                 />
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <input
+                    type="checkbox"
+                    id="isRecurring"
+                    checked={isRecurring}
+                    onChange={(e) => setIsRecurring(e.target.checked)}
+                    style={{ 
+                        width: "18px", 
+                        height: "18px", 
+                        cursor: "pointer", 
+                        accentColor: "var(--primary)",
+                        border: "1px solid var(--border)"
+                    }}
+                />
+                <label htmlFor="isRecurring" style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-main)", cursor: "pointer" }}>MARK AS RECURRING (MONTHLY)</label>
             </div>
             <button 
                 type="submit" 

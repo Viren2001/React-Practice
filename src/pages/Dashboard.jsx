@@ -67,11 +67,11 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
 
     return (
         <div className="page-container">
-            <div style={{ marginBottom: "32px" }}>
-                <h2 style={{ fontSize: "28px", fontWeight: "900", marginBottom: "4px", letterSpacing: "-0.04em" }}>
+            <div className="page-header-container" style={{ marginBottom: "32px" }}>
+                <h2 style={{ fontSize: "clamp(22px, 5vw, 28px)", fontWeight: "900", marginBottom: "4px", letterSpacing: "-0.04em" }}>
                     {greeting()}, {currentUser?.email?.split('@')[0]}!
                 </h2>
-                <p style={{ color: "var(--text-muted)", fontWeight: "500" }}>Here's what's happening with your money this month.</p>
+                <p style={{ color: "var(--text-muted)", fontWeight: "500", fontSize: "clamp(13px, 3vw, 15px)" }}>Here's what's happening with your money this month.</p>
             </div>
 
             {/* Smart Budget Alert */}
@@ -79,12 +79,12 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
 
             <div className="dashboard-grid">
                 {/* Period Selector Card */}
-                <div className="card glass" style={{ borderLeft: "4px solid var(--primary)", overflow: "visible", position: "relative", zIndex: 10 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-                        <div style={{ background: "rgba(var(--primary-rgb), 0.1)", color: "var(--primary)", padding: "10px", borderRadius: "12px" }}>
-                            <Calendar size={20} />
+                <div className="card glass-effect" style={{ borderTop: "4px solid var(--primary)", overflow: "visible", position: "relative", zIndex: 10 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
+                        <div style={{ background: "rgba(var(--primary-rgb), 0.1)", color: "var(--primary)", padding: "12px", borderRadius: "14px", border: "1px solid var(--primary-glow)" }}>
+                            <Calendar size={22} />
                         </div>
-                        <h3 className="card-label" style={{ margin: 0 }}>Current Period</h3>
+                        <h3 className="card-label" style={{ margin: 0, fontSize: "12px" }}>Financial Period</h3>
                     </div>
                     <MonthSelector
                         value={month}
@@ -93,64 +93,64 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
                 </div>
 
                 {/* Monthly Spending Card */}
-                <div className="card glass" style={{ borderLeft: "4px solid var(--success)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-                        <div style={{ background: "rgba(16, 185, 129, 0.1)", color: "var(--success)", padding: "10px", borderRadius: "12px" }}>
-                            <Wallet size={20} />
+                <div className="card glass-effect" style={{ borderTop: "4px solid var(--success)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
+                        <div style={{ background: "rgba(16, 185, 129, 0.1)", color: "var(--success)", padding: "12px", borderRadius: "14px", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
+                            <Wallet size={22} />
                         </div>
-                        <h3 className="card-label" style={{ margin: 0 }}>Month Spending</h3>
+                        <h3 className="card-label" style={{ margin: 0, fontSize: "12px" }}>Total Outflow</h3>
                     </div>
-                    <p className="stats-value" style={{ color: "var(--text-main)", margin: "0 0 8px 0" }}>
+                    <p className="stats-value" style={{ color: "var(--text-main)", margin: "0 0 10px 0", fontSize: "36px" }}>
                         {currency}{monthTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </p>
-                    <div style={{ fontSize: "13px", color: "var(--text-muted)", fontWeight: "600", display: "flex", alignItems: "center", gap: "4px" }}>
-                        <Activity size={14} /> {monthlyExpenses.length} transactions logged
+                    <div style={{ fontSize: "13px", color: "var(--text-muted)", fontWeight: "700", display: "flex", alignItems: "center", gap: "6px" }}>
+                        <Activity size={14} /> {monthlyExpenses.length} transactions this month
                     </div>
                 </div>
 
                 {/* Budget Management Card */}
-                <div className="card glass" style={{ borderLeft: "4px solid #7c3aed" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <div className="card glass-effect" style={{ borderTop: "4px solid #7c3aed" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                            <div style={{ background: "rgba(124, 58, 237, 0.1)", color: "#7c3aed", padding: "10px", borderRadius: "12px" }}>
-                                <Target size={20} />
+                            <div style={{ background: "rgba(124, 58, 237, 0.1)", color: "#7c3aed", padding: "12px", borderRadius: "14px", border: "1px solid rgba(124, 58, 237, 0.2)" }}>
+                                <Target size={22} />
                             </div>
-                            <h3 className="card-label" style={{ margin: 0 }}>Monthly Budget</h3>
+                            <h3 className="card-label" style={{ margin: 0, fontSize: "12px" }}>Budget Control</h3>
                         </div>
                         <button
                             onClick={() => isEditingBudget ? handleSaveBudget() : setIsEditingBudget(true)}
+                            className="glass-effect"
                             style={{
-                                background: "rgba(var(--primary-rgb), 0.1)",
-                                border: "none",
                                 color: "var(--primary)",
-                                padding: "6px 12px",
+                                padding: "8px 14px",
                                 cursor: "pointer",
                                 fontSize: "11px",
                                 fontWeight: "800",
-                                borderRadius: "8px",
-                                transition: "all 0.2s"
+                                borderRadius: "10px",
+                                border: "1.5px solid var(--primary-glow)"
                             }}
                         >
-                            {isEditingBudget ? "SAVE" : "EDIT"}
+                            {isEditingBudget ? "SAVE" : "ADJUST"}
                         </button>
                     </div>
 
                     {isEditingBudget ? (
-                        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                            <span style={{ fontWeight: "800", color: "var(--text-main)" }}>{currency}</span>
+                        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                            <span style={{ fontWeight: "900", color: "var(--primary)", fontSize: "20px" }}>{currency}</span>
                             <input
                                 type="number"
                                 value={tempBudget}
                                 onChange={(e) => setTempBudget(e.target.value)}
                                 autoFocus
                                 style={{
-                                    padding: "10px",
-                                    borderRadius: "10px",
+                                    padding: "12px 16px",
+                                    borderRadius: "12px",
                                     border: "2px solid var(--primary)",
                                     width: "100%",
-                                    fontSize: "18px",
-                                    fontWeight: "800",
-                                    background: "rgba(var(--bg-card-rgb), 0.5)"
+                                    fontSize: "20px",
+                                    fontWeight: "900",
+                                    background: "rgba(var(--bg-card-rgb), 0.8)",
+                                    boxShadow: "0 10px 20px -10px var(--primary-glow)"
                                 }}
                             />
                         </div>
