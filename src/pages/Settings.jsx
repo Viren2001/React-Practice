@@ -201,7 +201,14 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
             </div>
 
             <div className="settings-item-label" style={{ marginBottom: "12px" }}>Category Budgets</div>
-            <div className="category-budgets-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div className="category-budgets-grid" style={{ 
+              display: "grid", 
+              gridTemplateColumns: "1fr 1fr", 
+              gap: "12px",
+              maxHeight: "380px",
+              overflowY: "auto",
+              paddingRight: "8px"
+            }}>
               {categories.map((cat) => (
                 <div key={cat} className="category-budget-item">
                   <div className="category-budget-label">
@@ -232,25 +239,50 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
         {/* Alerts Card */}
         <div className="card settings-card">
           <div className="settings-card-header">
-            <Bell size={20} />
-            <h3>Alerts</h3>
+            <Bell 
+              size={20} 
+              color={Number(alertThreshold) > 90 ? "var(--danger)" : Number(alertThreshold) > 75 ? "var(--warning)" : "var(--primary)"} 
+            />
+            <h3>Alert Preferences</h3>
           </div>
           <div className="settings-card-body">
-            <div className="settings-row">
-              <div>
-                <div className="settings-item-label">Alert Threshold</div>
-                <div className="settings-item-desc">Get warned when spending reaches this % of budget</div>
+            <div className="settings-row" style={{ flexDirection: "column", alignItems: "stretch", gap: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div>
+                  <div className="settings-item-label">Budget Alert Threshold</div>
+                  <div className="settings-item-desc" style={{ marginTop: "4px" }}>Notify me when spending exceeds this limit</div>
+                </div>
+                <div style={{ 
+                  background: Number(alertThreshold) > 90 ? "rgba(239, 68, 68, 0.1)" : Number(alertThreshold) > 75 ? "rgba(245, 158, 11, 0.1)" : "rgba(217, 70, 239, 0.1)", 
+                  color: Number(alertThreshold) > 90 ? "var(--danger)" : Number(alertThreshold) > 75 ? "var(--warning)" : "var(--primary)",
+                  padding: "6px 14px", 
+                  borderRadius: "20px", 
+                  fontWeight: "800",
+                  fontSize: "14px",
+                  border: `1px solid ${Number(alertThreshold) > 90 ? "rgba(239, 68, 68, 0.2)" : Number(alertThreshold) > 75 ? "rgba(245, 158, 11, 0.2)" : "rgba(217, 70, 239, 0.2)"}`
+                }}>
+                  {alertThreshold}%
+                </div>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <input
-                  type="range"
-                  min="50"
-                  max="100"
-                  value={alertThreshold}
-                  onChange={(e) => setAlertThreshold(e.target.value)}
-                  style={{ width: "100px" }}
-                />
-                <span style={{ fontWeight: "700", fontSize: "14px", minWidth: "40px" }}>{alertThreshold}%</span>
+              <input
+                type="range"
+                min="50"
+                max="100"
+                step="5"
+                value={alertThreshold}
+                onChange={(e) => setAlertThreshold(e.target.value)}
+                style={{ 
+                  margin: "6px 0",
+                  width: "100%", 
+                  cursor: "pointer", 
+                  accentColor: Number(alertThreshold) > 90 ? "var(--danger)" : Number(alertThreshold) > 75 ? "var(--warning)" : "var(--primary)",
+                  height: "6px"
+                }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "var(--text-muted)", fontWeight: "600", padding: "0 6px" }}>
+                <span>Relaxed (50%)</span>
+                <span>Moderate (75%)</span>
+                <span>Strict (100%)</span>
               </div>
             </div>
           </div>
