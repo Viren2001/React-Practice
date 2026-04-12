@@ -1,9 +1,11 @@
+import { isDateInPeriod } from "./dateUtils";
+
 export function exportToCSV(expenses, monthFilter) {
   if (!expenses || expenses.length === 0) return;
 
-  // Filter based on the selected month (if any)
-  const filtered = monthFilter
-    ? expenses.filter((exp) => exp.date?.slice(0, 7) === monthFilter)
+  // Filter based on the selected month/period (if any)
+  const filtered = monthFilter && monthFilter !== "All"
+    ? expenses.filter((exp) => isDateInPeriod(exp.date, monthFilter))
     : expenses;
 
   if (filtered.length === 0) return;

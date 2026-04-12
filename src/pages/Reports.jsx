@@ -1,17 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MonthSelector from "../components/MonthSelector";
 import PageHeader from "../components/PageHeader";
+import { isDateInPeriod } from "../utils/dateUtils";
 import {
   PieChart,
   Pie,
   Cell,
   Tooltip,
   Legend,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
   ResponsiveContainer,
   AreaChart,
   Area,
@@ -19,52 +15,55 @@ import {
   RadarChart,
   PolarGrid,
   PolarAngleAxis,
-  PolarRadiusAxis
+  PolarRadiusAxis,
+  XAxis,
+  YAxis,
+  CartesianGrid
 } from "recharts";
 
-const COLORS = ["#2563eb", "#10b981", "#7c3aed", "#f59e0b", "#ef4444", "#14b8a6"];
+const COLORS = ["#d946ef", "#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#06b6d4"];
 
 function Reports({ expenses = [], month: propMonth, currency = "$" }) {
-  const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
+  const [month, setMonth] = useState(propMonth || new Date().toISOString().slice(0, 7));
 
-  // Filter expenses for selected month
-  const monthlyExpenses = expenses.filter((exp) => exp.date?.slice(0, 7) === month);
-  const monthTotal = monthlyExpenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
+  useEffect(() => {
+    if (propMonth) setMonth(propMonth);
+  }, [propMonth]);
+
+  // Filter expenses using robust date utility
+  const periodExpenses = expenses.filter((exp) => isDateInPeriod(exp.date, month));
+  const periodTotal = periodExpenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
   const total = expenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
 
   // Pie chart data (Category Breakdown)
-  const categoryTotals = monthlyExpenses.reduce((acc, e) => {
+  const categoryTotals = periodExpenses.reduce((acc, e) => {
     const cat = e.category || "Other";
     acc[cat] = (acc[cat] || 0) + Number(e.amount);
     return acc;
   }, {});
-  const pieData = Object.entries(categoryTotals).map(([name, value]) => ({ name, value }));
+  const pieData = Object.entries(categoryTotals)
+     .map(([name, value]) => ({ name, value }))
+     .sort((a, b) => b.value - a.value);
 
-  // Trend & Bar data (Daily Totals)
+  // Trend data grouped by date
   const dailyTotals = {};
-  // Initialize with all days of the month to show a smooth trend
-  const year = parseInt(month.split('-')[0]);
-  const m = parseInt(month.split('-')[1]);
-  const daysInMonth = new Date(year, m, 0).getDate();
-
-  for (let d = 1; d <= daysInMonth; d++) {
-    const dateStr = `${month}-${d.toString().padStart(2, '0')}`;
-    dailyTotals[dateStr] = 0;
-  }
-
-  monthlyExpenses.forEach((exp) => {
-    if (exp.date && dailyTotals[exp.date] !== undefined) {
+  periodExpenses.forEach((exp) => {
+    if (exp.date) {
+      if (!dailyTotals[exp.date]) dailyTotals[exp.date] = 0;
       dailyTotals[exp.date] += Number(exp.amount);
     }
   });
 
   const timeData = Object.entries(dailyTotals)
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([date, total]) => ({
-      date: date.split('-')[2], // Just the day number
-      fullDate: date,
-      total
-    }));
+    .map(([date, total]) => {
+        const d = new Date(date);
+        return {
+           date: d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+           fullDate: date,
+           total
+        };
+    });
 
   // Radar chart data (Weekly Habit Analyzer)
   const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -72,7 +71,7 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
     "Monday": 0, "Tuesday": 0, "Wednesday": 0, "Thursday": 0, "Friday": 0, "Saturday": 0, "Sunday": 0
   };
 
-  monthlyExpenses.forEach((exp) => {
+  periodExpenses.forEach((exp) => {
     if (exp.date) {
       const [y, m, d] = exp.date.split('-');
       const dateObj = new Date(y, m - 1, d);
@@ -84,107 +83,115 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
   });
 
   const radarData = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map(day => ({
-    subject: day,
+    subject: day.slice(0, 3), // e.g. Mon, Tue
     amount: weekdayTotals[day]
   }));
 
   return (
-    <div className="page-container">
-      <PageHeader title="Reports" subtitle="Visual insights into your spending habits" />
+    <div className="page-container" style={{ paddingBottom: "60px" }}>
+      <PageHeader title="Visual Reports" subtitle="Deep dive into your spending analytics" />
 
       {/* Summary Cards Row */}
       <div className="stats-grid">
         <div className="card" style={{ overflow: "visible", position: "relative", zIndex: 10 }}>
           <MonthSelector
-            label="Analysis Month"
+            label="Analysis Period"
             value={month}
             onChange={(val) => setMonth(val)}
+            options={[{ label: "Full History", value: "All" }]}
           />
         </div>
-        <div className="card">
-          <h3 className="card-label">Monthly Volume</h3>
-          <p className="stats-value success">{currency}{monthTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
-          <p className="card-subtext">Across {monthlyExpenses.length} transactions</p>
+        <div className="card glass-effect" style={{ borderTop: "4px solid var(--primary)" }}>
+          <h3 className="card-label">Period Volume</h3>
+          <p className="stats-value primary">{currency}{periodTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+          <p className="card-subtext">Across {periodExpenses.length} transactions</p>
         </div>
-        <div className="card">
+        <div className="card glass-effect" style={{ borderTop: "4px solid var(--success)" }}>
           <h3 className="card-label">Lifetime Total</h3>
-          <p className="stats-value primary">{currency}{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+          <p className="stats-value success">{currency}{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
           <p className="card-subtext">Total spending logged</p>
         </div>
       </div>
 
       {/* Main Trends Chart */}
-      <div className="card chart-main-card">
-        <h3 className="card-title">Spending Trend</h3>
-        <div className="chart-container">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={timeData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-              <defs>
-                <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
-              <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} />
-              <Tooltip
-                formatter={(value) => [`${currency}${parseFloat(value).toLocaleString(undefined, { minimumFractionDigits: 2 })}`, 'Total Spend']}
-                contentStyle={{
-                  backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: '12px',
-                  color: '#fff',
-                  boxShadow: '0 10px 20px rgba(0,0,0,0.3)'
-                }}
-                itemStyle={{ color: '#fff', fontWeight: 'bold' }}
-              />
-              <Area type="monotone" dataKey="total" stroke="#2563eb" strokeWidth={3} fillOpacity={1} fill="url(#colorTotal)" />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+      <div className="card chart-main-card glass-effect">
+        <h3 className="card-title">Cumulative Spending Trend</h3>
+        {timeData.length > 0 ? (
+            <div className="chart-container" style={{ height: "350px", marginTop: "20px" }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={timeData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} />
+                  <YAxis axisLine={false} tickLine={false} tickFormatter={(val) => `${currency}${val}`} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} />
+                  <Tooltip
+                    formatter={(value) => [`${currency}${parseFloat(value).toLocaleString(undefined, { minimumFractionDigits: 2 })}`, 'Total Spend']}
+                    contentStyle={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '12px',
+                      color: 'var(--text-main)',
+                      boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+                      fontWeight: '700'
+                    }}
+                    itemStyle={{ color: 'var(--primary)', fontWeight: '900' }}
+                  />
+                  <Area type="monotone" dataKey="total" stroke="var(--primary)" strokeWidth={3} fillOpacity={1} fill="url(#colorTotal)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+        ) : (
+            <div className="empty-chart" style={{ height: "350px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)" }}>
+              No trend data for this period
+            </div>
+        )}
       </div>
 
       <div className="charts-grid">
         {/* Category Breakdown */}
-        <div className="card">
-          <h3 className="card-title">Category Breakdown</h3>
+        <div className="card glass-effect">
+          <h3 className="card-title">Expense Distribution</h3>
           {pieData.length === 0 ? (
-            <div className="empty-chart">
+            <div className="empty-chart" style={{ height: "300px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)" }}>
               <p>No data available</p>
             </div>
           ) : (
-            <div className="chart-container">
+            <div className="chart-container" style={{ height: "300px", marginTop: "20px" }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={pieData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={55}
-                    outerRadius={85}
+                    innerRadius={65}
+                    outerRadius={100}
                     paddingAngle={6}
                     dataKey="value"
                     stroke="none"
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    labelLine={{ stroke: 'rgba(255,255,255,0.2)', strokeWidth: 1 }}
+                    labelLine={{ stroke: 'var(--text-muted)', strokeWidth: 1 }}
                   >
                     {pieData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} cornerRadius={4} />
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value) => [`${currency}${parseFloat(value).toLocaleString(undefined, { minimumFractionDigits: 2 })}`, 'Total Amount']}
+                    formatter={(value) => [`${currency}${parseFloat(value).toLocaleString(undefined, { minimumFractionDigits: 2 })}`, 'Volume']}
                     contentStyle={{
-                      backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                      border: '1px solid rgba(255,255,255,0.1)',
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
                       borderRadius: '12px',
-                      color: '#fff',
-                      boxShadow: '0 10px 20px rgba(0,0,0,0.3)'
+                      color: 'var(--text-main)',
+                      boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+                      fontWeight: '700'
                     }}
-                    itemStyle={{ color: '#fff', fontWeight: 'bold' }}
+                    itemStyle={{ color: 'var(--text-main)', fontWeight: '900' }}
                   />
-                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: '13px', paddingTop: '20px' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -192,18 +199,18 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
         </div>
 
         {/* Weekly Habit Analyzer (Radar Chart) */}
-        <div className="card">
+        <div className="card glass-effect">
           <h3 className="card-title">Weekly Habit Analyzer</h3>
           {radarData.every(d => d.amount === 0) ? (
-            <div className="empty-chart">
+            <div className="empty-chart" style={{ height: "300px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)" }}>
               <p>No spending recorded</p>
             </div>
           ) : (
-            <div className="chart-container">
+            <div className="chart-container" style={{ height: "300px", marginTop: "20px" }}>
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                  <PolarGrid stroke="rgba(255, 255, 255, 0.1)" />
-                  <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-muted)', fontSize: 11, fontWeight: 600 }} />
+                  <PolarGrid stroke="rgba(217, 70, 239, 0.15)" />
+                  <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-muted)', fontSize: 13, fontWeight: 700 }} />
                   <PolarRadiusAxis angle={90} domain={[0, 'auto']} tick={false} axisLine={false} />
                   <Radar
                     name="Spend Volume"
@@ -211,18 +218,19 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
                     stroke="var(--primary)"
                     strokeWidth={3}
                     fill="var(--primary)"
-                    fillOpacity={0.4}
+                    fillOpacity={0.3}
                   />
                   <Tooltip
                     formatter={(value) => [`${currency}${parseFloat(value).toLocaleString(undefined, { minimumFractionDigits: 2 })}`, 'Total Spent']}
                     contentStyle={{
-                      backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                      border: '1px solid rgba(255,255,255,0.1)',
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
                       borderRadius: '12px',
-                      color: '#fff',
-                      boxShadow: '0 10px 20px rgba(0,0,0,0.3)'
+                      color: 'var(--text-main)',
+                      boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+                      fontWeight: '700'
                     }}
-                    itemStyle={{ color: '#fff', fontWeight: 'bold' }}
+                    itemStyle={{ color: 'var(--primary)', fontWeight: '900' }}
                   />
                 </RadarChart>
               </ResponsiveContainer>

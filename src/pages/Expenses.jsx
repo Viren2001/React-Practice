@@ -7,6 +7,7 @@ import { getCategoryIcon } from "../utils/categoryIcons";
 import { useToast } from "../contexts/ToastContext";
 import MonthSelector from "../components/MonthSelector";
 import CustomDropdown from "../components/CustomDropdown";
+import { isDateInPeriod, formatPeriodLabel } from "../utils/dateUtils";
 import {
     Search,
     Pencil,
@@ -29,13 +30,13 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
     const [editingExpense, setEditingExpense] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
-    
+
     // Advanced Filters State
     const [minAmount, setMinAmount] = useState("");
     const [maxAmount, setMaxAmount] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
-    
+
     const toast = useToast();
 
     // Keyboard shortcut: N to open form
@@ -67,7 +68,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
         const expDate = exp.date;
 
         // Basic Filters
-        const matchesMonth = month === "All" || (expDate && expDate.slice(0, 7) === month);
+        const matchesMonth = isDateInPeriod(expDate, month);
         const matchesCategory = category === "All" || exp.category === category;
         const matchesSearch = exp.name?.toLowerCase().includes(search.toLowerCase());
 
@@ -77,8 +78,8 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
         const matchesStartDate = startDate === "" || (expDate && expDate >= startDate);
         const matchesEndDate = endDate === "" || (expDate && expDate <= endDate);
 
-        return matchesMonth && matchesCategory && matchesSearch && 
-               matchesMinAmount && matchesMaxAmount && matchesStartDate && matchesEndDate;
+        return matchesMonth && matchesCategory && matchesSearch &&
+            matchesMinAmount && matchesMaxAmount && matchesStartDate && matchesEndDate;
     });
 
     const resetFilters = () => {
@@ -168,7 +169,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
             toast.warning("No expenses to export");
             return;
         }
-        exportToCSV(filteredExpenses);
+        exportToCSV(filteredExpenses, month);
         toast.success("CSV exported!");
     };
 
@@ -218,11 +219,11 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
 
             {/* Add Expense Form - Collapsible */}
             {showForm && (
-                <div className="card glass-effect expense-form-card" style={{ 
-                    marginBottom: "32px", 
-                    border: "1.5px solid var(--primary-glow)", 
-                    background: "rgba(var(--primary-rgb), 0.05)", 
-                    position: "relative", 
+                <div className="card glass-effect expense-form-card" style={{
+                    marginBottom: "32px",
+                    border: "1.5px solid var(--primary-glow)",
+                    background: "rgba(var(--primary-rgb), 0.05)",
+                    position: "relative",
                     zIndex: 50,
                     boxShadow: "0 30px 60px -20px var(--primary-glow)"
                 }}>
@@ -286,12 +287,11 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                 </div>
 
                 <div className="expense-controls-grid" style={{ gap: "24px", transition: "all 0.3s ease" }}>
-                    {/* Month Picker */}
                     <MonthSelector
-                        label="Analysis Month"
+                        label="Analysis Period"
                         value={month}
                         onChange={(val) => setMonth(val)}
-                        options={[{label: "Full History", value: "All"}]}
+                        options={[{ label: "Full History", value: "All" }]}
                     />
 
                     {/* Category Filter */}

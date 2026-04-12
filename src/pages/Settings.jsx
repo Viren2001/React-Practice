@@ -9,6 +9,7 @@ import { collection, query, where, getDocs, addDoc, updateDoc, doc, onSnapshot }
 import { Sun, Moon, Download, Save, User, Palette, Bell, DollarSign } from "lucide-react";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import { exportToCSV } from "../utils/exportCSV";
+import { formatPeriodLabel } from "../utils/dateUtils";
 
 function Settings({ expenses = [], month, categories = [], addCategory }) {
   const { currentUser } = useAuth();
@@ -298,7 +299,7 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
             <div className="export-buttons">
               <button onClick={handleExportCSV} className="btn-export">
                 <Download size={16} />
-                Export Current Month
+                Export Selected ({formatPeriodLabel(month)})
               </button>
               <button onClick={handleExportAll} className="btn-export btn-export-secondary">
                 <Download size={16} />
