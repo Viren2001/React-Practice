@@ -52,14 +52,14 @@ function AppLayout() {
         setBudget(data.monthlyBudget || 0);
         setCategoryBudgets(data.categoryBudgets || {});
         setCurrency(data.currency || "$");
-        
+
         // Essential categories that should always be present
         const essentialCategories = ["Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Housing", "Work", "Other"];
-        
+
         if (data.categories) {
           // Check if any essential categories are missing
           const missingCategories = essentialCategories.filter(cat => !data.categories.includes(cat));
-          
+
           if (missingCategories.length > 0) {
             const updatedCategories = [...data.categories, ...missingCategories];
             setCategories(updatedCategories);
@@ -165,10 +165,10 @@ function AppLayout() {
 
     const currentMonth = new Date().toISOString().slice(0, 7);
     const recurringTemplates = expenses.filter(exp => exp.isRecurring);
-    
+
     // Get all unique templates (by name, amount and category)
     const uniqueTemplatesMap = new Map();
-    
+
     recurringTemplates.forEach(exp => {
       const key = `${exp.name}-${exp.category}-${exp.amount}`;
       if (!uniqueTemplatesMap.has(key)) {
@@ -178,9 +178,9 @@ function AppLayout() {
 
     uniqueTemplatesMap.forEach(async (tmpl) => {
       // Check if this recurring item already exists in the current month
-      const existsInCurrentMonth = expenses.some(exp => 
-        exp.name === tmpl.name && 
-        exp.category === tmpl.category && 
+      const existsInCurrentMonth = expenses.some(exp =>
+        exp.name === tmpl.name &&
+        exp.category === tmpl.category &&
         exp.amount === tmpl.amount &&
         exp.date?.slice(0, 7) === currentMonth
       );
@@ -189,7 +189,7 @@ function AppLayout() {
         // Auto-add for current month at the same day of month
         const day = tmpl.date?.slice(8, 10) || "01";
         const newDate = `${currentMonth}-${day}`;
-        
+
         await addExpense({
           name: tmpl.name,
           amount: tmpl.amount,
@@ -333,11 +333,11 @@ function AppLayout() {
             path="/settings"
             element={
               <ProtectedRoute>
-                <Settings 
-                  expenses={expenses} 
-                  month={month} 
-                  categories={categories} 
-                  addCategory={addCategory} 
+                <Settings
+                  expenses={expenses}
+                  month={month}
+                  categories={categories}
+                  addCategory={addCategory}
                 />
               </ProtectedRoute>
             }

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d946ef;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <!-- Background Circle for a "button" look, or just floating -->
+  <circle cx="16" cy="16" r="14" fill="none" stroke="url(#grad)" stroke-width="2" />
+  <!-- Abstract "O" and "IQ" fusion -->
+  <path d="M16 8 A 8 8 0 1 1 15.99 8 Z" fill="none" stroke="url(#grad)" stroke-width="2.5" stroke-linecap="round" />
+  <!-- IQ logic: a small dot for the 'i' and a dash for analysis -->
+  <circle cx="16" cy="13" r="1.5" fill="url(#grad)" />
+  <path d="M12 20 L20 20" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" />
+  <path d="M14 24 L18 24" stroke="url(#grad)" stroke-width="1.5" stroke-linecap="round" opacity="0.6" />
+</svg>

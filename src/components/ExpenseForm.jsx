@@ -85,9 +85,9 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ 
-            display: "grid", 
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
+        <form onSubmit={handleSubmit} style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
             gap: "20px",
             alignItems: "end"
         }}>
@@ -116,11 +116,11 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-muted)", textTransform: "uppercase" }}>Category</label>
                     {isAutoSuggesting && (
-                        <span style={{ 
-                            fontSize: "10px", 
-                            color: "var(--primary)", 
-                            display: "flex", 
-                            alignItems: "center", 
+                        <span style={{
+                            fontSize: "10px",
+                            color: "var(--primary)",
+                            display: "flex",
+                            alignItems: "center",
                             gap: "4px",
                             fontWeight: "600",
                             background: "var(--primary-light)",
@@ -148,9 +148,9 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
                         </div>
                     ) : (
                         <div style={{ flex: 1, display: "flex", alignItems: "center", gap: "6px", position: "relative" }}>
-                            <input 
+                            <input
                                 autoFocus
-                                type="text" 
+                                type="text"
                                 placeholder="Category name..."
                                 value={newCategoryName}
                                 onChange={(e) => setNewCategoryName(e.target.value)}
@@ -160,22 +160,22 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
                                 }}
                                 style={{ paddingRight: "70px" }}
                             />
-                            <div style={{ 
-                                position: "absolute", 
-                                right: "6px", 
-                                top: "50%", 
+                            <div style={{
+                                position: "absolute",
+                                right: "6px",
+                                top: "50%",
                                 transform: "translateY(-50%)",
                                 display: "flex",
                                 gap: "4px"
                             }}>
-                                <button 
+                                <button
                                     type="button"
                                     onClick={handleSaveNewCategory}
                                     title="Save Category"
-                                    style={{ 
-                                        width: "28px", 
-                                        height: "28px", 
-                                        padding: 0, 
+                                    style={{
+                                        width: "28px",
+                                        height: "28px",
+                                        padding: 0,
                                         background: "var(--success)",
                                         color: "white",
                                         borderRadius: "6px"
@@ -183,14 +183,14 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
                                 >
                                     <Check size={14} />
                                 </button>
-                                <button 
+                                <button
                                     type="button"
                                     onClick={handleCancelNewCategory}
                                     title="Cancel"
-                                    style={{ 
-                                        width: "28px", 
-                                        height: "28px", 
-                                        padding: 0, 
+                                    style={{
+                                        width: "28px",
+                                        height: "28px",
+                                        padding: 0,
                                         background: "var(--bg-app)",
                                         border: "1px solid var(--border)",
                                         color: "var(--text-muted)",
@@ -218,23 +218,23 @@ function ExpenseForm({ addExpense, categories = [], addCategory }) {
                     id="isRecurring"
                     checked={isRecurring}
                     onChange={(e) => setIsRecurring(e.target.checked)}
-                    style={{ 
-                        width: "18px", 
-                        height: "18px", 
-                        cursor: "pointer", 
+                    style={{
+                        width: "18px",
+                        height: "18px",
+                        cursor: "pointer",
                         accentColor: "var(--primary)",
                         border: "1px solid var(--border)"
                     }}
                 />
                 <label htmlFor="isRecurring" style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-main)", cursor: "pointer" }}>MARK AS RECURRING (MONTHLY)</label>
             </div>
-            <button 
-                type="submit" 
-                style={{ 
-                    backgroundColor: "var(--primary)", 
-                    color: "white", 
+            <button
+                type="submit"
+                style={{
+                    backgroundColor: "var(--primary)",
+                    color: "white",
                     boxShadow: "0 4px 12px var(--primary-glow)",
-                    height: "46px" 
+                    height: "46px"
                 }}
             >
                 Add Transaction
