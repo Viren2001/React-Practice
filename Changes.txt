@@ -18,3 +18,12 @@ Git Hardening: Your .gitignore is correctly configured to keep sensitive files o
 -- adding more categories
 -- adding more keywords for autocategorization
 -- export csv date issue solve 
+-- setting page design change
+-- mobile responsive design set up
+-- enhancing the whole project
+
+
+-- add filter like quertly, monthly, yearly in report page
+-- add filter like quertly, monthly, yearly in dashboard page      
+-- Dashboard page design change
+-- Expensium — Sounds like a rare, futuristic element or a massive financial institution.

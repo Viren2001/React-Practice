@@ -17,7 +17,7 @@
 A state-of-the-art, premium expense tracking application designed for precision and elegance. Built with a focus on high-end aesthetics (**Soft Lavender theme**) and seamless user experience, this tool simplifies financial management with intelligent automation and deep data insights.
 
 ## 🚀 Key Features
--   📈 **Pro Dashboard**: Real-time data visualizations using Area and Pie charts to track spending trends.
+-   📈 **Pro Dashboard**: Real-time data visualizations using Area and Pie charts with flexible filtering (Monthly, Quarterly, Yearly).
 -   🧾 **Receipt OCR**: Upload receipt images and let the app extract data automatically via Tesseract.js.
 -   🔄 **Recurring Expenses**: Setup automated monthly tracking for subscription and fixed costs.
 -   📂 **Smart Export**: Generate and download professional CSV reports compatible with Excel/Sheets.
