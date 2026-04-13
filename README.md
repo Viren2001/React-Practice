@@ -1,16 +1,76 @@
-# React + Vite
+# 💜 Expense Tracker - Premium Financial Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<p align="center">
+  <img src="./public/banner.png" alt="Expense Tracker Banner" width="100%">
+</p>
 
-Currently, two official plugins are available:
+<p align="center">
+  <img src="https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=white" />
+  <img src="https://img.shields.io/badge/Vite-7.2-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
+  <img src="https://img.shields.io/badge/Firebase-v12-FFCA28?style=for-the-badge&logo=firebase&logoColor=white" />
+  <img src="https://img.shields.io/badge/Framer--Motion-v12-FF0055?style=for-the-badge&logo=framer&logoColor=white" />
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ Overview
+A state-of-the-art, premium expense tracking application designed for precision and elegance. Built with a focus on high-end aesthetics (**Soft Lavender theme**) and seamless user experience, this tool simplifies financial management with intelligent automation and deep data insights.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Key Features
+-   📈 **Pro Dashboard**: Real-time data visualizations using Area and Pie charts to track spending trends.
+-   🧾 **Receipt OCR**: Upload receipt images and let the app extract data automatically via Tesseract.js.
+-   🔄 **Recurring Expenses**: Setup automated monthly tracking for subscription and fixed costs.
+-   📂 **Smart Export**: Generate and download professional CSV reports compatible with Excel/Sheets.
+-   🏷️ **Autocategorization**: Intelligent keyword detection to automatically categorize your spending.
+-   📱 **Mobile First**: Fully responsive layout optimized for all device sizes.
+-   🔒 **Enterprise Security**: Firestore security rules and environment-based credential management.
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
+-   **Frontend**: React 19, Vite, Lucide React
+-   **Animations**: Framer Motion
+-   **Charts**: Recharts
+-   **Backend/Auth**: Firebase Firestore & Auth
+-   **Utilities**: Tesseract.js (OCR), Date-fns
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🔒 Security Hardening
+Recent updates have implemented:
+-   **Environment Separation**: Sensitive API keys moved to `.env` files.
+-   **Server-Side Rules**: Strict Firestore rules ensure data is private to each user.
+-   **Input Sanitization**: Enhanced login/signup security prevents user enumeration.
+
+## 🏁 Getting Started
+
+### Prerequisites
+-   Node.js (v18+)
+-   Firebase Account
+
+### Installation
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/Viren2001/React-Practice.git
+    cd expense-tracker
+    ```
+2.  **Install dependencies**
+    ```bash
+    npm install
+    ```
+3.  **Setup Environment Variables**
+    Create a `.env` file in the root and add your Firebase credentials:
+    ```env
+    VITE_FIREBASE_API_KEY=your_key
+    VITE_FIREBASE_AUTH_DOMAIN=your_domain
+    VITE_FIREBASE_PROJECT_ID=your_id
+    VITE_FIREBASE_STORAGE_BUCKET=your_bucket
+    VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+    VITE_FIREBASE_APP_ID=your_app_id
+    ```
+4.  **Launch the App**
+    ```bash
+    npm run dev
+    ```
+
+## 📄 License
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+<p align="center">Built with 💜 by Viren</p>
