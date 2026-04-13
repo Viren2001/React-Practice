@@ -32,7 +32,13 @@ A state-of-the-art, premium expense tracking application designed for precision 
 -   **Animations**: Framer Motion
 -   **Charts**: Recharts
 -   **Backend/Auth**: Firebase Firestore & Auth
--   **Utilities**: Date-fns, Auto-categorization engine
+-   **Utilities**: Tesseract.js (OCR), Date-fns
+
+## 🔒 Security Hardening
+Recent updates have implemented:
+-   **Environment Separation**: Sensitive API keys moved to `.env` files.
+-   **Server-Side Rules**: Strict Firestore rules ensure data is private to each user.
+-   **Input Sanitization**: Enhanced login/signup security prevents user enumeration.
 
 ## 🏁 Getting Started
 
