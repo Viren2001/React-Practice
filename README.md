@@ -17,26 +17,22 @@
 A state-of-the-art, premium expense tracking application designed for precision and elegance. Built with a focus on high-end aesthetics (**Soft Lavender theme**) and seamless user experience, this tool simplifies financial management with intelligent automation and deep data insights.
 
 ## 🚀 Key Features
--   📈 **Pro Dashboard**: Real-time data visualizations using Area and Pie charts with flexible filtering (Monthly, Quarterly, Yearly).
--   🧾 **Receipt OCR**: Upload receipt images and let the app extract data automatically via Tesseract.js.
--   🔄 **Recurring Expenses**: Setup automated monthly tracking for subscription and fixed costs.
--   📂 **Smart Export**: Generate and download professional CSV reports compatible with Excel/Sheets.
--   🏷️ **Autocategorization**: Intelligent keyword detection to automatically categorize your spending.
--   📱 **Mobile First**: Fully responsive layout optimized for all device sizes.
--   🔒 **Enterprise Security**: Firestore security rules and environment-based credential management.
+-   📈 **Pro Dashboard**: Real-time data visualizations (Area & Pie charts) with flexible filtering by **Month, Quarter, or Year**.
+-   💰 **Smart Budgeting**: Set global and **category-specific targets** with adjustable **Alert Thresholds** (50%–100%).
+-   🌍 **Multi-Currency**: Seamless support for **$, €, £, ₹, and ¥** with instant symbol switching.
+-   🏷️ **Auto-Categorization**: Intelligent keyword detection suggestions for faster logging and custom category management.
+-   🔄 **Recurring Expenses**: Setup automated monthly tracking for subscriptions and fixed-cost transactions.
+-   📂 **Advanced Export**: Generate professional CSV reports for specific timeframes or your entire account history.
+-   ⌨️ **Power User Interface**: Rapid management with **Keyboard Shortcuts** (`N` to add, `Esc` to close) and **Bulk Actions**.
+-   ✨ **Premium Aesthetics**: Sophisticated UI featuring **Glassmorphism**, granular noise textures, and smooth Framer Motion transitions.
+-   🔒 **Secure & Private**: Full Firebase integration with environment-based credentials and server-side Firestore security rules.
 
 ## 🛠️ Tech Stack
 -   **Frontend**: React 19, Vite, Lucide React
 -   **Animations**: Framer Motion
 -   **Charts**: Recharts
 -   **Backend/Auth**: Firebase Firestore & Auth
--   **Utilities**: Tesseract.js (OCR), Date-fns
-
-## 🔒 Security Hardening
-Recent updates have implemented:
--   **Environment Separation**: Sensitive API keys moved to `.env` files.
--   **Server-Side Rules**: Strict Firestore rules ensure data is private to each user.
--   **Input Sanitization**: Enhanced login/signup security prevents user enumeration.
+-   **Utilities**: Date-fns, Auto-categorization engine
 
 ## 🏁 Getting Started
 
