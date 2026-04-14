@@ -1,12 +1,12 @@
 import React from "react";
 import { AlertTriangle, TrendingUp, CheckCircle } from "lucide-react";
 
-function BudgetAlert({ spent, budget, currency = "$" }) {
+function BudgetAlert({ spent, budget, currency = "$", alertThreshold = 80 }) {
   if (!budget || budget <= 0) return null;
 
   const percentage = (spent / budget) * 100;
 
-  if (percentage < 50) return null;
+  if (percentage < Math.min(50, alertThreshold - 10)) return null;
 
   let alertType, icon, message;
 
@@ -14,7 +14,7 @@ function BudgetAlert({ spent, budget, currency = "$" }) {
     alertType = "danger";
     icon = <AlertTriangle size={18} />;
     message = `Budget exceeded! You've spent ${currency}${spent.toFixed(2)} of ${currency}${budget.toFixed(2)} (${percentage.toFixed(0)}%)`;
-  } else if (percentage >= 80) {
+  } else if (percentage >= alertThreshold) {
     alertType = "warning";
     icon = <TrendingUp size={18} />;
     message = `Heads up! You've used ${percentage.toFixed(0)}% of your monthly budget (${currency}${(budget - spent).toFixed(2)} remaining)`;

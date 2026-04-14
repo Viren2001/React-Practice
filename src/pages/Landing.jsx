@@ -96,7 +96,7 @@ export default function Landing() {
         <nav className="nav-pill" ref={navRef}>
           <a href="#top" onClick={scrollToTop} className="nav-brand">
             <div className="brand-dot"></div>
-            TRACKER
+            <span>TRACKER</span>
           </a>
           <div className="nav-links">
             <a href="#features" className="nav-link">Features</a>

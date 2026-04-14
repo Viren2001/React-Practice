@@ -34,17 +34,18 @@ function Sidebar() {
                         <div className="logo-icon" style={{
                             width: "32px",
                             height: "32px",
-                            background: "linear-gradient(135deg, var(--primary) 0%, #1e40af 100%)",
-                            borderRadius: "10px",
+                            background: "var(--primary)",
+                            borderRadius: "6px",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            boxShadow: "0 4px 12px var(--primary-glow)",
-                            flexShrink: 0
+                            boxShadow: "0 0 15px var(--primary-glow)",
+                            flexShrink: 0,
+                            transform: "rotate(45deg)"
                         }}>
-                             <PlusCircle size={18} color="white" />
+                             <PlusCircle size={18} color="white" style={{ transform: "rotate(-45deg)" }} />
                         </div>
-                        <span className="logo-text">Tracker<span style={{ color: "var(--primary)" }}>.</span></span>
+                        <span className="logo-text">TRACKER</span>
                     </div>
                 </div>
             </div>
@@ -83,13 +84,13 @@ function Sidebar() {
                 {currentUser && (
                     <div className="user-info">
                         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                            <div style={{ 
-                                width: "32px", 
-                                height: "32px", 
-                                borderRadius: "8px", 
-                                background: "rgba(255,255,255,0.1)", 
-                                display: "flex", 
-                                alignItems: "center", 
+                            <div style={{
+                                width: "32px",
+                                height: "32px",
+                                borderRadius: "8px",
+                                background: "rgba(255,255,255,0.1)",
+                                display: "flex",
+                                alignItems: "center",
                                 justifyContent: "center",
                                 fontWeight: "800",
                                 fontSize: "14px",

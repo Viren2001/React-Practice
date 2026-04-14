@@ -33,14 +33,13 @@ export default function Login() {
     <div className="auth-wrapper fade-in-up">
       <div className="auth-left stagger-1">
         <Link to="/" className="auth-nav">
-          <div className="logo-icon-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: "rotate(-45deg)" }}><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          <div className="auth-diamond mini">
+            <Zap size={16} color="white" />
           </div>
-          Tracker<span>.</span>
+          <span className="auth-brand-text">LOGIN</span>
         </Link>
 
-        <div className="auth-shape shape-1"></div>
-        <div className="auth-shape shape-2"></div>
+
 
         <div className="auth-card">
           <h2>Welcome Back</h2>
@@ -85,8 +84,7 @@ export default function Login() {
       </div>
 
       <div className="auth-right stagger-2">
-        <div className="auth-right-shape ar-shape-1"></div>
-        <div className="auth-right-shape ar-shape-2"></div>
+
 
         <div className="auth-right-content">
           <h1 className="auth-right-title">Pick Up Where You Left Off</h1>
@@ -94,51 +92,51 @@ export default function Login() {
 
           <div className="auth-features-mockup fade-in-up" style={{ animationDelay: '0.3s' }}>
             <div className="auth-css-graphic">
-               <div className="graphic-header">
-                 <div className="g-dot" style={{background: '#ef4444'}}></div>
-                 <div className="g-dot" style={{background: '#f59e0b'}}></div>
-                 <div className="g-dot" style={{background: '#10b981'}}></div>
-               </div>
-               <div className="graphic-body">
-                  <div className="g-bar-group">
-                     <div className="g-bar" style={{ height: '40%' }}></div>
-                     <div className="g-bar" style={{ height: '70%' }}></div>
-                     <div className="g-bar highlight" style={{ height: '100%' }}></div>
-                     <div className="g-bar" style={{ height: '60%' }}></div>
+              <div className="graphic-header">
+                <div className="g-dot" style={{ background: '#ef4444' }}></div>
+                <div className="g-dot" style={{ background: '#f59e0b' }}></div>
+                <div className="g-dot" style={{ background: '#10b981' }}></div>
+              </div>
+              <div className="graphic-body">
+                <div className="g-bar-group">
+                  <div className="g-bar" style={{ height: '40%' }}></div>
+                  <div className="g-bar" style={{ height: '70%' }}></div>
+                  <div className="g-bar highlight" style={{ height: '100%' }}></div>
+                  <div className="g-bar" style={{ height: '60%' }}></div>
+                </div>
+                <div className="g-stats">
+                  <div className="g-stat-box">
+                    <span className="g-lbl">Total Balance</span>
+                    <span className="g-val">$12,450.00</span>
                   </div>
-                  <div className="g-stats">
-                     <div className="g-stat-box">
-                        <span className="g-lbl">Total Balance</span>
-                        <span className="g-val">$12,450.00</span>
-                     </div>
-                     <div className="g-stat-box outline">
-                        <span className="g-lbl">Monthly Spend</span>
-                        <span className="g-val">$3,120.50</span>
-                     </div>
+                  <div className="g-stat-box outline">
+                    <span className="g-lbl">Monthly Spend</span>
+                    <span className="g-val">$3,120.50</span>
                   </div>
-               </div>
+                </div>
+              </div>
             </div>
 
             <div className="auth-feature-list">
               <div className="auth-feat">
                 <div className="feat-icon"><Activity size={20} /></div>
                 <div>
-                   <h4>Deep Insights</h4>
-                   <p>Review your monthly spending</p>
+                  <h4>Deep Insights</h4>
+                  <p>Review your monthly spending</p>
                 </div>
               </div>
               <div className="auth-feat">
                 <div className="feat-icon"><Zap size={20} /></div>
                 <div>
-                   <h4>Quick Logging</h4>
-                   <p>Add expenses in seconds</p>
+                  <h4>Quick Logging</h4>
+                  <p>Add expenses in seconds</p>
                 </div>
               </div>
               <div className="auth-feat">
                 <div className="feat-icon"><Target size={20} /></div>
                 <div>
-                   <h4>Budget Goals</h4>
-                   <p>Always stay on track</p>
+                  <h4>Budget Goals</h4>
+                  <p>Always stay on track</p>
                 </div>
               </div>
             </div>

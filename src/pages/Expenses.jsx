@@ -19,7 +19,8 @@ import {
     X,
     Filter,
     Activity,
-    Check
+    Check,
+    Info
 } from "lucide-react";
 import { exportToCSV } from "../utils/exportCSV";
 
@@ -30,6 +31,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
     const [editingExpense, setEditingExpense] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+    const [showProTip, setShowProTip] = useState(false);
 
     // Advanced Filters State
     const [minAmount, setMinAmount] = useState("");
@@ -180,6 +182,22 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                     <PageHeader title="Transactions" subtitle="Detailed breakdown of your spending habits." />
                 </div>
                 <div className="page-actions" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                    <div style={{ position: "relative", display: "inline-block" }} onMouseEnter={() => setShowProTip(true)} onMouseLeave={() => setShowProTip(false)}>
+                        <button
+                            style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--text-muted)", padding: "10px", borderRadius: "12px", cursor: "help", display: "flex", alignItems: "center", justifyContent: "center" }}
+                        >
+                            <Info size={18} />
+                        </button>
+                        {showProTip && (
+                            <div style={{ position: "absolute", top: "100%", right: 0, marginTop: "8px", background: "rgba(var(--bg-card-rgb), 0.95)", border: "1px solid var(--border)", color: "var(--text-main)", padding: "12px 16px", borderRadius: "16px", fontSize: "12px", fontWeight: "700", width: "max-content", zIndex: 100, boxShadow: "0 20px 40px -5px rgba(0,0,0,0.3)" }}>
+                                <span style={{ color: "var(--primary)", fontWeight: "900" }}>PRO TIP:</span> 
+                                <span style={{ marginLeft: "8px" }}>
+                                    Press <kbd style={{ background: "var(--primary)", color: "white", padding: "2px 8px", borderRadius: "6px", margin: "0 2px" }}>N</kbd> to quick-add • <kbd style={{ background: "rgba(255,255,255,0.1)", color: "var(--text-main)", padding: "2px 8px", borderRadius: "6px", margin: "0 2px", border: "1px solid var(--border)" }}>Esc</kbd> to exit
+                                </span>
+                            </div>
+                        )}
+                    </div>
+
                     <button
                         onClick={handleDeleteAll}
                         style={{ background: "rgba(239, 68, 68, 0.1)", color: "#ef4444", padding: "10px", borderRadius: "12px", border: "1px solid rgba(239, 68, 68, 0.1)" }}
@@ -209,12 +227,6 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                         {showForm ? <><X size={18} /> Close</> : <><Plus size={18} /> Add New</>}
                     </button>
                 </div>
-            </div>
-            {/* Keyboard shortcut hint */}
-            <div style={{ marginBottom: "24px", textAlign: "center" }}>
-                <span className="keyboard-hint" style={{ background: "rgba(var(--bg-card-rgb), 0.8)", border: "1px solid var(--border)", color: "var(--text-main)", padding: "10px 20px", borderRadius: "30px", fontSize: "12px", fontWeight: "700", display: "inline-flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ color: "var(--primary)", fontWeight: "900" }}>PRO TIP:</span> Press <kbd style={{ background: "var(--primary)", color: "white", padding: "2px 8px", borderRadius: "6px", margin: "0 2px" }}>N</kbd> to quick-add • <kbd style={{ background: "var(--border)", color: "var(--text-main)", padding: "2px 8px", borderRadius: "6px", margin: "0 2px" }}>Esc</kbd> to exit
-                </span>
             </div>
 
             {/* Add Expense Form - Collapsible */}

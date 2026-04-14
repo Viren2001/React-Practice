@@ -29,6 +29,7 @@ function AppLayout() {
   const [budget, setBudget] = useState(0);
   const [categoryBudgets, setCategoryBudgets] = useState({});
   const [currency, setCurrency] = useState("$");
+  const [alertThreshold, setAlertThreshold] = useState(80);
   const [hasCheckedRecurring, setHasCheckedRecurring] = useState(false);
 
   // Sync budget and categories from settings
@@ -52,6 +53,7 @@ function AppLayout() {
         setBudget(data.monthlyBudget || 0);
         setCategoryBudgets(data.categoryBudgets || {});
         setCurrency(data.currency || "$");
+        setAlertThreshold(data.alertThreshold || 80);
 
         // Essential categories that should always be present
         const essentialCategories = ["Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Housing", "Work", "Other"];
@@ -292,6 +294,7 @@ function AppLayout() {
                     updateBudget={updateBudget}
                     categoryBudgets={categoryBudgets}
                     currency={currency}
+                    alertThreshold={alertThreshold}
                   />
                 </ProtectedRoute>
               ) : (
