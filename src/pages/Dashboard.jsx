@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import PageHeader from "../components/PageHeader";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import BudgetAlert from "../components/BudgetAlert";
@@ -15,13 +15,14 @@ import {
     Activity,
     Target,
     PieChart as PieChartIcon,
-    BarChart3
+    BarChart3,
+    AlertTriangle
 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Scatter } from "recharts";
 
 const COLORS = ['#d946ef', '#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
 
-function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, currency = "$" }) {
+function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, currency = "$", alertThreshold = 80 }) {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     
@@ -99,6 +100,28 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
 
     const periodLabel = formatPeriodLabel(month);
 
+    // Modal Alert Logic
+    const [showBudgetModal, setShowBudgetModal] = useState(false);
+    const hasInitialAlertedRef = useRef(false);
+    const prevPercentageRef = useRef(0);
+
+    useEffect(() => {
+        if (!effectiveBudget) return;
+        const percentage = (periodTotal / effectiveBudget) * 100;
+
+        if (percentage >= alertThreshold) {
+            if (!hasInitialAlertedRef.current) {
+                setShowBudgetModal(true);
+                hasInitialAlertedRef.current = true;
+            } else if (prevPercentageRef.current < alertThreshold && percentage >= alertThreshold) {
+                setShowBudgetModal(true);
+            } else if (prevPercentageRef.current < 100 && percentage >= 100) {
+                setShowBudgetModal(true);
+            }
+        }
+        prevPercentageRef.current = percentage;
+    }, [periodTotal, effectiveBudget, alertThreshold]);
+
     return (
         <div className="page-container" style={{ paddingBottom: "60px" }}>
             <div className="page-header-container" style={{ marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "20px" }}>
@@ -114,7 +137,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
                 </div>
             </div>
 
-            <BudgetAlert spent={periodTotal} budget={effectiveBudget} currency={currency} />
+            <BudgetAlert spent={periodTotal} budget={effectiveBudget} currency={currency} alertThreshold={alertThreshold} />
 
             {/* Quick Stats Top Row */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px", marginBottom: "24px" }}>
@@ -285,8 +308,9 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
                                             ))}
                                         </Pie>
                                         <Tooltip 
-                                            formatter={(value) => `${currency}${Number(value).toFixed(2)}`}
-                                            contentStyle={{ backgroundColor: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', fontWeight: '700' }}
+                                            formatter={(value) => [`${currency}${Number(value).toFixed(2)}`, 'Spent']}
+                                            contentStyle={{ backgroundColor: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', fontWeight: '700', color: 'var(--text-main)', boxShadow: '0 10px 20px -5px rgba(0,0,0,0.1)' }}
+                                            itemStyle={{ color: 'var(--text-main)', fontWeight: '900' }}
                                         />
                                     </PieChart>
                                 </ResponsiveContainer>
@@ -367,6 +391,29 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
                     </ul>
                 )}
             </div>
+
+            {/* Budget Alert Modal */}
+            {showBudgetModal && (
+                <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(5px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div className="card glass-effect fade-in-up" style={{ width: "90%", maxWidth: "420px", display: "flex", flexDirection: "column", gap: "16px", padding: "32px", border: periodTotal >= effectiveBudget ? "2px solid var(--danger)" : "2px solid var(--warning)", boxShadow: periodTotal >= effectiveBudget ? "0 20px 50px -10px rgba(239, 68, 68, 0.3)" : "0 20px 50px -10px rgba(245, 158, 11, 0.3)" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px", color: periodTotal >= effectiveBudget ? "var(--danger)" : "var(--warning)" }}>
+                            <AlertTriangle size={36} />
+                            <h2 style={{ margin: 0, fontSize: "22px", fontWeight: "900" }}>{periodTotal >= effectiveBudget ? "Budget Limit Exceeded!" : "Budget Alert!"}</h2>
+                        </div>
+                        <p style={{ margin: 0, color: "var(--text-main)", fontSize: "16px", lineHeight: "1.5", fontWeight: "500" }}>
+                            {periodTotal >= effectiveBudget 
+                                ? `You have crossed your budget limit of ${currency}${effectiveBudget}. Please try to reduce your expenses or do not make more expenses.` 
+                                : `You have reached ${Math.round((periodTotal / effectiveBudget) * 100)}% of your budget limit. Please try to reduce your expenses.`}
+                        </p>
+                        <button 
+                            onClick={() => setShowBudgetModal(false)}
+                            style={{ background: periodTotal >= effectiveBudget ? "var(--danger)" : "var(--warning)", color: "white", padding: "14px", border: "none", borderRadius: "10px", fontSize: "16px", fontWeight: "800", cursor: "pointer", marginTop: "12px", boxShadow: periodTotal >= effectiveBudget ? "0 10px 20px -5px rgba(239,68,68,0.4)" : "0 10px 20px -5px rgba(245,158,11,0.4)" }}
+                        >
+                            I Understand
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

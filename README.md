@@ -5,10 +5,10 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=white" />
-  <img src="https://img.shields.io/badge/Vite-7.2-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
-  <img src="https://img.shields.io/badge/Firebase-v12-FFCA28?style=for-the-badge&logo=firebase&logoColor=white" />
-  <img src="https://img.shields.io/badge/Framer--Motion-v12-FF0055?style=for-the-badge&logo=framer&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=white" />
+  <img src="https://img.shields.io/badge/Vite-7.3-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
+  <img src="https://img.shields.io/badge/Firebase-v12.11-FFCA28?style=for-the-badge&logo=firebase&logoColor=white" />
+  <img src="https://img.shields.io/badge/Framer--Motion-v12.38-FF0055?style=for-the-badge&logo=framer&logoColor=white" />
 </p>
 
 ---
@@ -32,7 +32,7 @@ A state-of-the-art, premium expense tracking application designed for precision 
 -   **Animations**: Framer Motion
 -   **Charts**: Recharts
 -   **Backend/Auth**: Firebase Firestore & Auth
--   **Utilities**: Tesseract.js (OCR), Date-fns
+-   **Utilities**: Lucide Icons, Date Utilities
 
 ## 🔒 Security Hardening
 Recent updates have implemented:
