@@ -45,7 +45,7 @@ function Sidebar() {
                         }}>
                              <PlusCircle size={18} color="white" style={{ transform: "rotate(-45deg)" }} />
                         </div>
-                        <span className="logo-text">TRACKER</span>
+                        <span className="logo-text">EXOVAULT</span>
                     </div>
                 </div>
             </div>
