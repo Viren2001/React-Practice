@@ -1,7 +1,7 @@
-# 💜 Expense Tracker - Premium Financial Dashboard
+# 💜 ExoVault - Premium Financial Dashboard
 
 <p align="center">
-  <img src="./public/banner.png" alt="Expense Tracker Banner" width="100%">
+  <img src="./public/banner.png" alt="ExoVault Banner" width="100%">
 </p>
 
 <p align="center">

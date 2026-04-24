@@ -96,7 +96,7 @@ export default function Landing() {
         <nav className="nav-pill" ref={navRef}>
           <a href="#top" onClick={scrollToTop} className="nav-brand">
             <div className="brand-dot"></div>
-            <span>TRACKER</span>
+            <span>EXOVAULT</span>
           </a>
           <div className="nav-links">
             <a href="#features" className="nav-link">Features</a>
@@ -408,7 +408,7 @@ export default function Landing() {
             >
               <div className="nav-brand" style={{ marginBottom: '1.5rem', transform: 'none' }}>
                 <div className="brand-dot"></div>
-                TRACKER
+                EXOVAULT
               </div>
               <p className="footer-v2-desc">
                 An intelligent financial companion designed to give you absolute clarity over your wealth. Built for speed, privacy, and visual excellence.

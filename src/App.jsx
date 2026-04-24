@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
+import AIAssistant from "./components/AIAssistant";
 import Dashboard from "./pages/Dashboard";
 import Expenses from "./pages/Expenses";
 import Reports from "./pages/Reports";
@@ -275,6 +276,13 @@ function AppLayout() {
   return (
     <div className={currentUser ? "app-container" : ""}>
       {currentUser && <Sidebar />}
+      {currentUser && (
+        <AIAssistant 
+          expenses={expenses} 
+          addExpense={addExpense} 
+          currency={currency} 
+        />
+      )}
 
       <main className={currentUser ? "main-content" : ""}>
         <Routes>
