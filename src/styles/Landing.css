@@ -1100,3 +1100,51 @@
         gap: 1.5rem;
     }
 }
+
+/* Mobile Responsiveness Additions */
+@media (max-width: 768px) {
+    .nav-pill {
+        padding: 0.6rem 1rem;
+        width: 95%;
+    }
+    
+    .nav-links {
+        display: none;
+    }
+    
+    .nav-brand {
+        font-size: 1.1rem;
+    }
+    
+    .nav-cta {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .f-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .p-container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    
+    .btn-row {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-lg {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .mock-row {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .mock-cat, .mock-row.header span:nth-child(2) {
+        display: none;
+    }
+}

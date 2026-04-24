@@ -98,7 +98,7 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
   };
 
   return (
-    <div className="page-container">
+    <div className="page-container" style={{ paddingBottom: "100px" }}>
       <PageHeader title="Settings" subtitle="Configure your preferences and budgets" />
 
       <div className="settings-grid">
@@ -204,7 +204,7 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
             <div className="settings-item-label" style={{ marginBottom: "12px" }}>Category Budgets</div>
             <div className="category-budgets-grid" style={{ 
               display: "grid", 
-              gridTemplateColumns: "1fr 1fr", 
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
               gap: "12px",
               maxHeight: "380px",
               overflowY: "auto",
