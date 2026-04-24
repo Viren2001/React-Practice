@@ -176,7 +176,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
     };
 
     return (
-        <div className="page-container">
+        <div className="page-container" style={{ paddingBottom: "100px" }}>
             <div className="page-header-row" style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "32px", flexWrap: "wrap" }}>
                 <div style={{ flex: 1, minWidth: "200px" }}>
                     <PageHeader title="Transactions" subtitle="Detailed breakdown of your spending habits." />
@@ -382,7 +382,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                     <Search size={18} style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)", pointerEvents: "none" }} />
                     <input
                         type="text"
-                        placeholder="Search for a specific purchase, vendor or note..."
+                        placeholder="Search transactions..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         style={{
@@ -399,7 +399,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
             </div>
 
             {/* Summary Highlights */}
-            <div className="glass-effect" style={{
+            <div className="ledger-summary-row glass-effect" style={{
                 marginBottom: "32px",
                 padding: "24px 32px",
                 borderRadius: "24px",

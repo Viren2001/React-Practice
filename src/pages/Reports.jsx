@@ -25,6 +25,14 @@ const COLORS = ["#d946ef", "#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6"
 
 function Reports({ expenses = [], month: propMonth, currency = "$" }) {
   const [month, setMonth] = useState(propMonth || new Date().toISOString().slice(0, 7));
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
   useEffect(() => {
     if (propMonth) setMonth(propMonth);
@@ -88,7 +96,7 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
   }));
 
   return (
-    <div className="page-container" style={{ paddingBottom: "60px" }}>
+    <div className="page-container" style={{ paddingBottom: "100px" }}>
       <PageHeader title="Visual Reports" subtitle="Deep dive into your spending analytics" />
 
       {/* Summary Cards Row */}
@@ -173,8 +181,8 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
                     paddingAngle={6}
                     dataKey="value"
                     stroke="none"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    labelLine={{ stroke: 'var(--text-muted)', strokeWidth: 1 }}
+                    label={isMobile ? false : ({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    labelLine={isMobile ? false : { stroke: 'var(--text-muted)', strokeWidth: 1 }}
                   >
                     {pieData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} cornerRadius={4} />
@@ -192,6 +200,7 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
                     }}
                     itemStyle={{ color: 'var(--text-main)', fontWeight: '900' }}
                   />
+                  <Legend iconType="circle" />
                 </PieChart>
               </ResponsiveContainer>
             </div>

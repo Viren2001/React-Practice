@@ -498,7 +498,7 @@ export default function Landing() {
           {/* Bottom Bar */}
           <div className="footer-v2-bottom">
             <div className="copyright">
-              © 2026 Tracker Dynamics. All rights reserved. Precision crafted for personal finance.
+              © 2026 ExoVault. All rights reserved. Precision crafted for personal finance.
             </div>
             <div className="bottom-links">
               <a href="#" className="bottom-link">Sitemap</a>

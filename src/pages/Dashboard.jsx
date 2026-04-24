@@ -123,7 +123,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
     }, [periodTotal, effectiveBudget, alertThreshold]);
 
     return (
-        <div className="page-container" style={{ paddingBottom: "60px" }}>
+        <div className="page-container" style={{ paddingBottom: "100px" }}>
             <div className="page-header-container" style={{ marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "20px" }}>
                 <div>
                     <h2 style={{ fontSize: "clamp(24px, 4vw, 32px)", fontWeight: "900", marginBottom: "8px", letterSpacing: "-0.04em" }}>
@@ -247,7 +247,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
             </div>
 
             {/* Main Visualizations Row */}
-            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "20px", marginBottom: "24px" }}>
+            <div className="dashboard-charts-grid">
                 {/* Trend Chart */}
                 <div className="card glass-effect">
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
@@ -325,7 +325,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
                             </div>
                         </>
                     ) : (
-                        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "180px" }}>
                              <span style={{ color: "var(--text-muted)", fontSize: "13px", fontWeight: "600" }}>No distribution data</span>
                         </div>
                     )}

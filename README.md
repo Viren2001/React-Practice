@@ -50,7 +50,7 @@ Recent updates have implemented:
 1.  **Clone the repository**
     ```bash
     git clone https://github.com/Viren2001/React-Practice.git
-    cd expense-tracker
+    cd ExoVault
     ```
 2.  **Install dependencies**
     ```bash

@@ -269,6 +269,19 @@ input::placeholder {
     gap: 16px;
 }
 
+@media (max-width: 768px) {
+    .ai-assistant-wrapper {
+        bottom: 80px;
+        right: 20px;
+    }
+    
+    .ai-chat-window {
+        width: calc(100vw - 40px) !important;
+        height: 500px !important;
+    }
+}
+
+
 .ai-toggle-bubble {
     width: 64px;
     height: 64px;
