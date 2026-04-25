@@ -6,12 +6,12 @@ import { useTheme } from "../contexts/ThemeContext";
 import { useToast } from "../contexts/ToastContext";
 import { db } from "../firebase";
 import { collection, query, where, getDocs, addDoc, updateDoc, doc, onSnapshot } from "firebase/firestore";
-import { Sun, Moon, Download, Save, User, Palette, Bell, DollarSign } from "lucide-react";
+import { Sun, Moon, Download, Save, User, Palette, Bell, DollarSign, Trash2 } from "lucide-react";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import { exportToCSV } from "../utils/exportCSV";
 import { formatPeriodLabel } from "../utils/dateUtils";
 
-function Settings({ expenses = [], month, categories = [], addCategory }) {
+function Settings({ expenses = [], month, categories = [], addCategory, deleteCategory }) {
   const { currentUser } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const toast = useToast();
@@ -19,7 +19,7 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
   const [monthlyBudget, setMonthlyBudget] = useState(0);
   const [categoryBudgets, setCategoryBudgets] = useState({});
   const [alertThreshold, setAlertThreshold] = useState(80);
-  const [currency, setCurrency] = useState("$");
+  const [currency, setCurrency] = useState("₹");
   const [settingsDocId, setSettingsDocId] = useState(null);
   const [newCatName, setNewCatName] = useState("");
 
@@ -39,7 +39,7 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
         setMonthlyBudget(data.monthlyBudget || 0);
         setCategoryBudgets(data.categoryBudgets || {});
         setAlertThreshold(data.alertThreshold || 80);
-        setCurrency(data.currency || "$");
+        setCurrency(data.currency || "₹");
       }
     });
 
@@ -65,9 +65,16 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
         settingsData.createdAt = Date.now();
         await addDoc(collection(db, "settings"), settingsData);
       }
-      toast.success("Settings saved successfully!");
+      toast.success("Preferences saved successfully!");
     } catch (err) {
-      toast.error("Failed to save settings");
+      toast.error("Failed to save preferences");
+    }
+  };
+
+  const handleDeleteCat = (cat) => {
+    if (window.confirm(`Delete category "${cat}"? This won\'t affect existing transactions.`)) {
+      deleteCategory(cat);
+      toast.success(`Category "${cat}" deleted`);
     }
   };
 
@@ -99,7 +106,7 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
 
   return (
     <div className="page-container" style={{ paddingBottom: "100px" }}>
-      <PageHeader title="Settings" subtitle="Configure your preferences and budgets" />
+      <PageHeader title="Preferences" subtitle="Configure your preferences and budgets" />
 
       <div className="settings-grid">
         {/* Profile Card */}
@@ -210,11 +217,35 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
               overflowY: "auto",
               paddingRight: "8px"
             }}>
-              {categories.map((cat) => (
-                <div key={cat} className="category-budget-item">
-                  <div className="category-budget-label">
-                    {getCategoryIcon(cat)}
-                    <span style={{ fontSize: "13px" }}>{cat}</span>
+            {categories.map((cat) => {
+                const essentialCategories = ["Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Housing", "Work", "Other"];
+                const isCustom = !essentialCategories.includes(cat);
+                return (
+                <div key={cat} className="category-budget-item" style={{ position: "relative" }}>
+                  <div className="category-budget-label" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      {getCategoryIcon(cat)}
+                      <span style={{ fontSize: "13px" }}>{cat}</span>
+                    </div>
+                    {isCustom && deleteCategory && (
+                      <button
+                        onClick={() => handleDeleteCat(cat)}
+                        title="Delete this category"
+                        style={{
+                          background: "rgba(239, 68, 68, 0.08)",
+                          border: "1px solid rgba(239, 68, 68, 0.15)",
+                          color: "#ef4444",
+                          borderRadius: "6px",
+                          padding: "3px 6px",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          flexShrink: 0
+                        }}
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    )}
                   </div>
                   <div className="settings-input-group">
                     <span className="settings-input-prefix">{currency}</span>
@@ -232,7 +263,8 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
                     />
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -313,7 +345,7 @@ function Settings({ expenses = [], month, categories = [], addCategory }) {
       <div className="settings-save-container">
         <button onClick={handleSave} className="btn-primary btn-save-settings">
           <Save size={18} />
-          Save All Settings
+          Save All Preferences
         </button>
       </div>
     </div>

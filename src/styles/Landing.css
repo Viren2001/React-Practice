@@ -100,7 +100,7 @@
 }
 
 .nav-brand span {
-    background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1101,6 +1101,11 @@
     }
 }
 
+/* Desktop / Mobile Theme Toggle Control */
+.mobile-theme-toggle {
+    display: none;
+}
+
 /* Mobile Responsiveness Additions */
 @media (max-width: 768px) {
     .nav-pill {
@@ -1146,5 +1151,31 @@
     
     .mock-cat, .mock-row.header span:nth-child(2) {
         display: none;
+    }
+
+    /* Bottom right theme toggle for mobile */
+    .landing-theme-toggle-wrap {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 1000;
+        background: rgba(var(--bg-card-rgb), 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 14px;
+        border: 1px solid var(--primary);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2), 0 0 15px var(--primary-glow);
+    }
+
+    .landing-theme-toggle-wrap .theme-toggle-btn {
+        padding: 12px !important;
+    }
+
+    .desktop-theme-toggle {
+        display: none !important;
+    }
+
+    .mobile-theme-toggle {
+        display: block;
     }
 }

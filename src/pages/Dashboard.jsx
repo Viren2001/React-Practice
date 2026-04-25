@@ -16,13 +16,14 @@ import {
     Target,
     PieChart as PieChartIcon,
     BarChart3,
-    AlertTriangle
+    AlertTriangle,
+    X
 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Scatter } from "recharts";
 
 const COLORS = ['#d946ef', '#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
 
-function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, currency = "$", alertThreshold = 80 }) {
+function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, updateThreshold, currency = "$", alertThreshold = 80 }) {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     
@@ -90,12 +91,20 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
     // Local Edit Budget State
     const [isEditingBudget, setIsEditingBudget] = useState(false);
     const [tempBudget, setTempBudget] = useState(budget);
+    const [tempThreshold, setTempThreshold] = useState(alertThreshold);
+    const [showThresholdPopup, setShowThresholdPopup] = useState(false);
 
     useEffect(() => { setTempBudget(budget); }, [budget]);
+    useEffect(() => { setTempThreshold(alertThreshold); }, [alertThreshold]);
 
     const handleSaveBudget = () => {
         updateBudget(tempBudget);
         setIsEditingBudget(false);
+    };
+
+    const handleSaveThreshold = () => {
+        updateThreshold(tempThreshold);
+        // Popup stays open or user can close manually
     };
 
     const periodLabel = formatPeriodLabel(month);
@@ -136,8 +145,6 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
                     <MonthSelector value={month} onChange={setMonth} options={[{ label: "Full History", value: "All" }]} />
                 </div>
             </div>
-
-            <BudgetAlert spent={periodTotal} budget={effectiveBudget} currency={currency} alertThreshold={alertThreshold} />
 
             {/* Quick Stats Top Row */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px", marginBottom: "24px" }}>
@@ -414,6 +421,66 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, c
                     </div>
                 </div>
             )}
+
+            {/* Threshold Popup Toggle Button & Panel */}
+            <div style={{ position: "fixed", bottom: "112px", right: "32px", zIndex: 9998, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "16px" }}>
+                {showThresholdPopup && (
+                    <div className="card glass-effect fade-in-up" style={{ width: "320px", padding: "20px", border: periodTotal >= effectiveBudget ? "2px solid var(--danger)" : "1px solid var(--border)", boxShadow: "var(--shadow-lg)" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: periodTotal >= effectiveBudget ? "var(--danger)" : "var(--primary)", fontWeight: "800" }}>
+                                <AlertTriangle size={18} />
+                                <span>Budget Status</span>
+                            </div>
+                            <button onClick={() => setShowThresholdPopup(false)} style={{ background: "transparent", border: "none", color: "var(--text-muted)", cursor: "pointer", padding: "4px" }}>
+                                <X size={16} />
+                            </button>
+                        </div>
+                        
+                        <div style={{ marginBottom: "16px", fontSize: "14px", color: "var(--text-main)", fontWeight: "600", lineHeight: "1.5" }}>
+                            {periodTotal >= effectiveBudget 
+                                ? `You have crossed your budget limit of ${currency}${effectiveBudget}.` 
+                                : `You have reached ${Math.round((periodTotal / effectiveBudget) * 100)}% of your limit (${currency}${effectiveBudget}).`}
+                        </div>
+
+                        <div style={{ height: "8px", background: "rgba(16, 185, 129, 0.2)", borderRadius: "4px", marginBottom: "20px", overflow: "hidden" }}>
+                            <div style={{ height: "100%", width: `${Math.min(100, (periodTotal / effectiveBudget) * 100)}%`, background: periodTotal >= effectiveBudget ? "var(--danger)" : "var(--primary)", borderRadius: "4px" }} />
+                        </div>
+
+                        <div style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-muted)", marginBottom: "8px", textTransform: "uppercase" }}>Alert Threshold (%)</div>
+                        <div style={{ display: "flex", gap: "8px" }}>
+                            <input 
+                                type="number" 
+                                value={tempThreshold} 
+                                onChange={(e) => setTempThreshold(e.target.value)}
+                                style={{ flex: 1, padding: "8px 12px", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--bg-input)", color: "var(--text-main)" }}
+                            />
+                            <button onClick={handleSaveThreshold} style={{ background: "var(--primary)", color: "white", border: "none", padding: "8px 16px", borderRadius: "8px", fontWeight: "700", cursor: "pointer" }}>
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                )}
+                
+                <button 
+                    onClick={() => setShowThresholdPopup(!showThresholdPopup)}
+                    style={{
+                        width: "56px", 
+                        height: "56px", 
+                        borderRadius: "18px", 
+                        background: periodTotal >= effectiveBudget ? "var(--danger)" : "var(--bg-card)",
+                        border: periodTotal >= effectiveBudget ? "none" : "1px solid var(--border)",
+                        boxShadow: periodTotal >= effectiveBudget ? "0 10px 20px rgba(239, 68, 68, 0.4)" : "var(--shadow-md)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        color: periodTotal >= effectiveBudget ? "white" : "var(--primary)",
+                        transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)"
+                    }}
+                >
+                    <AlertTriangle size={24} />
+                </button>
+            </div>
         </div>
     );
 }

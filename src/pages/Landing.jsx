@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useTheme } from "../contexts/ThemeContext";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowRight,
@@ -28,7 +29,9 @@ import {
   Cloud,
   Database,
   Search,
-  Download
+  Download,
+  Sun,
+  Moon
 } from "lucide-react";
 import dashboardPreview from "../assets/dashboard-preview.png";
 import "../styles/Landing.css";
@@ -74,6 +77,7 @@ const StackSection = ({ children, customPadding }) => {
 
 export default function Landing() {
   const { currentUser } = useAuth();
+  const { isDarkMode, toggleTheme } = useTheme();
   const navRef = useRef(null);
   const { scrollY } = useScroll();
 
@@ -103,9 +107,29 @@ export default function Landing() {
             <a href="#process" className="nav-link">Process</a>
             <Link to="/login" className="nav-link text-accent">Sign In</Link>
           </div>
+          <div className="desktop-theme-toggle" style={{ display: "flex", alignItems: "center", marginRight: "12px" }}>
+            <button 
+              onClick={toggleTheme} 
+              className="theme-toggle-btn" 
+              style={{ background: "rgba(var(--text-main-rgb, 255, 255, 255), 0.05)", border: "1px solid var(--border)", color: "var(--text-main)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: "8px", borderRadius: "10px", transition: "all 0.3s ease" }}
+            >
+              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+          </div>
           <Link to="/signup" className="nav-cta">Get Started</Link>
         </nav>
       </motion.div>
+
+      {/* Mobile Theme Toggle (Floating Bottom Right) */}
+      <div className="mobile-theme-toggle landing-theme-toggle-wrap">
+        <button 
+          onClick={toggleTheme} 
+          className="theme-toggle-btn" 
+          style={{ background: "rgba(var(--text-main-rgb, 255, 255, 255), 0.05)", border: "1px solid var(--border)", color: "var(--text-main)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: "8px", borderRadius: "10px", transition: "all 0.3s ease" }}
+        >
+          {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
+      </div>
 
       {/* PAGE SCROLLING STACK FOR MAIN SECTIONS */}
       <div className="page-stacking-container">
@@ -449,8 +473,6 @@ export default function Landing() {
               <ul className="footer-v2-links">
                 <li><a href="#">Documentation</a></li>
                 <li><a href="#">Help Center</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms</a></li>
               </ul>
             </motion.div>
 
@@ -501,9 +523,8 @@ export default function Landing() {
               © 2026 ExoVault. All rights reserved. Precision crafted for personal finance.
             </div>
             <div className="bottom-links">
-              <a href="#" className="bottom-link">Sitemap</a>
-              <a href="#" className="bottom-link">Cookies</a>
-              <a href="#" className="bottom-link"><ExternalLink size={14} /> Open Source</a>
+              <a href="#" className="bottom-link">Privacy Policy</a>
+              <a href="#" className="bottom-link">Terms & Condition</a>
             </div>
           </div>
         </div>

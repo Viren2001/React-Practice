@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { exportToCSV } from "../utils/exportCSV";
 
-function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, deleteMultipleExpenses, deleteAllExpenses, categories = [], addCategory, category, setCategory, month, setMonth, currency = "$" }) {
+function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, deleteMultipleExpenses, deleteAllExpenses, categories = [], addCategory, deleteCategory, category, setCategory, month, setMonth, currency = "₹" }) {
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState("date-desc");
     const [selectedIds, setSelectedIds] = useState([]);
@@ -224,7 +224,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                             transform: "scale(1.05)"
                         }}
                     >
-                        {showForm ? <><X size={18} /> Close</> : <><Plus size={18} /> Add New</>}
+                        {showForm ? <><X size={18} /> Close</> : <><Plus size={18} /> Add Transaction</>}
                     </button>
                 </div>
             </div>
@@ -245,7 +245,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                         </div>
                         <h3 className="card-label" style={{ margin: 0, fontSize: "14px", letterSpacing: "1.5px", color: "var(--primary)" }}>TRANSACTION BUILDER</h3>
                     </div>
-                    <ExpenseForm addExpense={handleAdd} categories={categories} addCategory={addCategory} />
+                    <ExpenseForm addExpense={handleAdd} categories={categories} addCategory={addCategory} deleteCategory={deleteCategory} />
                 </div>
             )}
 
@@ -556,6 +556,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                 expense={editingExpense}
                 onSave={handleEdit}
                 onClose={() => setEditingExpense(null)}
+                categories={categories}
             />
         </div>
     );

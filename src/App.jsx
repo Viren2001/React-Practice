@@ -29,7 +29,7 @@ function AppLayout() {
   const [categories, setCategories] = useState(["Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Housing", "Work", "Other"]);
   const [budget, setBudget] = useState(0);
   const [categoryBudgets, setCategoryBudgets] = useState({});
-  const [currency, setCurrency] = useState("$");
+  const [currency, setCurrency] = useState("₹");
   const [alertThreshold, setAlertThreshold] = useState(80);
   const [hasCheckedRecurring, setHasCheckedRecurring] = useState(false);
 
@@ -53,7 +53,7 @@ function AppLayout() {
         const data = snapshot.docs[0].data();
         setBudget(data.monthlyBudget || 0);
         setCategoryBudgets(data.categoryBudgets || {});
-        setCurrency(data.currency || "$");
+        setCurrency(data.currency || "₹");
         setAlertThreshold(data.alertThreshold || 80);
 
         // Essential categories that should always be present
@@ -81,6 +81,33 @@ function AppLayout() {
 
     return unsubscribe;
   }, [currentUser]);
+
+  const updateThreshold = async (newThreshold) => {
+    if (!currentUser) return;
+    try {
+      const q = query(
+        collection(db, "settings"),
+        where("userId", "==", currentUser.uid)
+      );
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        await addDoc(collection(db, "settings"), {
+          userId: currentUser.uid,
+          alertThreshold: Number(newThreshold),
+          createdAt: Date.now()
+        });
+      } else {
+        const docRef = doc(db, "settings", querySnapshot.docs[0].id);
+        await updateDoc(docRef, {
+          alertThreshold: Number(newThreshold),
+          updatedAt: Date.now()
+        });
+      }
+    } catch (error) {
+      console.error("Error updating threshold: ", error);
+    }
+  };
 
   const updateBudget = async (newBudget) => {
     if (!currentUser) return;
@@ -136,6 +163,31 @@ function AppLayout() {
       }
     } catch (error) {
       console.error("Error adding category: ", error);
+    }
+  };
+
+  const deleteCategory = async (categoryToDelete) => {
+    if (!currentUser || !categoryToDelete) return;
+    const essentialCategories = ["Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Housing", "Work", "Other"];
+    if (essentialCategories.includes(categoryToDelete)) return; // protect defaults
+
+    try {
+      const q = query(
+        collection(db, "settings"),
+        where("userId", "==", currentUser.uid)
+      );
+      const querySnapshot = await getDocs(q);
+      const updatedCategories = categories.filter(c => c !== categoryToDelete);
+
+      if (!querySnapshot.empty) {
+        const docRef = doc(db, "settings", querySnapshot.docs[0].id);
+        await updateDoc(docRef, {
+          categories: updatedCategories,
+          updatedAt: Date.now()
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting category: ", error);
     }
   };
 
@@ -300,6 +352,7 @@ function AppLayout() {
                     setMonth={setMonth}
                     budget={budget}
                     updateBudget={updateBudget}
+                    updateThreshold={updateThreshold}
                     categoryBudgets={categoryBudgets}
                     currency={currency}
                     alertThreshold={alertThreshold}
@@ -323,6 +376,7 @@ function AppLayout() {
                   deleteAllExpenses={deleteAllExpenses}
                   categories={categories}
                   addCategory={addCategory}
+                  deleteCategory={deleteCategory}
                   category={category}
                   setCategory={setCategory}
                   month={month}
@@ -349,6 +403,7 @@ function AppLayout() {
                   month={month}
                   categories={categories}
                   addCategory={addCategory}
+                  deleteCategory={deleteCategory}
                 />
               </ProtectedRoute>
             }
