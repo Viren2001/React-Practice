@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { getCategoryIcon } from "../utils/categoryIcons";
-import { Check, X, Sparkles } from "lucide-react";
+import { Check, X, Sparkles, Trash2 } from "lucide-react";
 import CustomDropdown from "./CustomDropdown";
 import { autoCategorize } from "../utils/autoCategorize";
 
-function ExpenseForm({ addExpense, categories = [], addCategory }) {
+function ExpenseForm({ addExpense, categories = [], addCategory, deleteCategory }) {
     const [name, setName] = useState("");
     const [amount, setAmount] = useState("");
     const [category, setCategory] = useState(categories[0] || "Food");

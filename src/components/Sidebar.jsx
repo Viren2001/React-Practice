@@ -43,7 +43,7 @@ function Sidebar() {
                             flexShrink: 0,
                             transform: "rotate(45deg)"
                         }}>
-                             <PlusCircle size={18} color="white" style={{ transform: "rotate(-45deg)" }} />
+                             <PlusCircle size={18} color="#ffffff" strokeWidth={3} style={{ transform: "rotate(-45deg)" }} />
                         </div>
                         <span className="logo-text">EXOVAULT</span>
                     </div>

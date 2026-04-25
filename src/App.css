@@ -47,7 +47,7 @@
     font-weight: 900;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -857,6 +857,13 @@
     font-size: 14px;
     font-weight: 600;
     animation: alertSlide 0.3s ease;
+    
+    position: fixed;
+    bottom: 112px;
+    right: 32px;
+    z-index: 9998;
+    box-shadow: var(--shadow-lg);
+    max-width: 400px;
 }
 
 .budget-alert-danger {
@@ -1425,6 +1432,10 @@
         font-size: 13px;
         padding: 12px 16px;
         gap: 10px;
+        bottom: 160px;
+        right: 20px;
+        left: 20px;
+        max-width: none;
     }
 
     .expense-item {
