@@ -99,6 +99,7 @@ function ExpenseForm({ addExpense, categories = [], addCategory, deleteCategory 
                     value={name}
                     onChange={handleNameChange}
                     required
+                    style={{ height: "48px" }}
                 />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -110,6 +111,7 @@ function ExpenseForm({ addExpense, categories = [], addCategory, deleteCategory 
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     required
+                    style={{ height: "48px" }}
                 />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -141,6 +143,11 @@ function ExpenseForm({ addExpense, categories = [], addCategory, deleteCategory 
                                 onChange={(val) => {
                                     if (val === "+ Add New") setIsAddingCategory(true);
                                     else handleCategoryChange(val);
+                                }}
+                                onDelete={(cat) => {
+                                    if (window.confirm(`Delete category "${cat}"?`)) {
+                                        deleteCategory(cat);
+                                    }
                                 }}
                                 icon={getCategoryIcon(category)}
                                 searchable={true}
@@ -210,35 +217,44 @@ function ExpenseForm({ addExpense, categories = [], addCategory, deleteCategory 
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
+                    style={{ height: "48px" }}
                 />
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <input
-                    type="checkbox"
-                    id="isRecurring"
-                    checked={isRecurring}
-                    onChange={(e) => setIsRecurring(e.target.checked)}
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <label style={{ fontSize: "12px", fontWeight: "700", color: "transparent", textTransform: "uppercase", userSelect: "none" }}>Recurring</label>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", height: "48px", background: "rgba(var(--bg-card-rgb), 0.5)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", padding: "0 16px" }}>
+                    <input
+                        type="checkbox"
+                        id="isRecurring"
+                        checked={isRecurring}
+                        onChange={(e) => setIsRecurring(e.target.checked)}
+                        style={{
+                            width: "18px",
+                            height: "18px",
+                            cursor: "pointer",
+                            accentColor: "var(--primary)",
+                            border: "1px solid var(--border)",
+                            width: "auto"
+                        }}
+                    />
+                    <label htmlFor="isRecurring" style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-main)", cursor: "pointer", margin: 0 }}>RECURRING</label>
+                </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <label style={{ fontSize: "12px", fontWeight: "700", color: "transparent", textTransform: "uppercase", userSelect: "none" }}>Action</label>
+                <button
+                    type="submit"
                     style={{
-                        width: "18px",
-                        height: "18px",
-                        cursor: "pointer",
-                        accentColor: "var(--primary)",
-                        border: "1px solid var(--border)"
+                        backgroundColor: "var(--primary)",
+                        color: "white",
+                        boxShadow: "0 4px 12px var(--primary-glow)",
+                        height: "48px",
+                        width: "100%"
                     }}
-                />
-                <label htmlFor="isRecurring" style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-main)", cursor: "pointer" }}>MARK AS RECURRING (MONTHLY)</label>
+                >
+                    Add Transaction
+                </button>
             </div>
-            <button
-                type="submit"
-                style={{
-                    backgroundColor: "var(--primary)",
-                    color: "white",
-                    boxShadow: "0 4px 12px var(--primary-glow)",
-                    height: "46px"
-                }}
-            >
-                Add Transaction
-            </button>
         </form>
     );
 }

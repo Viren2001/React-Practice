@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet, useOutletContext } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import AIAssistant from "./components/AIAssistant";
@@ -168,8 +168,6 @@ function AppLayout() {
 
   const deleteCategory = async (categoryToDelete) => {
     if (!currentUser || !categoryToDelete) return;
-    const essentialCategories = ["Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Housing", "Work", "Other"];
-    if (essentialCategories.includes(categoryToDelete)) return; // protect defaults
 
     try {
       const q = query(
@@ -337,94 +335,68 @@ function AppLayout() {
       )}
 
       <main className={currentUser ? "main-content" : ""}>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-
-          <Route
-            path="/"
-            element={
-              currentUser ? (
-                <ProtectedRoute>
-                  <Dashboard
-                    expenses={expenses}
-                    month={month}
-                    setMonth={setMonth}
-                    budget={budget}
-                    updateBudget={updateBudget}
-                    updateThreshold={updateThreshold}
-                    categoryBudgets={categoryBudgets}
-                    currency={currency}
-                    alertThreshold={alertThreshold}
-                  />
-                </ProtectedRoute>
-              ) : (
-                <Landing />
-              )
-            }
-          />
-          <Route
-            path="/expenses"
-            element={
-              <ProtectedRoute>
-                <Expenses
-                  expenses={expenses}
-                  addExpense={addExpense}
-                  editExpense={editExpense}
-                  deleteExpense={deleteExpense}
-                  deleteMultipleExpenses={deleteMultipleExpenses}
-                  deleteAllExpenses={deleteAllExpenses}
-                  categories={categories}
-                  addCategory={addCategory}
-                  deleteCategory={deleteCategory}
-                  category={category}
-                  setCategory={setCategory}
-                  month={month}
-                  setMonth={setMonth}
-                  currency={currency}
-                />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/reports"
-            element={
-              <ProtectedRoute>
-                <Reports expenses={expenses} month={month} currency={currency} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <Settings
-                  expenses={expenses}
-                  month={month}
-                  categories={categories}
-                  addCategory={addCategory}
-                  deleteCategory={deleteCategory}
-                />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+        <Outlet context={{
+          expenses, month, setMonth, budget, updateBudget, updateThreshold,
+          categoryBudgets, currency, alertThreshold, addExpense, editExpense,
+          deleteExpense, deleteMultipleExpenses, deleteAllExpenses, categories,
+          addCategory, deleteCategory, category, setCategory
+        }} />
       </main>
     </div>
   );
 }
 
+function HomeRoute() {
+  const { currentUser } = useAuth();
+  const context = useOutletContext();
+  return currentUser ? (
+    <ProtectedRoute>
+      <Dashboard {...context} />
+    </ProtectedRoute>
+  ) : (
+    <Landing />
+  );
+}
+
+function ExpensesRoute() {
+  const context = useOutletContext();
+  return <Expenses {...context} />;
+}
+
+function ReportsRoute() {
+  const context = useOutletContext();
+  return <Reports {...context} />;
+}
+
+function SettingsRoute() {
+  const context = useOutletContext();
+  return <Settings {...context} />;
+}
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppLayout />,
+    children: [
+      { index: true, element: <HomeRoute /> },
+      { path: "expenses", element: <ProtectedRoute><ExpensesRoute /></ProtectedRoute> },
+      { path: "reports", element: <ProtectedRoute><ReportsRoute /></ProtectedRoute> },
+      { path: "settings", element: <ProtectedRoute><SettingsRoute /></ProtectedRoute> },
+      { path: "login", element: <Login /> },
+      { path: "signup", element: <Signup /> },
+    ],
+  },
+]);
+
 function App() {
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <AuthProvider>
-          <ToastProvider>
-            <AppLayout />
-          </ToastProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <ThemeProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <RouterProvider router={router} />
+        </ToastProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

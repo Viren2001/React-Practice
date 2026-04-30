@@ -181,7 +181,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                             onClick={() => isEditingBudget ? handleSaveBudget() : setIsEditingBudget(true)}
                             style={{ background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border)", padding: "4px 10px", borderRadius: "8px", fontSize: "11px", fontWeight: "800", cursor: "pointer" }}
                         >
-                            {isEditingBudget ? "SAVE" : "EDIT BASE"}
+                            {isEditingBudget ? "UPDATE" : "EDIT BASE"}
                         </button>
                     </div>
 
@@ -264,7 +264,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                         </div>
                     </div>
                     {chartData.length > 0 ? (
-                        <div style={{ height: "260px", width: "100%" }}>
+                        <div style={{ height: "300px", width: "100%" }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                     <defs>
@@ -299,7 +299,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                     </div>
                     {categoryTotalsArr.length > 0 ? (
                         <>
-                            <div style={{ height: "180px", width: "100%", alignSelf: "center", margin: "auto 0" }}>
+                            <div style={{ height: "220px", width: "100%", alignSelf: "center", margin: "auto 0" }}>
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
                                         <Pie
@@ -455,7 +455,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                                 style={{ flex: 1, padding: "8px 12px", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--bg-input)", color: "var(--text-main)" }}
                             />
                             <button onClick={handleSaveThreshold} style={{ background: "var(--primary)", color: "white", border: "none", padding: "8px 16px", borderRadius: "8px", fontWeight: "700", cursor: "pointer" }}>
-                                Save
+                                Update
                             </button>
                         </div>
                     </div>

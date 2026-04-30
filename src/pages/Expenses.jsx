@@ -557,6 +557,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                 onSave={handleEdit}
                 onClose={() => setEditingExpense(null)}
                 categories={categories}
+                deleteCategory={deleteCategory}
             />
         </div>
     );
