@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import CustomDropdown from "./CustomDropdown";
 
-function EditExpenseModal({ expense, onSave, onClose, categories = [] }) {
+function EditExpenseModal({ expense, onSave, onClose, categories = [], deleteCategory }) {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("Food");
@@ -72,6 +72,11 @@ function EditExpenseModal({ expense, onSave, onClose, categories = [] }) {
               options={categoryOptions}
               value={category}
               onChange={(val) => setCategory(val)}
+              onDelete={(cat) => {
+                if (window.confirm(`Delete category "${cat}"?`)) {
+                  if (deleteCategory) deleteCategory(cat);
+                }
+              }}
               icon={getCategoryIcon(category)}
               searchable={true}
             />
@@ -90,7 +95,7 @@ function EditExpenseModal({ expense, onSave, onClose, categories = [] }) {
               Cancel
             </button>
             <button type="submit" className="btn-primary">
-              Save Changes
+              Update
             </button>
           </div>
         </form>

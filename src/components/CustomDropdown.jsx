@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronDown, Search, Check } from "lucide-react";
+import { ChevronDown, Search, Check, Trash2 } from "lucide-react";
 
 const CustomDropdown = ({ 
   options = [], 
   value, 
   onChange, 
+  onDelete, // New prop for deletion
   label, 
   icon, 
   placeholder = "Select option",
@@ -72,9 +73,34 @@ const CustomDropdown = ({
                     setIsOpen(false);
                     setSearchTerm("");
                   }}
+                  style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
                 >
-                  <span className="option-text">{opt}</span>
-                  {value === opt && <Check size={14} className="check-icon" />}
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <span className="option-text">{opt}</span>
+                    {value === opt && <Check size={14} className="check-icon" />}
+                  </div>
+                  {onDelete && opt !== "+ Add New" && opt !== "ADD_NEW" && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(opt);
+                      }}
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        color: "var(--danger)",
+                        padding: "4px",
+                        cursor: "pointer",
+                        opacity: 0.6,
+                        transition: "opacity 0.2s"
+                      }}
+                      onMouseOver={(e) => e.currentTarget.style.opacity = 1}
+                      onMouseOut={(e) => e.currentTarget.style.opacity = 0.6}
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  )}
                 </li>
               ))
             ) : (
