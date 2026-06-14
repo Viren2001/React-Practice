@@ -327,10 +327,10 @@ function AppLayout() {
     <div className={currentUser ? "app-container" : ""}>
       {currentUser && <Sidebar />}
       {currentUser && (
-        <AIAssistant 
-          expenses={expenses} 
-          addExpense={addExpense} 
-          currency={currency} 
+        <AIAssistant
+          expenses={expenses}
+          addExpense={addExpense}
+          currency={currency}
         />
       )}
 

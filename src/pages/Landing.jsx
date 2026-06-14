@@ -108,9 +108,9 @@ export default function Landing() {
             <Link to="/login" className="nav-link text-accent">Sign In</Link>
           </div>
           <div className="desktop-theme-toggle" style={{ display: "flex", alignItems: "center", marginRight: "12px" }}>
-            <button 
-              onClick={toggleTheme} 
-              className="theme-toggle-btn" 
+            <button
+              onClick={toggleTheme}
+              className="theme-toggle-btn"
               style={{ background: "rgba(var(--text-main-rgb, 255, 255, 255), 0.05)", border: "1px solid var(--border)", color: "var(--text-main)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: "8px", borderRadius: "10px", transition: "all 0.3s ease" }}
             >
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
@@ -122,9 +122,9 @@ export default function Landing() {
 
       {/* Mobile Theme Toggle (Floating Bottom Right) */}
       <div className="mobile-theme-toggle landing-theme-toggle-wrap">
-        <button 
-          onClick={toggleTheme} 
-          className="theme-toggle-btn" 
+        <button
+          onClick={toggleTheme}
+          className="theme-toggle-btn"
           style={{ background: "rgba(var(--text-main-rgb, 255, 255, 255), 0.05)", border: "1px solid var(--border)", color: "var(--text-main)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: "8px", borderRadius: "10px", transition: "all 0.3s ease" }}
         >
           {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
