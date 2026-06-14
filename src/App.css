@@ -1906,3 +1906,105 @@
         display: none !important;
     }
 }
+
+/* Receipt Vision Scanner Styles */
+.receipt-scanner-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-lg);
+    background: rgba(var(--primary-rgb), 0.02);
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.receipt-scanner-zone:hover, .receipt-scanner-zone.drag-active {
+    border-color: var(--primary);
+    background: rgba(var(--primary-rgb), 0.06);
+    box-shadow: 0 10px 30px -10px var(--primary-glow);
+}
+
+.receipt-scanner-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.receipt-scanner-zone:hover .receipt-scanner-icon-wrap {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.receipt-scanner-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.receipt-scanner-subtext {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.receipt-scanner-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+    color: var(--primary);
+}
+
+.scanner-sparkle-loader {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 8px var(--primary-glow)); }
+}
+
+.scan-progress-bar-container {
+    width: 100%;
+    max-width: 280px;
+    height: 6px;
+    background: rgba(var(--primary-rgb), 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.scan-progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), #8b5cf6);
+    border-radius: 10px;
+    animation: scanLoading 2.5s infinite linear;
+}
+
+@keyframes scanLoading {
+    0% { width: 0%; transform: translateX(-100%); }
+    50% { width: 100%; transform: translateX(0%); }
+    100% { width: 0%; transform: translateX(100%); }
+}
+
+.scan-error-msg {
+    color: #ef4444;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
