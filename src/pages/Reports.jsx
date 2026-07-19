@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import MonthSelector from "../components/MonthSelector";
 import PageHeader from "../components/PageHeader";
 import { isDateInPeriod } from "../utils/dateUtils";
@@ -96,7 +97,14 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
   }));
 
   return (
-    <div className="page-container" style={{ paddingBottom: "100px" }}>
+    <motion.div 
+        className="page-container" 
+        style={{ paddingBottom: "100px" }}
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -15 }}
+        transition={{ duration: 0.3 }}
+    >
       <PageHeader title="Visual Reports" subtitle="Deep dive into your spending analytics" />
 
       {/* Summary Cards Row */}
@@ -247,7 +255,7 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider, Outlet, useOutletContext } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet, useOutletContext, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import AIAssistant from "./components/AIAssistant";
@@ -17,10 +17,13 @@ import { db } from "./firebase";
 import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, updateDoc, getDocs, writeBatch } from "firebase/firestore";
 import "./App.css";
 import "./styles/Auth.css";
+// import OnboardingWizard from "./components/OnboardingWizard";
 
 function AppLayout() {
   const { currentUser } = useAuth();
+  const location = useLocation();
   const [expenses, setExpenses] = useState([]);
+  const [isExpensesLoaded, setIsExpensesLoaded] = useState(false);
   const [category, setCategory] = useState("All");
   const [month, setMonth] = useState(() => {
     const now = new Date();
@@ -55,6 +58,7 @@ function AppLayout() {
         setCategoryBudgets(data.categoryBudgets || {});
         setCurrency(data.currency || "₹");
         setAlertThreshold(data.alertThreshold || 80);
+        // setIsOnboarded(data.isOnboarded === undefined ? false : data.isOnboarded);
 
         // Essential categories that should always be present
         const essentialCategories = ["Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Housing", "Work", "Other"];
@@ -192,6 +196,7 @@ function AppLayout() {
   useEffect(() => {
     if (!currentUser) {
       setExpenses([]);
+      setIsExpensesLoaded(false);
       return;
     }
 
@@ -207,6 +212,7 @@ function AppLayout() {
       })).sort((a, b) => a.createdAt - b.createdAt);
 
       setExpenses(expensesData);
+      setIsExpensesLoaded(true);
     });
 
     return unsubscribe;
@@ -336,7 +342,7 @@ function AppLayout() {
 
       <main className={currentUser ? "main-content" : ""}>
         <Outlet context={{
-          expenses, month, setMonth, budget, updateBudget, updateThreshold,
+          expenses, isExpensesLoaded, month, setMonth, budget, updateBudget, updateThreshold,
           categoryBudgets, currency, alertThreshold, addExpense, editExpense,
           deleteExpense, deleteMultipleExpenses, deleteAllExpenses, categories,
           addCategory, deleteCategory, category, setCategory

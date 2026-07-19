@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import PageHeader from "../components/PageHeader";
 import { getCategoryIcon } from "../utils/categoryIcons";
-import BudgetAlert from "../components/BudgetAlert";
-import EmptyState from "../components/EmptyState";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import MonthSelector from "../components/MonthSelector";
+import EmptyState from "../components/EmptyState";
+import Skeleton from "../components/Skeleton";
+import AnimatedCounter from "../components/AnimatedCounter";
+import InsightCards from "../components/InsightCards";
+import { generateInsights } from "../utils/insightsEngine";
+import { motion } from "framer-motion";
 import { isDateInPeriod, formatPeriodLabel, getDaysInPeriod } from "../utils/dateUtils";
 import {
     Wallet,
@@ -23,13 +27,13 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, 
 
 const COLORS = ['#d946ef', '#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
 
-function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, updateThreshold, currency = "$", alertThreshold = 80 }) {
+function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, budget = 0, updateBudget, updateThreshold, currency = "$", alertThreshold = 80 }) {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
-    
+
     // Filter expenses using the new robust date utility
     const periodExpenses = expenses.filter(exp => isDateInPeriod(exp.date, month));
-    
+
     // Total for selected period
     const periodTotal = periodExpenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
 
@@ -51,13 +55,13 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
     const chartData = useMemo(() => {
         if (periodExpenses.length === 0) return [];
         const dataMap = {};
-        
+
         // Always sort by date first
         const sorted = [...periodExpenses].sort((a, b) => new Date(a.date) - new Date(b.date));
-        
+
         sorted.forEach(exp => {
             const dateStr = exp.date; // YYYY-MM-DD
-            if(!dataMap[dateStr]) dataMap[dateStr] = 0;
+            if (!dataMap[dateStr]) dataMap[dateStr] = 0;
             dataMap[dateStr] += Number(exp.amount);
         });
 
@@ -131,6 +135,23 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
         prevPercentageRef.current = percentage;
     }, [periodTotal, effectiveBudget, alertThreshold]);
 
+    // Generate insights using useMemo for performance
+    const insights = useMemo(() => {
+        if (!isExpensesLoaded) return [];
+        return generateInsights(expenses, month, effectiveBudget, currency);
+    }, [expenses, month, effectiveBudget, currency, isExpensesLoaded]);
+
+    // Calculate category totals for comparison
+    const categoryTotals = useMemo(() => {
+        const totals = {};
+        expenses.forEach(expense => {
+            if (expense.category && expense.amount > 0) {
+                totals[expense.category] = (totals[expense.category] || 0) + expense.amount;
+            }
+        });
+        return totals;
+    }, [expenses]);
+
     return (
         <div className="page-container" style={{ paddingBottom: "100px" }}>
             <div className="page-header-container" style={{ marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "20px" }}>
@@ -140,15 +161,17 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                     </h2>
                     <p style={{ color: "var(--text-muted)", fontWeight: "600", fontSize: "clamp(13px, 3vw, 15px)" }}>Your financial command center for {periodLabel}.</p>
                 </div>
-                
+
                 <div style={{ width: "240px", zIndex: 10 }}>
                     <MonthSelector value={month} onChange={setMonth} options={[{ label: "Full History", value: "All" }]} />
                 </div>
             </div>
 
+            <InsightCards insights={insights} />
+
             {/* Quick Stats Top Row */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px", marginBottom: "24px" }}>
-                
+
                 {/* Total Spend */}
                 <div className="card glass-effect" style={{ borderTop: "4px solid var(--primary)", position: "relative", overflow: "hidden" }}>
                     <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, left: 0, background: "radial-gradient(circle at top right, rgba(var(--primary-rgb), 0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
@@ -158,13 +181,22 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                         </div>
                         <h3 className="card-label" style={{ margin: 0, fontSize: "14px" }}>Total Spend</h3>
                     </div>
-                    <p style={{ color: "var(--text-main)", margin: "0 0 8px 0", fontSize: "38px", fontWeight: "900", letterSpacing: "-0.04em", display: "flex", alignItems: "baseline", gap: "4px" }}>
-                        <span style={{ fontSize: "20px", color: "var(--primary)" }}>{currency}</span>
-                        {periodTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    </p>
-                    <div style={{ fontSize: "13px", color: "var(--text-muted)", fontWeight: "700", display: "flex", alignItems: "center", gap: "6px" }}>
-                        <Activity size={14} /> {periodExpenses.length} transactions in {periodLabel}
-                    </div>
+                    {!isExpensesLoaded ? (
+                        <>
+                            <Skeleton style={{ width: "60%", height: "44px", marginBottom: "8px" }} />
+                            <Skeleton style={{ width: "40%", height: "16px" }} />
+                        </>
+                    ) : (
+                        <>
+                            <p style={{ color: "var(--text-main)", margin: "0 0 8px 0", fontSize: "38px", fontWeight: "900", letterSpacing: "-0.04em", display: "flex", alignItems: "baseline", gap: "4px" }}>
+                                <span style={{ fontSize: "20px", color: "var(--primary)" }}>{currency}</span>
+                                <AnimatedCounter value={periodTotal} fractionDigits={2} />
+                            </p>
+                            <div style={{ fontSize: "13px", color: "var(--text-muted)", fontWeight: "700", display: "flex", alignItems: "center", gap: "6px" }}>
+                                <Activity size={14} /> {periodExpenses.length} transactions in {periodLabel}
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 {/* Budget Tracker */}
@@ -187,37 +219,43 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
 
                     {isEditingBudget ? (
                         <div style={{ display: "flex", gap: "12px", alignItems: "center", marginTop: "12px" }}>
-                           <span style={{ fontWeight: "900", color: "#10b981", fontSize: "20px" }}>{currency}</span>
-                           <input
-                               type="number"
-                               value={tempBudget}
-                               onChange={(e) => setTempBudget(e.target.value)}
-                               autoFocus
-                               style={{ padding: "8px 12px", borderRadius: "10px", border: "2px solid #10b981", width: "100%", fontSize: "18px", fontWeight: "900", background: "rgba(var(--bg-card-rgb), 0.8)" }}
-                           />
-                           <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>/mo</div>
+                            <span style={{ fontWeight: "900", color: "#10b981", fontSize: "20px" }}>{currency}</span>
+                            <input
+                                type="number"
+                                value={tempBudget}
+                                onChange={(e) => setTempBudget(e.target.value)}
+                                autoFocus
+                                style={{ padding: "8px 12px", borderRadius: "10px", border: "2px solid #10b981", width: "100%", fontSize: "18px", fontWeight: "900", background: "rgba(var(--bg-card-rgb), 0.8)" }}
+                            />
+                            <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>/mo</div>
                         </div>
+                    ) : !isExpensesLoaded ? (
+                        <>
+                            <Skeleton style={{ width: "70%", height: "30px", marginBottom: "8px" }} />
+                            <Skeleton style={{ width: "100%", height: "12px", marginBottom: "12px", borderRadius: "10px" }} />
+                            <Skeleton style={{ width: "50%", height: "16px" }} />
+                        </>
                     ) : (
                         <>
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "8px" }}>
                                 <div style={{ fontSize: "24px", fontWeight: "900", color: budgetPercent >= 100 ? "var(--danger)" : "var(--text-main)" }}>
-                                    {currency}{effectiveBudget.toLocaleString()}
+                                    {currency}<AnimatedCounter value={effectiveBudget} />
                                 </div>
                                 <div style={{ fontSize: "14px", fontWeight: "800", color: budgetPercent >= 100 ? "var(--danger)" : "var(--text-muted)" }}>
-                                    {budgetPercent.toFixed(0)}% Used
+                                    <AnimatedCounter value={budgetPercent} fractionDigits={0} />% Used
                                 </div>
                             </div>
                             <div style={{ height: "12px", background: "rgba(16, 185, 129, 0.1)", borderRadius: "10px", overflow: "hidden", position: "relative" }}>
-                                <div style={{ 
-                                    position: "absolute", left: 0, top: 0, bottom: 0, 
-                                    width: `${budgetPercent}%`, 
+                                <div style={{
+                                    position: "absolute", left: 0, top: 0, bottom: 0,
+                                    width: `${budgetPercent}%`,
                                     background: budgetPercent >= 100 ? "var(--danger)" : "linear-gradient(90deg, #10b981, #34d399)",
                                     borderRadius: "10px",
                                     transition: "width 1s cubic-bezier(0.16, 1, 0.3, 1)"
                                 }} />
                             </div>
                             <div style={{ fontSize: "13px", color: "var(--text-muted)", fontWeight: "700", marginTop: "12px" }}>
-                                {effectiveBudget - periodTotal >= 0 ? `${currency}${(effectiveBudget - periodTotal).toLocaleString(undefined, {minimumFractionDigits: 2})} remaining` : `${currency}${(periodTotal - effectiveBudget).toLocaleString()} over budget `}
+                                {effectiveBudget - periodTotal >= 0 ? `${currency}${(effectiveBudget - periodTotal).toLocaleString(undefined, { minimumFractionDigits: 2 })} remaining` : `${currency}${(periodTotal - effectiveBudget).toLocaleString()} over budget `}
                             </div>
                         </>
                     )}
@@ -225,31 +263,53 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
 
                 {/* Daily Average & Top Category */}
                 <div className="card glass-effect" style={{ borderTop: "4px solid #3b82f6", display: "flex", flexDirection: "column", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-                   <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, left: 0, background: "radial-gradient(circle at top right, rgba(59, 130, 246, 0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
-                   <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px", position: "relative" }}>
-                       <div style={{ background: "rgba(59, 130, 246, 0.1)", color: "#3b82f6", padding: "12px", borderRadius: "14px" }}>
-                           <BarChart3 size={24} />
-                       </div>
-                       <div>
-                           <div style={{ fontSize: "12px", fontWeight: "800", color: "var(--text-muted)", textTransform: "uppercase" }}>Avg Daily Spend</div>
-                           <div style={{ fontSize: "22px", fontWeight: "900", color: "var(--text-main)" }}>{currency}{dailyAvg.toFixed(2)}</div>
-                       </div>
-                   </div>
-                   
-                   <div style={{ height: "1px", background: "var(--border)", margin: "0 0 16px 0" }} />
+                    <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, left: 0, background: "radial-gradient(circle at top right, rgba(59, 130, 246, 0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+                    <div style={{ height: "1px", background: "var(--border)", margin: "0 0 16px 0" }} />
 
-                   <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                       <div style={{ background: "rgba(245, 158, 11, 0.1)", color: "#f59e0b", padding: "12px", borderRadius: "14px" }}>
-                           {topCategory ? getCategoryIcon(topCategory.name) : <PieChartIcon size={24} />}
-                       </div>
-                       <div>
-                           <div style={{ fontSize: "12px", fontWeight: "800", color: "var(--text-muted)", textTransform: "uppercase" }}>Top Category</div>
-                           <div style={{ fontSize: "18px", fontWeight: "900", color: "var(--text-main)", display: "flex", alignItems: "baseline", gap: "8px" }}>
-                               {topCategory ? topCategory.name : "None"} 
-                               {topCategory && <span style={{ fontSize: "13px", color: "var(--text-muted)" }}>({Math.round((topCategory.value / periodTotal) * 100)}%)</span>}
-                           </div>
-                       </div>
-                   </div>
+                    {!isExpensesLoaded ? (
+                        <>
+                            <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
+                                <Skeleton variant="circle" style={{ width: "48px", height: "48px" }} />
+                                <div style={{ flex: 1 }}>
+                                    <Skeleton style={{ width: "50%", height: "14px", marginBottom: "6px" }} />
+                                    <Skeleton style={{ width: "70%", height: "26px" }} />
+                                </div>
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                                <Skeleton variant="circle" style={{ width: "48px", height: "48px" }} />
+                                <div style={{ flex: 1 }}>
+                                    <Skeleton style={{ width: "50%", height: "14px", marginBottom: "6px" }} />
+                                    <Skeleton style={{ width: "80%", height: "22px" }} />
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px", position: "relative" }}>
+                                <div style={{ background: "rgba(59, 130, 246, 0.1)", color: "#3b82f6", padding: "12px", borderRadius: "14px" }}>
+                                    <BarChart3 size={24} />
+                                </div>
+                                <div>
+                                    <div style={{ fontSize: "12px", fontWeight: "800", color: "var(--text-muted)", textTransform: "uppercase" }}>Avg Daily Spend</div>
+                                    <div style={{ fontSize: "22px", fontWeight: "900", color: "var(--text-main)", display: "flex", alignItems: "baseline" }}>
+                                        <span>{currency}</span><AnimatedCounter value={dailyAvg} fractionDigits={2} />
+                                    </div>
+                                </div>
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                                <div style={{ background: "rgba(245, 158, 11, 0.1)", color: "#f59e0b", padding: "12px", borderRadius: "14px" }}>
+                                    {topCategory ? getCategoryIcon(topCategory.name) : <PieChartIcon size={24} />}
+                                </div>
+                                <div>
+                                    <div style={{ fontSize: "12px", fontWeight: "800", color: "var(--text-muted)", textTransform: "uppercase" }}>Top Category</div>
+                                    <div style={{ fontSize: "18px", fontWeight: "900", color: "var(--text-main)", display: "flex", alignItems: "baseline", gap: "8px" }}>
+                                        {topCategory ? topCategory.name : "None"}
+                                        {topCategory && <span style={{ fontSize: "13px", color: "var(--text-muted)" }}>({Math.round((topCategory.value / periodTotal) * 100)}%)</span>}
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
 
@@ -263,19 +323,25 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                             <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "800" }}>Cashflow Trend</h3>
                         </div>
                     </div>
-                    {chartData.length > 0 ? (
+                    {!isExpensesLoaded ? (
+                        <div style={{ height: "300px", width: "100%", display: "flex", alignItems: "flex-end", gap: "10px", paddingBottom: "20px" }}>
+                            {[40, 70, 45, 90, 60, 80, 50].map((h, i) => (
+                                <Skeleton key={i} style={{ flex: 1, height: `${h}%`, borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }} />
+                            ))}
+                        </div>
+                    ) : chartData.length > 0 ? (
                         <div style={{ height: "300px", width: "100%" }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                     <defs>
                                         <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.4}/>
-                                            <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
+                                            <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.4} />
+                                            <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
-                                    <XAxis dataKey="displayDate" axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12, fontWeight: 600}} dy={10} />
-                                    <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12, fontWeight: 600}} dx={-10} tickFormatter={(val) => `${currency}${val}`} />
-                                    <Tooltip 
+                                    <XAxis dataKey="displayDate" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12, fontWeight: 600 }} dy={10} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12, fontWeight: 600 }} dx={-10} tickFormatter={(val) => `${currency}${val}`} />
+                                    <Tooltip
                                         contentStyle={{ backgroundColor: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: '0 10px 20px -5px rgba(0,0,0,0.1)', fontWeight: '700' }}
                                         itemStyle={{ color: 'var(--primary)', fontWeight: '900' }}
                                         formatter={(value) => [`${currency}${Number(value).toFixed(2)}`, 'Spent']}
@@ -297,7 +363,16 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                         <PieChartIcon size={20} color="#10b981" />
                         <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "800" }}>Distribution</h3>
                     </div>
-                    {categoryTotalsArr.length > 0 ? (
+                    {!isExpensesLoaded ? (
+                        <div style={{ height: "220px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "20px" }}>
+                            <Skeleton variant="circle" style={{ width: "160px", height: "160px" }} />
+                            <div style={{ display: "flex", gap: "10px" }}>
+                                <Skeleton style={{ width: "40px", height: "16px" }} />
+                                <Skeleton style={{ width: "40px", height: "16px" }} />
+                                <Skeleton style={{ width: "40px", height: "16px" }} />
+                            </div>
+                        </div>
+                    ) : categoryTotalsArr.length > 0 ? (
                         <>
                             <div style={{ height: "220px", width: "100%", alignSelf: "center", margin: "auto 0" }}>
                                 <ResponsiveContainer width="100%" height="100%">
@@ -314,7 +389,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>
-                                        <Tooltip 
+                                        <Tooltip
                                             formatter={(value) => [`${currency}${Number(value).toFixed(2)}`, 'Spent']}
                                             contentStyle={{ backgroundColor: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border)', fontWeight: '700', color: 'var(--text-main)', boxShadow: '0 10px 20px -5px rgba(0,0,0,0.1)' }}
                                             itemStyle={{ color: 'var(--text-main)', fontWeight: '900' }}
@@ -333,7 +408,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                         </>
                     ) : (
                         <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "180px" }}>
-                             <span style={{ color: "var(--text-muted)", fontSize: "13px", fontWeight: "600" }}>No distribution data</span>
+                            <span style={{ color: "var(--text-muted)", fontSize: "13px", fontWeight: "600" }}>No distribution data</span>
                         </div>
                     )}
                 </div>
@@ -366,7 +441,22 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                     </button>
                 </div>
 
-                {periodExpenses.length === 0 ? (
+                {!isExpensesLoaded ? (
+                    <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "12px" }}>
+                        {[1, 2, 3].map(i => (
+                            <li key={i} className="expense-item" style={{ margin: 0, background: "rgba(var(--bg-card-rgb), 0.4)", border: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "16px", width: "100%" }}>
+                                    <Skeleton variant="circle" style={{ width: "40px", height: "40px", flexShrink: 0 }} />
+                                    <div style={{ flex: 1 }}>
+                                        <Skeleton style={{ width: "30%", height: "15px", marginBottom: "6px" }} />
+                                        <Skeleton style={{ width: "20%", height: "12px" }} />
+                                    </div>
+                                    <Skeleton style={{ width: "80px", height: "20px" }} />
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                ) : periodExpenses.length === 0 ? (
                     <EmptyState
                         type="dashboard"
                         title="Quiet Period"
@@ -386,7 +476,7 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                                             {exp.name}
                                         </div>
                                         <div style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: "600" }}>
-                                            {exp.category} • {new Date(exp.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric'})}
+                                            {exp.category} • {new Date(exp.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                                         </div>
                                     </div>
                                 </div>
@@ -408,11 +498,11 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                             <h2 style={{ margin: 0, fontSize: "22px", fontWeight: "900" }}>{periodTotal >= effectiveBudget ? "Budget Limit Exceeded!" : "Budget Alert!"}</h2>
                         </div>
                         <p style={{ margin: 0, color: "var(--text-main)", fontSize: "16px", lineHeight: "1.5", fontWeight: "500" }}>
-                            {periodTotal >= effectiveBudget 
-                                ? `You have crossed your budget limit of ${currency}${effectiveBudget}. Please try to reduce your expenses or do not make more expenses.` 
+                            {periodTotal >= effectiveBudget
+                                ? `You have crossed your budget limit of ${currency}${effectiveBudget}. Please try to reduce your expenses or do not make more expenses.`
                                 : `You have reached ${Math.round((periodTotal / effectiveBudget) * 100)}% of your budget limit. Please try to reduce your expenses.`}
                         </p>
-                        <button 
+                        <button
                             onClick={() => setShowBudgetModal(false)}
                             style={{ background: periodTotal >= effectiveBudget ? "var(--danger)" : "var(--warning)", color: "white", padding: "14px", border: "none", borderRadius: "10px", fontSize: "16px", fontWeight: "800", cursor: "pointer", marginTop: "12px", boxShadow: periodTotal >= effectiveBudget ? "0 10px 20px -5px rgba(239,68,68,0.4)" : "0 10px 20px -5px rgba(245,158,11,0.4)" }}
                         >
@@ -435,10 +525,10 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                                 <X size={16} />
                             </button>
                         </div>
-                        
+
                         <div style={{ marginBottom: "16px", fontSize: "14px", color: "var(--text-main)", fontWeight: "600", lineHeight: "1.5" }}>
-                            {periodTotal >= effectiveBudget 
-                                ? `You have crossed your budget limit of ${currency}${effectiveBudget}.` 
+                            {periodTotal >= effectiveBudget
+                                ? `You have crossed your budget limit of ${currency}${effectiveBudget}.`
                                 : `You have reached ${Math.round((periodTotal / effectiveBudget) * 100)}% of your limit (${currency}${effectiveBudget}).`}
                         </div>
 
@@ -448,9 +538,9 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
 
                         <div style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-muted)", marginBottom: "8px", textTransform: "uppercase" }}>Alert Threshold (%)</div>
                         <div style={{ display: "flex", gap: "8px" }}>
-                            <input 
-                                type="number" 
-                                value={tempThreshold} 
+                            <input
+                                type="number"
+                                value={tempThreshold}
                                 onChange={(e) => setTempThreshold(e.target.value)}
                                 style={{ flex: 1, padding: "8px 12px", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--bg-input)", color: "var(--text-main)" }}
                             />
@@ -460,13 +550,13 @@ function Dashboard({ expenses = [], month, setMonth, budget = 0, updateBudget, u
                         </div>
                     </div>
                 )}
-                
-                <button 
+
+                <button
                     onClick={() => setShowThresholdPopup(!showThresholdPopup)}
                     style={{
-                        width: "56px", 
-                        height: "56px", 
-                        borderRadius: "18px", 
+                        width: "56px",
+                        height: "56px",
+                        borderRadius: "18px",
                         background: periodTotal >= effectiveBudget ? "var(--danger)" : "var(--bg-card)",
                         border: periodTotal >= effectiveBudget ? "none" : "1px solid var(--border)",
                         boxShadow: periodTotal >= effectiveBudget ? "0 10px 20px rgba(239, 68, 68, 0.4)" : "var(--shadow-md)",
