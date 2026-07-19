@@ -25,7 +25,7 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
   const [settingsDocId, setSettingsDocId] = useState(null);
   const [newCatName, setNewCatName] = useState("");
   const [isDirty, setIsDirty] = useState(false);
-  
+
   const initialValues = useRef({});
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -63,7 +63,7 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
       if (!snapshot.empty) {
         const data = snapshot.docs[0].data();
         setSettingsDocId(snapshot.docs[0].id);
-        
+
         const budgetValue = Number(data.monthlyBudget || 0);
         const catBudgetsValue = data.categoryBudgets || {};
         const thresholdValue = Number(data.alertThreshold || 80);
@@ -117,7 +117,7 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
     };
 
     const isDifferent = JSON.stringify(currentValues) !== JSON.stringify(initialValues.current);
-    
+
     if (isDifferent !== isDirty) {
       setIsDirty(isDifferent);
     }
@@ -155,7 +155,7 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
         settingsData.createdAt = Date.now();
         await addDoc(collection(db, "settings"), settingsData);
       }
-      
+
       // Update initial values after successful save
       initialValues.current = {
         monthlyBudget: Number(monthlyBudget),
@@ -165,7 +165,7 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
         categories: normalizeCategories(categories)
       };
       setIsDirty(false);
-      
+
       toast.success("Preferences updated successfully!");
     } catch (err) {
       toast.error("Failed to save preferences");
@@ -206,16 +206,23 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
   };
 
   return (
-    <div className="page-container" style={{ paddingBottom: "120px" }}>
+    <motion.div
+      className="page-container"
+      style={{ paddingBottom: "120px" }}
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -15 }}
+      transition={{ duration: 0.3 }}
+    >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
         <PageHeader title="Preferences" subtitle="Configure your financial environment" />
         {isDirty && (
-          <div style={{ 
-            background: "rgba(239, 68, 68, 0.1)", 
-            color: "var(--danger)", 
-            padding: "8px 16px", 
-            borderRadius: "12px", 
-            fontSize: "12px", 
+          <div style={{
+            background: "rgba(239, 68, 68, 0.1)",
+            color: "var(--danger)",
+            padding: "8px 16px",
+            borderRadius: "12px",
+            fontSize: "12px",
             fontWeight: "800",
             display: "flex",
             alignItems: "center",
@@ -276,9 +283,9 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
                   options={["$ USD", "€ EUR", "£ GBP", "₹ INR", "¥ JPY"]}
                   value={
                     currency === "$" ? "$ USD" :
-                    currency === "€" ? "€ EUR" :
-                    currency === "£" ? "£ GBP" :
-                    currency === "₹" ? "₹ INR" : "¥ JPY"
+                      currency === "€" ? "€ EUR" :
+                        currency === "£" ? "£ GBP" :
+                          currency === "₹" ? "₹ INR" : "¥ JPY"
                   }
                   onChange={(val) => setCurrency(val.split(' ')[0])}
                 />
@@ -330,69 +337,69 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
             </div>
 
             <div className="settings-item-label" style={{ marginBottom: "12px" }}>Category-Specific Limits</div>
-            <div className="category-budgets-grid" style={{ 
-              display: "grid", 
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
+            <div className="category-budgets-grid" style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
               gap: "12px",
               maxHeight: "380px",
               overflowY: "auto",
               paddingRight: "8px"
             }}>
-            {categories.map((cat) => {
+              {categories.map((cat) => {
                 return (
-                <div key={cat} className="category-budget-item" style={{ position: "relative" }}>
-                  <div className="category-budget-label" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                      {getCategoryIcon(cat)}
-                      <span style={{ fontSize: "13px" }}>{cat}</span>
+                  <div key={cat} className="category-budget-item" style={{ position: "relative" }}>
+                    <div className="category-budget-label" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                        {getCategoryIcon(cat)}
+                        <span style={{ fontSize: "13px" }}>{cat}</span>
+                      </div>
+                      {deleteCategory && (
+                        <button
+                          onClick={() => handleDeleteCat(cat)}
+                          title="Delete this category"
+                          style={{
+                            background: "rgba(239, 68, 68, 0.08)",
+                            border: "1px solid rgba(239, 68, 68, 0.15)",
+                            color: "#ef4444",
+                            borderRadius: "6px",
+                            padding: "3px 6px",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            flexShrink: 0
+                          }}
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      )}
                     </div>
-                    {deleteCategory && (
-                      <button
-                        onClick={() => handleDeleteCat(cat)}
-                        title="Delete this category"
-                        style={{
-                          background: "rgba(239, 68, 68, 0.08)",
-                          border: "1px solid rgba(239, 68, 68, 0.15)",
-                          color: "#ef4444",
-                          borderRadius: "6px",
-                          padding: "3px 6px",
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          flexShrink: 0
-                        }}
-                      >
-                        <Trash2 size={12} />
-                      </button>
-                    )}
+                    <div className="settings-input-group">
+                      <span className="settings-input-prefix">{currency}</span>
+                      <input
+                        type="number"
+                        value={categoryBudgets[cat] || ""}
+                        onChange={(e) =>
+                          setCategoryBudgets((prev) => ({
+                            ...prev,
+                            [cat]: e.target.value,
+                          }))
+                        }
+                        placeholder="0"
+                        style={{ width: "100%", paddingLeft: "30px" }}
+                      />
+                    </div>
                   </div>
-                  <div className="settings-input-group">
-                    <span className="settings-input-prefix">{currency}</span>
-                    <input
-                      type="number"
-                      value={categoryBudgets[cat] || ""}
-                      onChange={(e) =>
-                        setCategoryBudgets((prev) => ({
-                          ...prev,
-                          [cat]: e.target.value,
-                        }))
-                      }
-                      placeholder="0"
-                      style={{ width: "100%", paddingLeft: "30px" }}
-                    />
-                  </div>
-                </div>
                 );
               })}
             </div>
             <div style={{ marginTop: "24px", display: "flex", justifyContent: "flex-end" }}>
-              <button 
-                onClick={handleSave} 
+              <button
+                onClick={handleSave}
                 className="btn-primary"
                 disabled={!isDirty}
-                style={{ 
-                  padding: "12px 24px", 
-                  borderRadius: "12px", 
+                style={{
+                  padding: "12px 24px",
+                  borderRadius: "12px",
                   boxShadow: isDirty ? "0 10px 20px var(--primary-glow)" : "none",
                   opacity: isDirty ? 1 : 0.7,
                   background: isDirty ? "var(--primary)" : "var(--bg-card)",
@@ -424,9 +431,9 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
         {/* Alerts Card */}
         <div className="card settings-card">
           <div className="settings-card-header">
-            <Bell 
-              size={20} 
-              color={Number(alertThreshold) > 90 ? "var(--danger)" : Number(alertThreshold) > 75 ? "var(--warning)" : "var(--primary)"} 
+            <Bell
+              size={20}
+              color={Number(alertThreshold) > 90 ? "var(--danger)" : Number(alertThreshold) > 75 ? "var(--warning)" : "var(--primary)"}
             />
             <h3>System Notifications</h3>
           </div>
@@ -437,11 +444,11 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
                   <div className="settings-item-label">Budget Proximity Alert</div>
                   <div className="settings-item-desc" style={{ marginTop: "4px" }}>Threshold for visual spending warnings</div>
                 </div>
-                <div style={{ 
-                  background: Number(alertThreshold) > 90 ? "rgba(239, 68, 68, 0.1)" : Number(alertThreshold) > 75 ? "rgba(245, 158, 11, 0.1)" : "rgba(217, 70, 239, 0.1)", 
+                <div style={{
+                  background: Number(alertThreshold) > 90 ? "rgba(239, 68, 68, 0.1)" : Number(alertThreshold) > 75 ? "rgba(245, 158, 11, 0.1)" : "rgba(217, 70, 239, 0.1)",
                   color: Number(alertThreshold) > 90 ? "var(--danger)" : Number(alertThreshold) > 75 ? "var(--warning)" : "var(--primary)",
-                  padding: "6px 14px", 
-                  borderRadius: "20px", 
+                  padding: "6px 14px",
+                  borderRadius: "20px",
                   fontWeight: "800",
                   fontSize: "14px",
                   border: `1px solid ${Number(alertThreshold) > 90 ? "rgba(239, 68, 68, 0.2)" : Number(alertThreshold) > 75 ? "rgba(245, 158, 11, 0.2)" : "rgba(217, 70, 239, 0.2)"}`
@@ -456,10 +463,10 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
                 step="5"
                 value={alertThreshold}
                 onChange={(e) => setAlertThreshold(e.target.value)}
-                style={{ 
+                style={{
                   margin: "6px 0",
-                  width: "100%", 
-                  cursor: "pointer", 
+                  width: "100%",
+                  cursor: "pointer",
                   accentColor: Number(alertThreshold) > 90 ? "var(--danger)" : Number(alertThreshold) > 75 ? "var(--warning)" : "var(--primary)",
                   height: "6px"
                 }}
@@ -493,7 +500,7 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

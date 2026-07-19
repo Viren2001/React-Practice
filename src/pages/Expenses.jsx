@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import PageHeader from "../components/PageHeader";
 import ExpenseForm from "../components/ExpenseForm";
 import EditExpenseModal from "../components/EditExpenseModal";
 import EmptyState from "../components/EmptyState";
+import Skeleton from "../components/Skeleton";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import { useToast } from "../contexts/ToastContext";
 import MonthSelector from "../components/MonthSelector";
 import CustomDropdown from "../components/CustomDropdown";
-import { isDateInPeriod, formatPeriodLabel } from "../utils/dateUtils";
+import { isDateInPeriod } from "../utils/dateUtils";
 import {
     Search,
     Pencil,
@@ -24,7 +26,7 @@ import {
 } from "lucide-react";
 import { exportToCSV } from "../utils/exportCSV";
 
-function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, deleteMultipleExpenses, deleteAllExpenses, categories = [], addCategory, deleteCategory, category, setCategory, month, setMonth, currency = "₹" }) {
+function Expenses({ expenses = [], isExpensesLoaded = true, addExpense, editExpense, deleteExpense, deleteMultipleExpenses, deleteAllExpenses, categories = [], addCategory, deleteCategory, category, setCategory, month, setMonth, currency = "₹" }) {
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState("date-desc");
     const [selectedIds, setSelectedIds] = useState([]);
@@ -176,7 +178,14 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
     };
 
     return (
-        <div className="page-container" style={{ paddingBottom: "100px" }}>
+        <motion.div 
+            className="page-container" 
+            style={{ paddingBottom: "100px" }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.3 }}
+        >
             <div className="page-header-row" style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "32px", flexWrap: "wrap" }}>
                 <div style={{ flex: 1, minWidth: "200px" }}>
                     <PageHeader title="Transactions" subtitle="Detailed breakdown of your spending habits." />
@@ -439,7 +448,23 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                     )}
                 </div>
 
-                {sortedExpenses.length === 0 ? (
+                {!isExpensesLoaded ? (
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                        {[1, 2, 3, 4, 5].map((i) => (
+                            <li key={i} className="expense-item" style={{ borderBottom: "1px solid var(--border)", padding: "16px 0" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "16px", width: "100%" }}>
+                                    <Skeleton variant="circle" style={{ width: "20px", height: "20px", flexShrink: 0 }} />
+                                    <Skeleton variant="circle" style={{ width: "42px", height: "42px", flexShrink: 0 }} />
+                                    <div style={{ flex: 1 }}>
+                                        <Skeleton style={{ width: "30%", height: "16px", marginBottom: "6px" }} />
+                                        <Skeleton style={{ width: "20%", height: "12px" }} />
+                                    </div>
+                                    <Skeleton style={{ width: "80px", height: "22px" }} />
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                ) : sortedExpenses.length === 0 ? (
                     <EmptyState
                         type="search"
                         title={search ? "We couldn't find any matches" : "No Ledger Entries Found"}
@@ -448,15 +473,21 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                     />
                 ) : (
                     <>
-                        <ul className="expense-list" style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: selectedIds.length > 0 ? "80px" : "0" }}>
-                            {sortedExpenses.map((exp) => (
-                                <li key={exp.id} className={`expense-item ${selectedIds.includes(exp.id) ? 'selected' : ''}`} style={{ background: "rgba(var(--bg-card-rgb), 0.5)", border: "1px solid var(--border)", position: "relative" }}>
-                                    <div className="expense-item-left">
+                        <ul className="expense-list" style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: selectedIds.length > 0 ? "80px" : "0", padding: 0, listStyle: "none" }}>
+                            {sortedExpenses.map((exp, index) => (
+                                <motion.li 
+                                    key={exp.id} 
+                                    className={`expense-item ${selectedIds.includes(exp.id) ? 'selected' : ''}`} 
+                                    style={{ background: "rgba(var(--bg-card-rgb), 0.5)", border: "1px solid var(--border)", position: "relative", padding: "16px", borderRadius: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.3, delay: Math.min(index * 0.05, 0.5) }}
+                                >
+                                    <div className="expense-item-left" style={{ display: "flex", alignItems: "center", gap: "16px", flex: 1, minWidth: 0 }}>
                                         <div
                                             onClick={() => handleToggleSelection(exp.id)}
                                             style={{
                                                 cursor: "pointer",
-                                                marginRight: "16px",
                                                 padding: "4px",
                                                 borderRadius: "6px",
                                                 border: `2px solid ${selectedIds.includes(exp.id) ? 'var(--primary)' : 'var(--border)'}`,
@@ -471,25 +502,27 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                                         >
                                             {selectedIds.includes(exp.id) && <Check size={14} color="white" />}
                                         </div>
-                                        <div className="expense-icon-box" style={{ background: "var(--bg-app)" }}>
+                                        <div className="expense-icon-box" style={{ background: "rgba(var(--bg-card-rgb), 0.5)", padding: "12px", borderRadius: "12px", color: "var(--primary)" }}>
                                             {getCategoryIcon(exp.category)}
                                         </div>
-                                        <div className="expense-item-info">
-                                            <strong className="expense-item-name" style={{ fontSize: "16px", fontWeight: "800" }}>{exp.name}</strong>
-                                            <span className="expense-item-meta" style={{ fontWeight: "600", color: "var(--text-muted)" }}>
-                                                {exp.category} • {exp.date}
-                                                {exp.isRecurring && <span className="recurring-badge" style={{ background: "rgba(124, 58, 237, 0.1)", color: "#7c3aed" }}><RefreshCw size={10} /> RECURRING</span>}
+                                        <div className="expense-item-info" style={{ minWidth: 0 }}>
+                                            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                                <strong className="expense-item-name" style={{ fontSize: "15px", fontWeight: "700", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{exp.name}</strong>
+                                                {exp.isRecurring && <RefreshCw size={12} color="var(--primary)" />}
+                                            </div>
+                                            <span className="expense-item-meta" style={{ fontWeight: "600", color: "var(--text-muted)", fontSize: "12px" }}>
+                                                {exp.category} • {new Date(exp.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="expense-item-right" style={{ gap: "24px" }}>
-                                        <div className="expense-item-amount" style={{ fontSize: "18px", fontWeight: "900", color: "var(--text-main)" }}>
-                                            {currency}{Number(exp.amount).toFixed(2)}
+                                    <div className="expense-item-right" style={{ display: "flex", alignItems: "center", gap: "20px", flexShrink: 0 }}>
+                                        <div className="expense-item-amount" style={{ fontSize: "16px", fontWeight: "800", color: "var(--text-main)" }}>
+                                            {currency}{Number(exp.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                         </div>
-                                        <div className="expense-item-actions">
+                                        <div className="expense-item-actions" style={{ display: "flex", gap: "8px" }}>
                                             <button
-                                                onClick={() => setEditingExpense(exp)}
-                                                style={{ background: "rgba(var(--primary-rgb), 0.1)", color: "var(--primary)", border: "none" }}
+                                                onClick={() => { setEditingExpense(exp); setShowForm(false); }}
+                                                style={{ background: "rgba(var(--primary-rgb), 0.1)", color: "var(--primary)", border: "none", padding: "8px", borderRadius: "8px" }}
                                                 className="btn-action"
                                                 title="Edit"
                                             >
@@ -497,7 +530,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(exp.id)}
-                                                style={{ background: "rgba(239, 68, 68, 0.1)", color: "#ef4444", border: "none" }}
+                                                style={{ background: "rgba(239, 68, 68, 0.1)", color: "#ef4444", border: "none", padding: "8px", borderRadius: "8px" }}
                                                 className="btn-action"
                                                 title="Delete"
                                             >
@@ -505,7 +538,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                                             </button>
                                         </div>
                                     </div>
-                                </li>
+                                </motion.li>
                             ))}
                         </ul>
 
@@ -550,7 +583,6 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                 )}
             </div>
 
-
             {/* Edit Modal */}
             <EditExpenseModal
                 expense={editingExpense}
@@ -559,7 +591,7 @@ function Expenses({ expenses = [], addExpense, editExpense, deleteExpense, delet
                 categories={categories}
                 deleteCategory={deleteCategory}
             />
-        </div>
+        </motion.div>
     );
 }
 
