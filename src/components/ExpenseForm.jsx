@@ -120,7 +120,7 @@ function ExpenseForm({ addExpense, categories = [], addCategory, deleteCategory 
             const base64 = await fileToBase64(file);
             toast.info("Analyzing receipt with Cyber-AI...");
             const parsed = await parseReceiptImage(base64, file.type, categories);
-            
+
             if (parsed) {
                 if (parsed.name) setName(parsed.name);
                 if (parsed.amount) setAmount(String(parsed.amount));
@@ -135,7 +135,7 @@ function ExpenseForm({ addExpense, categories = [], addCategory, deleteCategory 
                     }
                 }
                 if (parsed.date) setDate(parsed.date);
-                
+
                 setIsAutoSuggesting(true);
                 toast.success("Receipt parsed successfully! Verify and save.");
             }
@@ -179,7 +179,7 @@ function ExpenseForm({ addExpense, categories = [], addCategory, deleteCategory 
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "24px", width: "100%" }}>
             {/* Receipt Vision Scanner Box */}
-            <div 
+            <div
                 className={`receipt-scanner-zone ${dragActive ? "drag-active" : ""}`}
                 onDragEnter={handleDrag}
                 onDragOver={handleDrag}
@@ -187,12 +187,12 @@ function ExpenseForm({ addExpense, categories = [], addCategory, deleteCategory 
                 onDrop={handleDrop}
                 onClick={triggerFileSelect}
             >
-                <input 
-                    type="file" 
-                    ref={fileInputRef} 
-                    onChange={handleFileChange} 
-                    accept="image/*" 
-                    style={{ display: "none" }} 
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    style={{ display: "none" }}
                 />
 
                 {isScanning ? (

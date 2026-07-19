@@ -193,7 +193,7 @@
         padding: 20px !important;
     }
 
-    .ledger-summary-row > div {
+    .ledger-summary-row>div {
         width: 100%;
         justify-content: space-between;
     }
@@ -857,7 +857,7 @@
     font-size: 14px;
     font-weight: 600;
     animation: alertSlide 0.3s ease;
-    
+
     position: fixed;
     bottom: 112px;
     right: 32px;
@@ -1902,6 +1902,7 @@
     .keyboard-hint {
         display: none !important;
     }
+
     .keyboard-hint {
         display: none !important;
     }
@@ -1925,7 +1926,8 @@
     overflow: hidden;
 }
 
-.receipt-scanner-zone:hover, .receipt-scanner-zone.drag-active {
+.receipt-scanner-zone:hover,
+.receipt-scanner-zone.drag-active {
     border-color: var(--primary);
     background: rgba(var(--primary-rgb), 0.06);
     box-shadow: 0 10px 30px -10px var(--primary-glow);
@@ -1972,8 +1974,18 @@
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 8px var(--primary-glow)); }
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+        filter: drop-shadow(0 0 8px var(--primary-glow));
+    }
 }
 
 .scan-progress-bar-container {
@@ -1994,9 +2006,20 @@
 }
 
 @keyframes scanLoading {
-    0% { width: 0%; transform: translateX(-100%); }
-    50% { width: 100%; transform: translateX(0%); }
-    100% { width: 0%; transform: translateX(100%); }
+    0% {
+        width: 0%;
+        transform: translateX(-100%);
+    }
+
+    50% {
+        width: 100%;
+        transform: translateX(0%);
+    }
+
+    100% {
+        width: 0%;
+        transform: translateX(100%);
+    }
 }
 
 .scan-error-msg {
