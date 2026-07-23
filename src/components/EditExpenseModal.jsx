@@ -1,24 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { X } from "lucide-react";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import CustomDropdown from "./CustomDropdown";
 
-function EditExpenseModal({ expense, onSave, onClose, categories = [], deleteCategory }) {
-  const [name, setName] = useState("");
-  const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState("Food");
-  const [date, setDate] = useState("");
-
-  useEffect(() => {
-    if (expense) {
-      setName(expense.name || "");
-      setAmount(expense.amount || "");
-      setCategory(expense.category || "Food");
-      setDate(expense.date || "");
-    }
-  }, [expense]);
-
-  if (!expense) return null;
+function EditExpenseModalContent({ expense, onSave, onClose, categories = [], deleteCategory }) {
+  const [name, setName] = useState(expense.name || "");
+  const [amount, setAmount] = useState(expense.amount || "");
+  const [category, setCategory] = useState(expense.category || "Food");
+  const [date, setDate] = useState(expense.date || "");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,7 +20,6 @@ function EditExpenseModal({ expense, onSave, onClose, categories = [], deleteCat
     });
   };
 
-  // Use full dynamic category list if provided, else fallback to essential defaults
   const categoryOptions = categories.length > 0
     ? categories
     : ["Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Housing", "Work", "Other"];
@@ -101,6 +89,21 @@ function EditExpenseModal({ expense, onSave, onClose, categories = [], deleteCat
         </form>
       </div>
     </div>
+  );
+}
+
+function EditExpenseModal({ expense, onSave, onClose, categories = [], deleteCategory }) {
+  if (!expense) return null;
+
+  return (
+    <EditExpenseModalContent
+      key={expense.id}
+      expense={expense}
+      onSave={onSave}
+      onClose={onClose}
+      categories={categories}
+      deleteCategory={deleteCategory}
+    />
   );
 }
 

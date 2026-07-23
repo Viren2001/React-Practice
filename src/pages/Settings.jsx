@@ -6,9 +6,9 @@ import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { useToast } from "../contexts/ToastContext";
 import { db } from "../firebase";
-import { collection, query, where, getDocs, addDoc, updateDoc, doc, onSnapshot } from "firebase/firestore";
+import { collection, query, where, addDoc, updateDoc, doc, onSnapshot } from "firebase/firestore";
 import { Sun, Moon, Download, Save, User, Palette, Bell, DollarSign, Trash2, AlertCircle, X, Check } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import { exportToCSV } from "../utils/exportCSV";
 import { formatPeriodLabel } from "../utils/dateUtils";
@@ -167,13 +167,13 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
       setIsDirty(false);
 
       toast.success("Preferences updated successfully!");
-    } catch (err) {
+    } catch {
       toast.error("Failed to save preferences");
     }
   };
 
   const handleDeleteCat = (cat) => {
-    if (window.confirm(`Delete category "${cat}"? This won\'t affect existing transactions.`)) {
+    if (window.confirm(`Delete category "${cat}"? This won't affect existing transactions.`)) {
       deleteCategory(cat);
       toast.success(`Category "${cat}" deleted`);
     }

@@ -33,6 +33,7 @@ import {
   Sun,
   Moon
 } from "lucide-react";
+import { GoldCoinStackSVG, MoneyVaultSVG, MoneyGrowthSVG, FinancialShieldSVG, DiamondWealthSVG } from "../components/MoneyIcons";
 import dashboardPreview from "../assets/dashboard-preview.png";
 import "../styles/Landing.css";
 import "../styles/Auth.css";
@@ -279,25 +280,25 @@ export default function Landing() {
         {/* SECTION 3: FEATURES GRID */}
         <StackSection>
           <div className="s-features" id="features">
-            <h2 className="f-title">Designed for <br /><span className="font-serif text-accent">Personal Clarity.</span></h2>
+            <h2 className="f-title">Intelligent Tools for <br /><span className="font-serif text-accent">Analyzing Your Money.</span></h2>
 
-            <div className="f-grid">
+            <div className="f-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
               <div className="f-card">
-                <span className="detail-tag">UX Design</span>
-                <div className="f-icon-container"><Zap size={32} /></div>
-                <h3>Lightning Entry</h3>
-                <p>Log a transaction perfectly in under 3 seconds. Press <kbd className="mock-kbd">N</kbd> to quick-add from anywhere.</p>
+                <span className="detail-tag">Intelligence</span>
+                <div className="f-icon-container" style={{ background: 'transparent', padding: 0 }}><GoldCoinStackSVG size={48} /></div>
+                <h3>Money Health Score</h3>
+                <p>An intelligent 0-100 gauge rating your spending velocity, budget discipline, and cash flow risk in real time.</p>
               </div>
               <div className="f-card">
-                <span className="detail-tag">Data Visual</span>
-                <div className="f-icon-container"><PieChart size={32} /></div>
-                <h3>Deep Analytics</h3>
-                <p>Your data transforms into gorgeous, interactive charts instantly. Discover exactly where your wealth is leaking.</p>
+                <span className="detail-tag">Simulation</span>
+                <div className="f-icon-container" style={{ background: 'transparent', padding: 0 }}><MoneyGrowthSVG size={48} /></div>
+                <h3>5-Year Wealth Simulator</h3>
+                <p>Test "what-if" wealth scenarios. Adjust savings targets and compound growth rates to project your future net worth.</p>
               </div>
               <div className="f-card">
                 <span className="detail-tag">Encryption</span>
-                <div className="f-icon-container"><ShieldCheck size={32} /></div>
-                <h3>Bank-Level Security</h3>
+                <div className="f-icon-container" style={{ background: 'transparent', padding: 0 }}><FinancialShieldSVG size={48} /></div>
+                <h3>Bank-Level Vault</h3>
                 <p>Powered by Google Firebase. Modern infrastructure ensuring your financial footprint stays locked securely.</p>
               </div>
             </div>

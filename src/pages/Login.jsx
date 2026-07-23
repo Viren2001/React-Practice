@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -13,7 +13,6 @@ function useCountUp(target, duration = 2000, delay = 800) {
   const [value, setValue] = useState(0);
   useEffect(() => {
     const timeout = setTimeout(() => {
-      let start = 0;
       const startTime = performance.now();
       function tick(now) {
         const elapsed = now - startTime;
