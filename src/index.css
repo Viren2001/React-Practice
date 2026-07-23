@@ -131,7 +131,7 @@ h4 {
     text-shadow: none;
 }
 
-/* Unified Button Component */
+/* Unified Button Component with Premium Sheen & Micro-Animations */
 button {
     font-family: var(--font-main);
     font-weight: 600;
@@ -146,16 +146,80 @@ button {
     gap: 10px;
     border: 1px solid transparent;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.25),
+        transparent
+    );
+    transform: skewX(-20deg);
+    transition: 0.6s ease;
+    pointer-events: none;
+}
+
+button:hover::after {
+    left: 140%;
 }
 
 button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px -5px var(--primary-glow);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 25px -4px var(--primary-glow), 0 0 15px rgba(217, 70, 239, 0.3);
 }
 
 button:active {
-    transform: scale(0.96);
+    transform: scale(0.95);
 }
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+    color: white;
+    box-shadow: 0 8px 20px -4px var(--primary-glow);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-hover) 0%, #6d28d9 100%);
+    box-shadow: 0 14px 28px -4px var(--primary-glow), 0 0 20px rgba(217, 70, 239, 0.5);
+}
+
+/* Neon Pulse Animation */
+@keyframes neonPulse {
+    0%, 100% {
+        box-shadow: 0 0 15px var(--primary-glow), 0 0 30px rgba(217, 70, 239, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 25px var(--primary-glow), 0 0 50px rgba(217, 70, 239, 0.4);
+    }
+}
+
+.neon-glow-card {
+    animation: neonPulse 4s infinite ease-in-out;
+}
+
+/* Money Analyzer Badge Styles */
+.badge-optimal {
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+.badge-moderate {
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+}
+
+.badge-risk {
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+}
+
 
 /* Unified Input Component */
 input,

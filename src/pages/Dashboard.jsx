@@ -2,14 +2,12 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import PageHeader from "../components/PageHeader";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
 import MonthSelector from "../components/MonthSelector";
 import EmptyState from "../components/EmptyState";
 import Skeleton from "../components/Skeleton";
 import AnimatedCounter from "../components/AnimatedCounter";
 import InsightCards from "../components/InsightCards";
 import { generateInsights } from "../utils/insightsEngine";
-import { motion } from "framer-motion";
 import { isDateInPeriod, formatPeriodLabel, getDaysInPeriod } from "../utils/dateUtils";
 import {
     Wallet,
@@ -23,13 +21,14 @@ import {
     AlertTriangle,
     X
 } from "lucide-react";
+import MoneyAnalyzer from "../components/MoneyAnalyzer";
+import { GoldCoinStackSVG, MoneyVaultSVG, MoneyGrowthSVG, DiamondWealthSVG, BanknoteSVG } from "../components/MoneyIcons";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Scatter } from "recharts";
 
 const COLORS = ['#d946ef', '#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
 
 function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, budget = 0, updateBudget, updateThreshold, currency = "$", alertThreshold = 80 }) {
     const navigate = useNavigate();
-    const { currentUser } = useAuth();
 
     // Filter expenses using the new robust date utility
     const periodExpenses = expenses.filter(exp => isDateInPeriod(exp.date, month));
@@ -141,25 +140,14 @@ function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, bu
         return generateInsights(expenses, month, effectiveBudget, currency);
     }, [expenses, month, effectiveBudget, currency, isExpensesLoaded]);
 
-    // Calculate category totals for comparison
-    const categoryTotals = useMemo(() => {
-        const totals = {};
-        expenses.forEach(expense => {
-            if (expense.category && expense.amount > 0) {
-                totals[expense.category] = (totals[expense.category] || 0) + expense.amount;
-            }
-        });
-        return totals;
-    }, [expenses]);
-
     return (
         <div className="page-container" style={{ paddingBottom: "100px" }}>
             <div className="page-header-container" style={{ marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "20px" }}>
                 <div>
                     <h2 style={{ fontSize: "clamp(24px, 4vw, 32px)", fontWeight: "900", marginBottom: "8px", letterSpacing: "-0.04em" }}>
-                        Overview
+                        Money Command Center
                     </h2>
-                    <p style={{ color: "var(--text-muted)", fontWeight: "600", fontSize: "clamp(13px, 3vw, 15px)" }}>Your financial command center for {periodLabel}.</p>
+                    <p style={{ color: "var(--text-muted)", fontWeight: "600", fontSize: "clamp(13px, 3vw, 15px)" }}>Intelligent wealth tracking & financial analysis engine for {periodLabel}.</p>
                 </div>
 
                 <div style={{ width: "240px", zIndex: 10 }}>
@@ -169,15 +157,20 @@ function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, bu
 
             <InsightCards insights={insights} />
 
+            {/* Money Analyzer Intelligence Suite */}
+            <MoneyAnalyzer expenses={expenses} budget={effectiveBudget} currency={currency} month={month} />
+
             {/* Quick Stats Top Row */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px", marginBottom: "24px" }}>
 
                 {/* Total Spend */}
                 <div className="card glass-effect" style={{ borderTop: "4px solid var(--primary)", position: "relative", overflow: "hidden" }}>
-                    <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, left: 0, background: "radial-gradient(circle at top right, rgba(var(--primary-rgb), 0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+                    <div style={{ position: "absolute", right: "-10px", bottom: "-10px", opacity: 0.15, pointerEvents: "none" }}>
+                        <GoldCoinStackSVG size={96} />
+                    </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-                        <div style={{ background: "rgba(var(--primary-rgb), 0.1)", color: "var(--primary)", padding: "10px", borderRadius: "12px" }}>
-                            <Wallet size={20} />
+                        <div style={{ background: "rgba(var(--primary-rgb), 0.1)", color: "var(--primary)", padding: "8px", borderRadius: "12px" }}>
+                            <GoldCoinStackSVG size={24} />
                         </div>
                         <h3 className="card-label" style={{ margin: 0, fontSize: "14px" }}>Total Spend</h3>
                     </div>
@@ -201,16 +194,19 @@ function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, bu
 
                 {/* Budget Tracker */}
                 <div className="card glass-effect" style={{ borderTop: "4px solid #10b981", position: "relative", overflow: "hidden" }}>
-                    <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, left: 0, background: "radial-gradient(circle at top right, rgba(16, 185, 129, 0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+                    <div style={{ position: "absolute", right: "-10px", bottom: "-10px", opacity: 0.15, pointerEvents: "none" }}>
+                        <MoneyVaultSVG size={96} />
+                    </div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", position: "relative" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                            <div style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981", padding: "10px", borderRadius: "12px" }}>
-                                <Target size={20} />
+                            <div style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981", padding: "8px", borderRadius: "12px" }}>
+                                <MoneyVaultSVG size={24} />
                             </div>
                             <h3 className="card-label" style={{ margin: 0, fontSize: "14px" }}>{month === "All" ? "Total Budget Limit" : `${periodLabel} Budget`}</h3>
                         </div>
                         <button
                             onClick={() => isEditingBudget ? handleSaveBudget() : setIsEditingBudget(true)}
+                            className="btn-animated-sm"
                             style={{ background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border)", padding: "4px 10px", borderRadius: "8px", fontSize: "11px", fontWeight: "800", cursor: "pointer" }}
                         >
                             {isEditingBudget ? "UPDATE" : "EDIT BASE"}

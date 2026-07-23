@@ -24,6 +24,7 @@ import {
     Check,
     Info
 } from "lucide-react";
+import { GoldCoinStackSVG, BanknoteSVG } from "../components/MoneyIcons";
 import { exportToCSV } from "../utils/exportCSV";
 
 function Expenses({ expenses = [], isExpensesLoaded = true, addExpense, editExpense, deleteExpense, deleteMultipleExpenses, deleteAllExpenses, categories = [], addCategory, deleteCategory, category, setCategory, month, setMonth, currency = "₹" }) {

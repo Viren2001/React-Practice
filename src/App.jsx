@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider, Outlet, useOutletContext, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Sidebar from "./components/Sidebar";
 import AIAssistant from "./components/AIAssistant";
 import Dashboard from "./pages/Dashboard";
@@ -11,10 +11,11 @@ import Signup from "./pages/Signup";
 import Landing from "./pages/Landing";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
-import { ToastProvider, useToast } from "./contexts/ToastContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { ToastProvider } from "./contexts/ToastContext";
 import { db } from "./firebase";
 import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, updateDoc, getDocs, writeBatch } from "firebase/firestore";
+import { motion } from "framer-motion";
 import "./App.css";
 import "./styles/Auth.css";
 // import OnboardingWizard from "./components/OnboardingWizard";
@@ -34,16 +35,29 @@ function AppLayout() {
   const [categoryBudgets, setCategoryBudgets] = useState({});
   const [currency, setCurrency] = useState("₹");
   const [alertThreshold, setAlertThreshold] = useState(80);
-  const [hasCheckedRecurring, setHasCheckedRecurring] = useState(false);
+  const hasCheckedRecurringRef = useRef(false);
+  const [prevUser, setPrevUser] = useState(currentUser);
 
-  // Sync budget and categories from settings
-  useEffect(() => {
+  if (currentUser !== prevUser) {
+    setPrevUser(currentUser);
     if (!currentUser) {
       setBudget(0);
       setCategories(["Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Housing", "Work", "Other"]);
       setCategoryBudgets({});
-      return;
+      setExpenses([]);
+      setIsExpensesLoaded(false);
     }
+  }
+
+  useEffect(() => {
+    if (!currentUser) {
+      hasCheckedRecurringRef.current = false;
+    }
+  }, [currentUser]);
+
+  // Sync budget and categories from settings
+  useEffect(() => {
+    if (!currentUser) return;
 
     const q = query(
       collection(db, "settings"),
@@ -194,11 +208,7 @@ function AppLayout() {
   };
 
   useEffect(() => {
-    if (!currentUser) {
-      setExpenses([]);
-      setIsExpensesLoaded(false);
-      return;
-    }
+    if (!currentUser) return;
 
     const q = query(
       collection(db, "expenses"),
@@ -218,9 +228,22 @@ function AppLayout() {
     return unsubscribe;
   }, [currentUser]);
 
+  const addExpense = useCallback(async (expense) => {
+    if (!currentUser) return;
+    try {
+      await addDoc(collection(db, "expenses"), {
+        ...expense,
+        userId: currentUser.uid,
+        createdAt: Date.now()
+      });
+    } catch (error) {
+      console.error("Error adding expense: ", error);
+    }
+  }, [currentUser]);
+
   // Recurring expenses check: Runs once per session when expenses are loaded
   useEffect(() => {
-    if (!currentUser || expenses.length === 0 || hasCheckedRecurring) return;
+    if (!currentUser || expenses.length === 0 || hasCheckedRecurringRef.current) return;
 
     const currentMonth = new Date().toISOString().slice(0, 7);
     const recurringTemplates = expenses.filter(exp => exp.isRecurring);
@@ -260,21 +283,8 @@ function AppLayout() {
       }
     });
 
-    setHasCheckedRecurring(true);
-  }, [expenses, currentUser, hasCheckedRecurring]);
-
-  const addExpense = async (expense) => {
-    if (!currentUser) return;
-    try {
-      await addDoc(collection(db, "expenses"), {
-        ...expense,
-        userId: currentUser.uid,
-        createdAt: Date.now()
-      });
-    } catch (error) {
-      console.error("Error adding expense: ", error);
-    }
-  };
+    hasCheckedRecurringRef.current = true;
+  }, [expenses, currentUser, addExpense]);
 
   const editExpense = async (id, updatedData) => {
     if (!currentUser) return;
@@ -341,12 +351,20 @@ function AppLayout() {
       )}
 
       <main className={currentUser ? "main-content" : ""}>
-        <Outlet context={{
-          expenses, isExpensesLoaded, month, setMonth, budget, updateBudget, updateThreshold,
-          categoryBudgets, currency, alertThreshold, addExpense, editExpense,
-          deleteExpense, deleteMultipleExpenses, deleteAllExpenses, categories,
-          addCategory, deleteCategory, category, setCategory
-        }} />
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.15, ease: "easeOut" }}
+          style={{ width: "100%", minHeight: "100%" }}
+        >
+          <Outlet context={{
+            expenses, isExpensesLoaded, month, setMonth, budget, updateBudget, updateThreshold,
+            categoryBudgets, currency, alertThreshold, addExpense, editExpense,
+            deleteExpense, deleteMultipleExpenses, deleteAllExpenses, categories,
+            addCategory, deleteCategory, category, setCategory
+          }} />
+        </motion.div>
       </main>
     </div>
   );

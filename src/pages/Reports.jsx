@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import MonthSelector from "../components/MonthSelector";
 import PageHeader from "../components/PageHeader";
+import MoneyAnalyzer from "../components/MoneyAnalyzer";
+import { GoldCoinStackSVG, MoneyGrowthSVG, FinancialShieldSVG, DiamondWealthSVG } from "../components/MoneyIcons";
 import { isDateInPeriod } from "../utils/dateUtils";
 import {
   PieChart,
@@ -26,7 +28,13 @@ const COLORS = ["#d946ef", "#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6"
 
 function Reports({ expenses = [], month: propMonth, currency = "$" }) {
   const [month, setMonth] = useState(propMonth || new Date().toISOString().slice(0, 7));
+  const [prevPropMonth, setPrevPropMonth] = useState(propMonth);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  if (propMonth && propMonth !== prevPropMonth) {
+    setPrevPropMonth(propMonth);
+    setMonth(propMonth);
+  }
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -34,10 +42,6 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
-  useEffect(() => {
-    if (propMonth) setMonth(propMonth);
-  }, [propMonth]);
 
   // Filter expenses using robust date utility
   const periodExpenses = expenses.filter((exp) => isDateInPeriod(exp.date, month));
@@ -105,10 +109,10 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
         exit={{ opacity: 0, y: -15 }}
         transition={{ duration: 0.3 }}
     >
-      <PageHeader title="Visual Reports" subtitle="Deep dive into your spending analytics" />
+      <PageHeader title="Visual Reports & Money Intelligence" subtitle="Deep dive into your spending analytics, health score & financial trajectory" />
 
       {/* Summary Cards Row */}
-      <div className="stats-grid">
+      <div className="stats-grid" style={{ marginBottom: "32px" }}>
         <div className="card" style={{ overflow: "visible", position: "relative", zIndex: 10 }}>
           <MonthSelector
             label="Analysis Period"
@@ -117,17 +121,26 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
             options={[{ label: "Full History", value: "All" }]}
           />
         </div>
-        <div className="card glass-effect" style={{ borderTop: "4px solid var(--primary)" }}>
+        <div className="card glass-effect" style={{ borderTop: "4px solid var(--primary)", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", right: "-10px", bottom: "-10px", opacity: 0.15, pointerEvents: "none" }}>
+            <GoldCoinStackSVG size={80} />
+          </div>
           <h3 className="card-label">Period Volume</h3>
           <p className="stats-value primary">{currency}{periodTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
           <p className="card-subtext">Across {periodExpenses.length} transactions</p>
         </div>
-        <div className="card glass-effect" style={{ borderTop: "4px solid var(--success)" }}>
+        <div className="card glass-effect" style={{ borderTop: "4px solid var(--success)", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", right: "-10px", bottom: "-10px", opacity: 0.15, pointerEvents: "none" }}>
+            <MoneyGrowthSVG size={80} />
+          </div>
           <h3 className="card-label">Lifetime Total</h3>
           <p className="stats-value success">{currency}{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
           <p className="card-subtext">Total spending logged</p>
         </div>
       </div>
+
+      {/* Money Analyzer Intelligence Suite */}
+      <MoneyAnalyzer expenses={periodExpenses} currency={currency} month={month} />
 
       {/* Main Trends Chart */}
       <div className="card chart-main-card glass-effect">

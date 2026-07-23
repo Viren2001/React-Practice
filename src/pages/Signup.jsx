@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -7,27 +7,6 @@ import {
   DollarSign, IndianRupee, Coins, PiggyBank,
   Wallet, CreditCard, ArrowUpRight, Landmark
 } from "lucide-react";
-
-/* Animated counter hook */
-function useCountUp(target, duration = 2000, delay = 800) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      let start = 0;
-      const startTime = performance.now();
-      function tick(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        setValue(Math.floor(eased * target));
-        if (progress < 1) requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    }, delay);
-    return () => clearTimeout(timeout);
-  }, [target, duration, delay]);
-  return value;
-}
 
 /* Different floating icons for signup - growth & aspiration themed */
 const FLOATING_ICONS = [

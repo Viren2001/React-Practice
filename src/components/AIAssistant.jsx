@@ -83,7 +83,7 @@ const AIAssistant = ({ expenses = [], addExpense, currency = "$" }) => {
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, aiMessage]);
-        } catch (error) {
+        } catch {
             toast.error("AI connection failed.");
         } finally {
             setIsLoading(false);
