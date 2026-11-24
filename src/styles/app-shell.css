@@ -1,0 +1,130 @@
+/* Logged-in app shell — ambient mesh & content rhythm */
+.app-container {
+  position: relative;
+  isolation: isolate;
+}
+
+.app-container::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(var(--primary-rgb), 0.12), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 95% 20%, rgba(139, 92, 246, 0.08), transparent 50%),
+    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(16, 185, 129, 0.06), transparent 45%);
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.dark .app-container::before {
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(var(--primary-rgb), 0.18), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 95% 20%, rgba(124, 58, 237, 0.12), transparent 50%),
+    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(16, 185, 129, 0.05), transparent 45%);
+}
+
+.main-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Stat / dashboard cards — subtle entrance via CSS when wrapped */
+.dashboard-stat-card {
+  transform-origin: center bottom;
+}
+
+.nav-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.nav-item:hover::before {
+  opacity: 1;
+}
+
+.nav-item.active::before {
+  opacity: 0;
+}
+
+/* Softer card lift for data-heavy views */
+.card.card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card.card-static:hover {
+  transform: none;
+  box-shadow: var(--shadow-md);
+}
+
+.page-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.page-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 12px var(--primary-glow);
+  animation: eyebrowPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes eyebrowPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.65; transform: scale(0.85); }
+}
+
+.btn-subtle,
+.btn-icon,
+.btn-action,
+.theme-btn,
+.logout-btn,
+.modal-close-btn,
+.ai-close-btn,
+.ai-send-btn,
+.nav-item,
+.burger-toggle-btn,
+.mobile-theme-btn,
+.year-nav-btn {
+  transform: none !important;
+  box-shadow: none;
+}
+
+.btn-subtle::after,
+.btn-icon::after,
+.btn-action::after,
+.theme-btn::after,
+.modal-close-btn::after,
+.ai-close-btn::after,
+.ai-send-btn::after,
+.nav-item::after,
+.burger-toggle-btn::after {
+  display: none !important;
+}
+
+.btn-subtle:hover,
+.btn-icon:hover,
+.btn-action:hover {
+  transform: translateY(-1px) !important;
+}

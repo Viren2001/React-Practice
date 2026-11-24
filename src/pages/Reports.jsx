@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import MonthSelector from "../components/MonthSelector";
 import PageHeader from "../components/PageHeader";
 import MoneyAnalyzer from "../components/MoneyAnalyzer";
@@ -26,7 +25,7 @@ import {
 
 const COLORS = ["#d946ef", "#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#06b6d4"];
 
-function Reports({ expenses = [], month: propMonth, currency = "$" }) {
+function Reports({ expenses = [], month: propMonth, currency = "$", budget = 0 }) {
   const [month, setMonth] = useState(propMonth || new Date().toISOString().slice(0, 7));
   const [prevPropMonth, setPrevPropMonth] = useState(propMonth);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -101,15 +100,12 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
   }));
 
   return (
-    <motion.div 
-        className="page-container" 
-        style={{ paddingBottom: "100px" }}
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -15 }}
-        transition={{ duration: 0.3 }}
-    >
-      <PageHeader title="Visual Reports & Money Intelligence" subtitle="Deep dive into your spending analytics, health score & financial trajectory" />
+    <div className="page-container" style={{ paddingBottom: "100px" }}>
+      <PageHeader
+        eyebrow="Analytics"
+        title="Reports & patterns"
+        subtitle="Charts, category splits, and weekly habits for the period you choose."
+      />
 
       {/* Summary Cards Row */}
       <div className="stats-grid" style={{ marginBottom: "32px" }}>
@@ -140,7 +136,7 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
       </div>
 
       {/* Money Analyzer Intelligence Suite */}
-      <MoneyAnalyzer expenses={periodExpenses} currency={currency} month={month} />
+      <MoneyAnalyzer expenses={expenses} budget={budget} currency={currency} month={month} />
 
       {/* Main Trends Chart */}
       <div className="card chart-main-card glass-effect">
@@ -268,7 +264,7 @@ function Reports({ expenses = [], month: propMonth, currency = "$" }) {
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

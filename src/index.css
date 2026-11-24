@@ -1,7 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&display=swap');
 
 :root {
-    --font-main: "Inter", system-ui, -apple-system, sans-serif;
+    --font-main: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --duration-fast: 0.2s;
+    --duration-normal: 0.35s;
+    --duration-slow: 0.55s;
 
     /* Cyber Neon Theme Palette (Light Mod) */
     --bg-app: #f1f5f9;
@@ -73,18 +78,22 @@ body {
     position: relative;
 }
 
-/* Precise Portavia Background Configuration */
 body::before {
     content: "";
     position: fixed;
     inset: 0;
     pointer-events: none;
-    background-image: url('https://framerusercontent.com/images/AVsssNQRylEZc5orEWvz8Q1wQT4.gif');
-    background-repeat: repeat;
-    background-size: 150px;
-    /* Extremely subtle grain mask */
-    opacity: 0.04;
+    background:
+        radial-gradient(circle at 20% 0%, rgba(var(--primary-rgb), 0.06), transparent 42%),
+        radial-gradient(circle at 80% 100%, rgba(139, 92, 246, 0.05), transparent 40%);
+    opacity: 1;
     z-index: 0;
+}
+
+.dark body::before {
+    background:
+        radial-gradient(circle at 20% 0%, rgba(var(--primary-rgb), 0.1), transparent 42%),
+        radial-gradient(circle at 80% 100%, rgba(124, 58, 237, 0.08), transparent 40%);
 }
 
 
@@ -131,7 +140,6 @@ h4 {
     text-shadow: none;
 }
 
-/* Unified Button Component with Premium Sheen & Micro-Animations */
 button {
     font-family: var(--font-main);
     font-weight: 600;
@@ -139,18 +147,39 @@ button {
     padding: 10px 22px;
     border-radius: var(--radius-md);
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color var(--duration-normal) var(--ease-out-expo),
+        border-color var(--duration-normal) var(--ease-out-expo),
+        color var(--duration-fast) var(--ease-in-out),
+        box-shadow var(--duration-normal) var(--ease-out-expo),
+        transform var(--duration-normal) var(--ease-out-expo);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     border: 1px solid transparent;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     position: relative;
     overflow: hidden;
 }
 
-button::after {
+.btn-primary,
+.btn-lg,
+.btn-export,
+.btn-save-settings,
+.empty-state-btn,
+.main-cta-btn,
+.closing-cta-btn,
+.nav-cta {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary::after,
+.btn-lg::after,
+.btn-export::after,
+.btn-save-settings::after,
+.empty-state-btn::after,
+.main-cta-btn::after,
+.closing-cta-btn::after,
+.nav-cta::after {
     content: '';
     position: absolute;
     top: 0;
@@ -160,25 +189,40 @@ button::after {
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.25),
+        rgba(255, 255, 255, 0.22),
         transparent
     );
     transform: skewX(-20deg);
-    transition: 0.6s ease;
+    transition: 0.55s ease;
     pointer-events: none;
 }
 
-button:hover::after {
+.btn-primary:hover::after,
+.btn-lg:hover::after,
+.btn-export:hover::after,
+.btn-save-settings:hover::after,
+.empty-state-btn:hover::after,
+.main-cta-btn:hover::after,
+.closing-cta-btn:hover::after,
+.nav-cta:hover::after {
     left: 140%;
 }
 
-button:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 12px 25px -4px var(--primary-glow), 0 0 15px rgba(217, 70, 239, 0.3);
+.btn-primary:hover,
+.btn-lg:hover,
+.btn-export:not(.btn-export-secondary):hover,
+.btn-save-settings:hover,
+.empty-state-btn:hover,
+.main-cta-btn:hover,
+.closing-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px -4px var(--primary-glow);
 }
 
-button:active {
-    transform: scale(0.95);
+.btn-primary:active,
+.btn-lg:active,
+.empty-state-btn:active {
+    transform: scale(0.98);
 }
 
 .btn-primary {
@@ -269,10 +313,10 @@ input::placeholder {
     z-index: 1;
 }
 
-.card:hover {
-    box-shadow: 0 30px 60px -12px var(--primary-glow), 0 18px 36px -18px rgba(0, 0, 0, 0.1);
-    border-color: rgba(217, 70, 239, 0.3);
-    transform: translateY(-6px) scale(1.01);
+.card:not(.card-static):hover {
+    box-shadow: 0 20px 40px -12px var(--primary-glow), 0 12px 24px -12px rgba(0, 0, 0, 0.08);
+    border-color: rgba(var(--primary-rgb), 0.35);
+    transform: translateY(-4px);
     z-index: 2;
 }
 

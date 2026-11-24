@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import { motion } from "framer-motion";
 import PageHeader from "../components/PageHeader";
 import { getCategoryIcon } from "../utils/categoryIcons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { staggerContainer, staggerItem } from "../utils/motionPresets";
 import MonthSelector from "../components/MonthSelector";
 import EmptyState from "../components/EmptyState";
 import Skeleton from "../components/Skeleton";
@@ -19,7 +21,6 @@ import {
     PieChart as PieChartIcon,
     BarChart3,
     AlertTriangle,
-    X
 } from "lucide-react";
 import MoneyAnalyzer from "../components/MoneyAnalyzer";
 import { GoldCoinStackSVG, MoneyVaultSVG, MoneyGrowthSVG, DiamondWealthSVG, BanknoteSVG } from "../components/MoneyIcons";
@@ -27,7 +28,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, 
 
 const COLORS = ['#d946ef', '#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
 
-function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, budget = 0, updateBudget, updateThreshold, currency = "$", alertThreshold = 80 }) {
+function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, budget = 0, updateBudget, currency = "$", alertThreshold = 80 }) {
     const navigate = useNavigate();
 
     // Filter expenses using the new robust date utility
@@ -94,20 +95,11 @@ function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, bu
     // Local Edit Budget State
     const [isEditingBudget, setIsEditingBudget] = useState(false);
     const [tempBudget, setTempBudget] = useState(budget);
-    const [tempThreshold, setTempThreshold] = useState(alertThreshold);
-    const [showThresholdPopup, setShowThresholdPopup] = useState(false);
-
     useEffect(() => { setTempBudget(budget); }, [budget]);
-    useEffect(() => { setTempThreshold(alertThreshold); }, [alertThreshold]);
 
     const handleSaveBudget = () => {
         updateBudget(tempBudget);
         setIsEditingBudget(false);
-    };
-
-    const handleSaveThreshold = () => {
-        updateThreshold(tempThreshold);
-        // Popup stays open or user can close manually
     };
 
     const periodLabel = formatPeriodLabel(month);
@@ -142,29 +134,31 @@ function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, bu
 
     return (
         <div className="page-container" style={{ paddingBottom: "100px" }}>
-            <div className="page-header-container" style={{ marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "20px" }}>
-                <div>
-                    <h2 style={{ fontSize: "clamp(24px, 4vw, 32px)", fontWeight: "900", marginBottom: "8px", letterSpacing: "-0.04em" }}>
-                        Money Command Center
-                    </h2>
-                    <p style={{ color: "var(--text-muted)", fontWeight: "600", fontSize: "clamp(13px, 3vw, 15px)" }}>Intelligent wealth tracking & financial analysis engine for {periodLabel}.</p>
-                </div>
-
-                <div style={{ width: "240px", zIndex: 10 }}>
-                    <MonthSelector value={month} onChange={setMonth} options={[{ label: "Full History", value: "All" }]} />
-                </div>
-            </div>
+            <PageHeader
+                eyebrow="Overview"
+                title="Financial command center"
+                subtitle={`Track spending, budget health, and trends for ${periodLabel}.`}
+                actions={
+                    <div style={{ width: "min(240px, 100%)", zIndex: 10 }}>
+                        <MonthSelector value={month} onChange={setMonth} options={[{ label: "Full History", value: "All" }]} />
+                    </div>
+                }
+            />
 
             <InsightCards insights={insights} />
 
             {/* Money Analyzer Intelligence Suite */}
             <MoneyAnalyzer expenses={expenses} budget={effectiveBudget} currency={currency} month={month} />
 
-            {/* Quick Stats Top Row */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px", marginBottom: "24px" }}>
+            <motion.div
+                variants={staggerContainer}
+                initial="initial"
+                animate="animate"
+                style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px", marginBottom: "24px" }}
+            >
 
                 {/* Total Spend */}
-                <div className="card glass-effect" style={{ borderTop: "4px solid var(--primary)", position: "relative", overflow: "hidden" }}>
+                <motion.div variants={staggerItem} className="card glass-effect card-interactive dashboard-stat-card" style={{ borderTop: "4px solid var(--primary)", position: "relative", overflow: "hidden" }}>
                     <div style={{ position: "absolute", right: "-10px", bottom: "-10px", opacity: 0.15, pointerEvents: "none" }}>
                         <GoldCoinStackSVG size={96} />
                     </div>
@@ -190,10 +184,10 @@ function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, bu
                             </div>
                         </>
                     )}
-                </div>
+                </motion.div>
 
                 {/* Budget Tracker */}
-                <div className="card glass-effect" style={{ borderTop: "4px solid #10b981", position: "relative", overflow: "hidden" }}>
+                <motion.div variants={staggerItem} className="card glass-effect card-interactive dashboard-stat-card" style={{ borderTop: "4px solid #10b981", position: "relative", overflow: "hidden" }}>
                     <div style={{ position: "absolute", right: "-10px", bottom: "-10px", opacity: 0.15, pointerEvents: "none" }}>
                         <MoneyVaultSVG size={96} />
                     </div>
@@ -250,15 +244,20 @@ function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, bu
                                     transition: "width 1s cubic-bezier(0.16, 1, 0.3, 1)"
                                 }} />
                             </div>
-                            <div style={{ fontSize: "13px", color: "var(--text-muted)", fontWeight: "700", marginTop: "12px" }}>
-                                {effectiveBudget - periodTotal >= 0 ? `${currency}${(effectiveBudget - periodTotal).toLocaleString(undefined, { minimumFractionDigits: 2 })} remaining` : `${currency}${(periodTotal - effectiveBudget).toLocaleString()} over budget `}
+                            <div style={{ fontSize: "13px", color: "var(--text-muted)", fontWeight: "700", marginTop: "12px", display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center" }}>
+                                <span>
+                                    {effectiveBudget - periodTotal >= 0 ? `${currency}${(effectiveBudget - periodTotal).toLocaleString(undefined, { minimumFractionDigits: 2 })} remaining` : `${currency}${(periodTotal - effectiveBudget).toLocaleString()} over budget`}
+                                </span>
+                                <Link to="/settings" style={{ fontSize: "12px", color: "var(--primary)", fontWeight: "800", textDecoration: "none" }}>
+                                    Alert at {alertThreshold}% →
+                                </Link>
                             </div>
                         </>
                     )}
-                </div>
+                </motion.div>
 
                 {/* Daily Average & Top Category */}
-                <div className="card glass-effect" style={{ borderTop: "4px solid #3b82f6", display: "flex", flexDirection: "column", justifyContent: "center", position: "relative", overflow: "hidden" }}>
+                <motion.div variants={staggerItem} className="card glass-effect card-interactive dashboard-stat-card" style={{ borderTop: "4px solid #3b82f6", display: "flex", flexDirection: "column", justifyContent: "center", position: "relative", overflow: "hidden" }}>
                     <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, left: 0, background: "radial-gradient(circle at top right, rgba(59, 130, 246, 0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
                     <div style={{ height: "1px", background: "var(--border)", margin: "0 0 16px 0" }} />
 
@@ -306,13 +305,13 @@ function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, bu
                             </div>
                         </>
                     )}
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
 
             {/* Main Visualizations Row */}
             <div className="dashboard-charts-grid">
                 {/* Trend Chart */}
-                <div className="card glass-effect">
+                <div className="card glass-effect card-static">
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                             <TrendingDown size={20} color="var(--primary)" />
@@ -354,7 +353,7 @@ function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, bu
                 </div>
 
                 {/* Category Pie */}
-                <div className="card glass-effect" style={{ display: "flex", flexDirection: "column" }}>
+                <div className="card glass-effect card-static" style={{ display: "flex", flexDirection: "column" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
                         <PieChartIcon size={20} color="#10b981" />
                         <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "800" }}>Distribution</h3>
@@ -411,7 +410,7 @@ function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, bu
             </div>
 
             {/* Recent Expenses List */}
-            <div className="card glass-effect" style={{ padding: "32px" }}>
+            <div className="card glass-effect card-static" style={{ padding: "32px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <Wallet size={20} color="var(--primary)" />
@@ -487,8 +486,19 @@ function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, bu
 
             {/* Budget Alert Modal */}
             {showBudgetModal && (
-                <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(5px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <div className="card glass-effect fade-in-up" style={{ width: "90%", maxWidth: "420px", display: "flex", flexDirection: "column", gap: "16px", padding: "32px", border: periodTotal >= effectiveBudget ? "2px solid var(--danger)" : "2px solid var(--warning)", boxShadow: periodTotal >= effectiveBudget ? "0 20px 50px -10px rgba(239, 68, 68, 0.3)" : "0 20px 50px -10px rgba(245, 158, 11, 0.3)" }}>
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.25 }}
+                    style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}
+                >
+                    <motion.div
+                        initial={{ opacity: 0, y: 24, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                        className="card glass-effect"
+                        style={{ width: "90%", maxWidth: "420px", display: "flex", flexDirection: "column", gap: "16px", padding: "32px", border: periodTotal >= effectiveBudget ? "2px solid var(--danger)" : "2px solid var(--warning)", boxShadow: periodTotal >= effectiveBudget ? "0 20px 50px -10px rgba(239, 68, 68, 0.3)" : "0 20px 50px -10px rgba(245, 158, 11, 0.3)" }}
+                    >
                         <div style={{ display: "flex", alignItems: "center", gap: "12px", color: periodTotal >= effectiveBudget ? "var(--danger)" : "var(--warning)" }}>
                             <AlertTriangle size={36} />
                             <h2 style={{ margin: 0, fontSize: "22px", fontWeight: "900" }}>{periodTotal >= effectiveBudget ? "Budget Limit Exceeded!" : "Budget Alert!"}</h2>
@@ -504,69 +514,10 @@ function Dashboard({ expenses = [], isExpensesLoaded = true, month, setMonth, bu
                         >
                             I Understand
                         </button>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             )}
 
-            {/* Threshold Popup Toggle Button & Panel */}
-            <div style={{ position: "fixed", bottom: "112px", right: "32px", zIndex: 9998, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "16px" }}>
-                {showThresholdPopup && (
-                    <div className="card glass-effect fade-in-up" style={{ width: "320px", padding: "20px", border: periodTotal >= effectiveBudget ? "2px solid var(--danger)" : "1px solid var(--border)", boxShadow: "var(--shadow-lg)" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: periodTotal >= effectiveBudget ? "var(--danger)" : "var(--primary)", fontWeight: "800" }}>
-                                <AlertTriangle size={18} />
-                                <span>Budget Status</span>
-                            </div>
-                            <button onClick={() => setShowThresholdPopup(false)} style={{ background: "transparent", border: "none", color: "var(--text-muted)", cursor: "pointer", padding: "4px" }}>
-                                <X size={16} />
-                            </button>
-                        </div>
-
-                        <div style={{ marginBottom: "16px", fontSize: "14px", color: "var(--text-main)", fontWeight: "600", lineHeight: "1.5" }}>
-                            {periodTotal >= effectiveBudget
-                                ? `You have crossed your budget limit of ${currency}${effectiveBudget}.`
-                                : `You have reached ${Math.round((periodTotal / effectiveBudget) * 100)}% of your limit (${currency}${effectiveBudget}).`}
-                        </div>
-
-                        <div style={{ height: "8px", background: "rgba(16, 185, 129, 0.2)", borderRadius: "4px", marginBottom: "20px", overflow: "hidden" }}>
-                            <div style={{ height: "100%", width: `${Math.min(100, (periodTotal / effectiveBudget) * 100)}%`, background: periodTotal >= effectiveBudget ? "var(--danger)" : "var(--primary)", borderRadius: "4px" }} />
-                        </div>
-
-                        <div style={{ fontSize: "12px", fontWeight: "700", color: "var(--text-muted)", marginBottom: "8px", textTransform: "uppercase" }}>Alert Threshold (%)</div>
-                        <div style={{ display: "flex", gap: "8px" }}>
-                            <input
-                                type="number"
-                                value={tempThreshold}
-                                onChange={(e) => setTempThreshold(e.target.value)}
-                                style={{ flex: 1, padding: "8px 12px", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--bg-input)", color: "var(--text-main)" }}
-                            />
-                            <button onClick={handleSaveThreshold} style={{ background: "var(--primary)", color: "white", border: "none", padding: "8px 16px", borderRadius: "8px", fontWeight: "700", cursor: "pointer" }}>
-                                Update
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                <button
-                    onClick={() => setShowThresholdPopup(!showThresholdPopup)}
-                    style={{
-                        width: "56px",
-                        height: "56px",
-                        borderRadius: "18px",
-                        background: periodTotal >= effectiveBudget ? "var(--danger)" : "var(--bg-card)",
-                        border: periodTotal >= effectiveBudget ? "none" : "1px solid var(--border)",
-                        boxShadow: periodTotal >= effectiveBudget ? "0 10px 20px rgba(239, 68, 68, 0.4)" : "var(--shadow-md)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        cursor: "pointer",
-                        color: periodTotal >= effectiveBudget ? "white" : "var(--primary)",
-                        transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)"
-                    }}
-                >
-                    <AlertTriangle size={24} />
-                </button>
-            </div>
         </div>
     );
 }

@@ -444,6 +444,10 @@
     transition: transform 0.3s;
 }
 
+.floating-badge .animated-svg-wrapper {
+    flex-shrink: 0;
+}
+
 .badge-left {
     top: 15%;
     left: -35px;

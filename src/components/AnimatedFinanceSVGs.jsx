@@ -3,8 +3,8 @@ import "./AnimatedFinanceSVGs.css";
 
 // 1. Futuristic Vault Door SVG with Animated Dial & Laser Scan
 export const AnimatedVaultDoor = ({ size = 120, className = "" }) => (
-  <div className={`animated-svg-wrapper ${className}`} style={{ width: size, height: size }}>
-    <svg viewBox="0 0 100 100" className="vault-svg">
+  <div className={`animated-svg-wrapper ${className}`} style={{ width: `${size}px`, height: `${size}px`, minWidth: `${size}px`, minHeight: `${size}px` }}>
+    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" className="vault-svg">
       <defs>
         <linearGradient id="vaultBg" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#1e1b4b" />
@@ -56,8 +56,8 @@ export const AnimatedVaultDoor = ({ size = 120, className = "" }) => (
 
 // 2. Animated Gold Coin Stack & Sparkle
 export const AnimatedGoldCoins = ({ size = 120, className = "" }) => (
-  <div className={`animated-svg-wrapper ${className}`} style={{ width: size, height: size }}>
-    <svg viewBox="0 0 100 100" className="coins-svg">
+  <div className={`animated-svg-wrapper ${className}`} style={{ width: `${size}px`, height: `${size}px`, minWidth: `${size}px`, minHeight: `${size}px` }}>
+    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" className="coins-svg">
       <defs>
         <linearGradient id="goldTop" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#fef08a" />
@@ -113,8 +113,8 @@ export const AnimatedGoldCoins = ({ size = 120, className = "" }) => (
 
 // 3. Dynamic Growth & Yield Chart SVG
 export const AnimatedGrowthChart = ({ size = 120, className = "" }) => (
-  <div className={`animated-svg-wrapper ${className}`} style={{ width: size, height: size }}>
-    <svg viewBox="0 0 100 100" className="chart-svg">
+  <div className={`animated-svg-wrapper ${className}`} style={{ width: `${size}px`, height: `${size}px`, minWidth: `${size}px`, minHeight: `${size}px` }}>
+    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" className="chart-svg">
       <defs>
         <linearGradient id="chartBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stopColor="rgba(16, 185, 129, 0.4)" />
@@ -170,8 +170,8 @@ export const AnimatedGrowthChart = ({ size = 120, className = "" }) => (
 
 // 4. Holographic Shield SVG
 export const AnimatedShield = ({ size = 120, className = "" }) => (
-  <div className={`animated-svg-wrapper ${className}`} style={{ width: size, height: size }}>
-    <svg viewBox="0 0 100 100" className="shield-svg">
+  <div className={`animated-svg-wrapper ${className}`} style={{ width: `${size}px`, height: `${size}px`, minWidth: `${size}px`, minHeight: `${size}px` }}>
+    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" className="shield-svg">
       <defs>
         <linearGradient id="shieldBg" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#3b82f6" />
@@ -224,8 +224,8 @@ export const AnimatedShield = ({ size = 120, className = "" }) => (
 
 // 5. Holographic Floating Credit Card & Cash SVG
 export const AnimatedCardCash = ({ size = 120, className = "" }) => (
-  <div className={`animated-svg-wrapper ${className}`} style={{ width: size, height: size }}>
-    <svg viewBox="0 0 100 100" className="card-cash-svg">
+  <div className={`animated-svg-wrapper ${className}`} style={{ width: `${size}px`, height: `${size}px`, minWidth: `${size}px`, minHeight: `${size}px` }}>
+    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" className="card-cash-svg">
       <defs>
         <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#ec4899" />
@@ -273,8 +273,8 @@ export const AnimatedCardCash = ({ size = 120, className = "" }) => (
 
 // 6. Sparkling Diamond Wealth SVG
 export const AnimatedDiamond = ({ size = 120, className = "" }) => (
-  <div className={`animated-svg-wrapper ${className}`} style={{ width: size, height: size }}>
-    <svg viewBox="0 0 100 100" className="diamond-svg">
+  <div className={`animated-svg-wrapper ${className}`} style={{ width: `${size}px`, height: `${size}px`, minWidth: `${size}px`, minHeight: `${size}px` }}>
+    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" className="diamond-svg">
       <defs>
         <linearGradient id="diamGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#38bdf8" />
