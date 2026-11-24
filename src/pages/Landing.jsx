@@ -16,10 +16,6 @@ import {
   Sparkles,
   Lock,
   Globe,
-  Terminal,
-  MessageSquare,
-  Mail,
-  ChevronRight,
   Cloud,
   Database,
   Search,
@@ -353,7 +349,7 @@ export default function Landing() {
                 <div className="avatar">MW</div>
                 <div className="avatar">JD</div>
               </div>
-              <span>Trusted by 50,000+ financial builders worldwide.</span>
+              <span>Built for people who want clarity—not spreadsheet chaos.</span>
             </div>
           </div>
 
@@ -715,11 +711,6 @@ export default function Landing() {
               <p className="footer-v2-desc">
                 An intelligent financial companion designed for absolute wealth clarity. Fast, encrypted, and visually extraordinary.
               </p>
-              <div className="footer-v2-socials">
-                <a href="#" className="social-pill" aria-label="Community"><MessageSquare size={18} /></a>
-                <a href="#" className="social-pill" aria-label="Terminal"><Terminal size={18} /></a>
-                <a href="#" className="social-pill" aria-label="Contact"><Mail size={18} /></a>
-              </div>
             </div>
 
             {/* Column 2 */}
@@ -735,26 +726,12 @@ export default function Landing() {
 
             {/* Column 3 */}
             <div className="footer-v2-col">
-              <h4 className="footer-v2-title">Resources</h4>
+              <h4 className="footer-v2-title">Product</h4>
               <ul className="footer-v2-links">
-                <li><a href="#">Documentation</a></li>
-                <li><a href="#">Privacy Guide</a></li>
-                <li><a href="#">API Status</a></li>
+                <li><Link to="/signup">Create account</Link></li>
+                <li><Link to="/login">Sign in</Link></li>
+                <li><a href="#features">Features</a></li>
               </ul>
-            </div>
-
-            {/* Column 4 */}
-            <div className="footer-v2-col newsletter-col">
-              <h4 className="footer-v2-title">Stay Informed</h4>
-              <p className="footer-v2-desc" style={{ fontSize: "0.9rem" }}>
-                Join 5,000+ builders receiving weekly financial growth strategies.
-              </p>
-              <div className="newsletter-form">
-                <input type="email" placeholder="Your email..." className="newsletter-input" />
-                <button className="newsletter-btn">
-                  Subscribe <ChevronRight size={16} style={{ marginLeft: "4px" }} />
-                </button>
-              </div>
             </div>
           </div>
 
@@ -782,8 +759,7 @@ export default function Landing() {
               © 2026 ExoVault. Precision crafted for personal financial freedom.
             </div>
             <div className="bottom-links">
-              <a href="#" className="bottom-link">Privacy Policy</a>
-              <a href="#" className="bottom-link">Terms & Conditions</a>
+              <span className="bottom-link" style={{ opacity: 0.7, cursor: "default" }}>Privacy · Terms (coming soon)</span>
             </div>
           </div>
         </div>

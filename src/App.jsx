@@ -15,9 +15,10 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { ToastProvider } from "./contexts/ToastContext";
 import { db } from "./firebase";
 import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, updateDoc, getDocs, writeBatch } from "firebase/firestore";
-import { motion } from "framer-motion";
+import AnimatedPage from "./components/AnimatedPage";
 import "./App.css";
 import "./styles/Auth.css";
+import "./styles/app-shell.css";
 // import OnboardingWizard from "./components/OnboardingWizard";
 
 function AppLayout() {
@@ -351,20 +352,14 @@ function AppLayout() {
       )}
 
       <main className={currentUser ? "main-content" : ""}>
-        <motion.div
-          key={location.pathname}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
-          style={{ width: "100%", minHeight: "100%" }}
-        >
+        <AnimatedPage key={location.pathname}>
           <Outlet context={{
             expenses, isExpensesLoaded, month, setMonth, budget, updateBudget, updateThreshold,
             categoryBudgets, currency, alertThreshold, addExpense, editExpense,
             deleteExpense, deleteMultipleExpenses, deleteAllExpenses, categories,
             addCategory, deleteCategory, category, setCategory
           }} />
-        </motion.div>
+        </AnimatedPage>
       </main>
     </div>
   );

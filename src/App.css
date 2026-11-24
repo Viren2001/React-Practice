@@ -324,7 +324,7 @@
     overflow: visible !important;
 }
 
-.card:hover {
+.card:not(.card-static):hover {
     box-shadow: var(--shadow-lg);
     border-color: var(--primary-glow);
 }

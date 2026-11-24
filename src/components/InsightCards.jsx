@@ -41,7 +41,7 @@ const InsightCards = ({ insights }) => {
                         initial={{ opacity: 0, scale: 0.95, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        transition={{ duration: 0.4, delay: index * 0.07, ease: [0.16, 1, 0.3, 1] }}
                         style={{
                             background: "rgba(var(--bg-card-rgb), 0.6)",
                             border: `1px solid ${getColor(insight.type)}`,

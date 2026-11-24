@@ -189,7 +189,11 @@ function Expenses({ expenses = [], isExpensesLoaded = true, addExpense, editExpe
         >
             <div className="page-header-row" style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "32px", flexWrap: "wrap" }}>
                 <div style={{ flex: 1, minWidth: "200px" }}>
-                    <PageHeader title="Transactions" subtitle="Detailed breakdown of your spending habits." />
+                    <PageHeader
+                        eyebrow="Ledger"
+                        title="Transactions"
+                        subtitle="Search, filter, and manage every expense in one place."
+                    />
                 </div>
                 <div className="page-actions" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
                     <div style={{ position: "relative", display: "inline-block" }} onMouseEnter={() => setShowProTip(true)} onMouseLeave={() => setShowProTip(false)}>

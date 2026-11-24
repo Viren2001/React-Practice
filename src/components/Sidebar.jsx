@@ -58,25 +58,25 @@ function Sidebar() {
             path: "/",
             label: "Overview",
             icon: LayoutDashboard,
-            desc: "Command Center & Wealth Gauge"
+            desc: "Summary, budget & insights"
         },
         {
             path: "/expenses",
             label: "Transactions",
             icon: ReceiptIndianRupee,
-            desc: "Full Ledger & Spending Records"
+            desc: "Add, edit & export spending"
         },
         {
             path: "/reports",
             label: "Analytics",
             icon: BarChart3,
-            desc: "Visual Insights & Trends"
+            desc: "Charts & spending patterns"
         },
         {
             path: "/settings",
-            label: "Preferences",
+            label: "Settings",
             icon: Settings,
-            desc: "Budgets, Alerts & Themes"
+            desc: "Budget, currency & alerts"
         }
     ];
 
@@ -101,7 +101,7 @@ function Sidebar() {
                             </div>
                             <div style={{ display: "flex", flexDirection: "column" }}>
                                 <span className="logo-text">EXOVAULT</span>
-                                <span style={{ fontSize: "9px", letterSpacing: "1.5px", color: "var(--primary)", fontWeight: "800", marginTop: "-4px" }}>MONEY ANALYZER</span>
+                                <span style={{ fontSize: "9px", letterSpacing: "1.5px", color: "var(--primary)", fontWeight: "800", marginTop: "-4px" }}>FINANCE HUB</span>
                             </div>
                         </div>
                     </div>

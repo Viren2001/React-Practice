@@ -5,7 +5,16 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-shrink: 0;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animated-svg-wrapper svg {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
 }
 
 .animated-svg-wrapper:hover {
@@ -24,15 +33,31 @@
 }
 
 @keyframes svgSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes svgSpinDial {
-  0% { transform: rotate(0deg); }
-  40% { transform: rotate(180deg); }
-  70% { transform: rotate(90deg); }
-  100% { transform: rotate(270deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  40% {
+    transform: rotate(180deg);
+  }
+
+  70% {
+    transform: rotate(90deg);
+  }
+
+  100% {
+    transform: rotate(270deg);
+  }
 }
 
 /* Pulsing Dots & Core */
@@ -40,13 +65,28 @@
   animation: pulseDot 2s ease-in-out infinite alternate;
 }
 
-.pulse-dot.delay-1 { animation-delay: 0.5s; }
-.pulse-dot.delay-2 { animation-delay: 1s; }
-.pulse-dot.delay-3 { animation-delay: 1.5s; }
+.pulse-dot.delay-1 {
+  animation-delay: 0.5s;
+}
+
+.pulse-dot.delay-2 {
+  animation-delay: 1s;
+}
+
+.pulse-dot.delay-3 {
+  animation-delay: 1.5s;
+}
 
 @keyframes pulseDot {
-  0% { r: 2px; opacity: 0.4; }
-  100% { r: 4px; opacity: 1; }
+  0% {
+    r: 2px;
+    opacity: 0.4;
+  }
+
+  100% {
+    r: 4px;
+    opacity: 1;
+  }
 }
 
 .core-pulse {
@@ -55,8 +95,15 @@
 }
 
 @keyframes corePulse {
-  0% { transform: scale(0.9); opacity: 0.8; }
-  100% { transform: scale(1.1); opacity: 1; }
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
 }
 
 /* Scanner Beam */
@@ -65,24 +112,38 @@
 }
 
 @keyframes scannerBeam {
-  0% { transform: translateY(0); opacity: 0.2; }
-  100% { transform: translateY(12px); opacity: 1; }
+  0% {
+    transform: translateY(0);
+    opacity: 0.2;
+  }
+
+  100% {
+    transform: translateY(12px);
+    opacity: 1;
+  }
 }
 
 /* Coin Floating Animations */
 .coin-float-1 {
   animation: coinFloat 4s ease-in-out infinite alternate;
 }
+
 .coin-float-2 {
   animation: coinFloat 4s ease-in-out 0.5s infinite alternate;
 }
+
 .coin-float-3 {
   animation: coinFloat 4s ease-in-out 1s infinite alternate;
 }
 
 @keyframes coinFloat {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-6px); }
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-6px);
+  }
 }
 
 .currency-symbol {
@@ -90,8 +151,14 @@
 }
 
 @keyframes symbolPulse {
-  0% { opacity: 0.8; }
-  100% { opacity: 1; fill: #581c87; }
+  0% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 1;
+    fill: #581c87;
+  }
 }
 
 /* Sparkle Animations */
@@ -99,21 +166,41 @@
   animation: sparkleTwinkle 2.5s ease-in-out infinite alternate;
   transform-origin: center;
 }
-.sparkle-twinkle.delay-1 { animation-delay: 1.2s; }
+
+.sparkle-twinkle.delay-1 {
+  animation-delay: 1.2s;
+}
 
 @keyframes sparkleTwinkle {
-  0% { transform: scale(0.6) rotate(0deg); opacity: 0.3; }
-  100% { transform: scale(1.2) rotate(45deg); opacity: 1; }
+  0% {
+    transform: scale(0.6) rotate(0deg);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: scale(1.2) rotate(45deg);
+    opacity: 1;
+  }
 }
 
 .sparkle-float {
   animation: sparkleFloat 3s ease-in-out infinite alternate;
 }
-.sparkle-float.delay-2 { animation-delay: 1.5s; }
+
+.sparkle-float.delay-2 {
+  animation-delay: 1.5s;
+}
 
 @keyframes sparkleFloat {
-  0% { transform: translateY(0) scale(0.8); opacity: 0.5; }
-  100% { transform: translateY(-8px) scale(1.3); opacity: 1; }
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translateY(-8px) scale(1.3);
+    opacity: 1;
+  }
 }
 
 /* Chart Path & Point Animations */
@@ -124,9 +211,17 @@
 }
 
 @keyframes dashPath {
-  0% { stroke-dashoffset: 250; }
-  40% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: 0; }
+  0% {
+    stroke-dashoffset: 250;
+  }
+
+  40% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
 }
 
 .area-fade {
@@ -134,20 +229,41 @@
 }
 
 @keyframes areaFade {
-  0% { opacity: 0; }
-  40% { opacity: 1; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 .pulse-point {
   animation: pointPulse 2s ease-in-out infinite alternate;
 }
-.pulse-point.delay-1 { animation-delay: 0.6s; }
-.pulse-point.delay-2 { animation-delay: 1.2s; }
+
+.pulse-point.delay-1 {
+  animation-delay: 0.6s;
+}
+
+.pulse-point.delay-2 {
+  animation-delay: 1.2s;
+}
 
 @keyframes pointPulse {
-  0% { transform: scale(0.8); opacity: 0.7; }
-  100% { transform: scale(1.3); opacity: 1; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
 }
 
 .arrow-bounce {
@@ -155,8 +271,13 @@
 }
 
 @keyframes arrowBounce {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(4px, -4px); }
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(4px, -4px);
+  }
 }
 
 /* Shield Animations */
@@ -165,8 +286,14 @@
 }
 
 @keyframes shieldBreathe {
-  0% { stroke: #93c5fd; }
-  100% { stroke: #38bdf8; filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8)); }
+  0% {
+    stroke: #93c5fd;
+  }
+
+  100% {
+    stroke: #38bdf8;
+    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8));
+  }
 }
 
 .scan-line {
@@ -174,9 +301,19 @@
 }
 
 @keyframes scanLineAnim {
-  0% { transform: translateY(-10px); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: translateY(45px); opacity: 0; }
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(45px);
+    opacity: 0;
+  }
 }
 
 .check-draw {
@@ -186,9 +323,17 @@
 }
 
 @keyframes checkAnim {
-  0% { stroke-dashoffset: 60; }
-  40% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: 0; }
+  0% {
+    stroke-dashoffset: 60;
+  }
+
+  40% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Card & Cash Animations */
@@ -197,8 +342,13 @@
 }
 
 @keyframes billFloat {
-  0% { transform: translateY(0) rotate(-12deg); }
-  100% { transform: translateY(-8px) rotate(-8deg); }
+  0% {
+    transform: translateY(0) rotate(-12deg);
+  }
+
+  100% {
+    transform: translateY(-8px) rotate(-8deg);
+  }
 }
 
 .card-float-3d {
@@ -206,18 +356,31 @@
 }
 
 @keyframes cardFloat3d {
-  0% { transform: translateY(0) rotate(0deg); }
-  100% { transform: translateY(-6px) rotate(3deg); }
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  100% {
+    transform: translateY(-6px) rotate(3deg);
+  }
 }
 
 .wave-pulse {
   animation: wavePulse 1.5s ease-in-out infinite alternate;
 }
-.wave-pulse.delay-1 { animation-delay: 0.4s; }
+
+.wave-pulse.delay-1 {
+  animation-delay: 0.4s;
+}
 
 @keyframes wavePulse {
-  0% { opacity: 0.2; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0.2;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 /* Diamond Floating */
@@ -226,6 +389,11 @@
 }
 
 @keyframes diamondFloat {
-  0% { transform: translateY(0) scale(1); }
-  100% { transform: translateY(-8px) scale(1.04); }
+  0% {
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    transform: translateY(-8px) scale(1.04);
+  }
 }

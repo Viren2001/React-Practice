@@ -215,7 +215,11 @@ function Settings({ expenses = [], month, categories = [], addCategory, deleteCa
       transition={{ duration: 0.3 }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-        <PageHeader title="Preferences" subtitle="Configure your financial environment" />
+        <PageHeader
+          eyebrow="Settings"
+          title="Your preferences"
+          subtitle="Monthly budget, categories, currency, alerts, and data export."
+        />
         {isDirty && (
           <div style={{
             background: "rgba(239, 68, 68, 0.1)",
